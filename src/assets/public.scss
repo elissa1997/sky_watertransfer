@@ -1,0 +1,51 @@
+// 全局样式
+
+body {
+  margin: 0px;
+}
+
+::-webkit-scrollbar {
+  /*滚动条整体样式*/
+  width: 10px; /*高宽分别对应横竖滚动条的尺寸*/
+  height: 10px;
+}
+::-webkit-scrollbar-thumb {
+  /*滚动条里面小方块*/
+  border-radius: 10px;
+  box-shadow: inset 0 0 5px #00000025;
+  background: #2929296e;
+}
+::-webkit-scrollbar-track {
+  /*滚动条里面轨道*/
+  box-shadow: inset 0 0 5px #00000000;
+  border-radius: 10px;
+  background: #ededed00;
+}
+
+// 自定义公共样式
+@mixin grossGlass {
+  backdrop-filter: blur(7px);
+  background-color: #ffffff7a;
+}
+
+@mixin boxShadow {
+  box-shadow: 0px 0px 10px #0000002e;
+}
+
+@mixin animation_cubic-bezier {
+  transition: all cubic-bezier(0.46, 0.03, 0.52, 0.96) 0.5s;
+}
+
+@mixin title_text {
+  font-size: 17px;
+  font-weight: 700;
+  color: #1caa00;
+}
+
+// ESRI样式覆盖
+
+.esri-view .esri-view-surface--inset-outline:focus::after {
+  outline: auto 0px Highlight !important;
+  outline: auto 0px -webkit-focus-ring-color !important;
+}
+
