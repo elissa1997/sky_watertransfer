@@ -3,18 +3,18 @@
     <div class="mapView" id="mapView"></div>
     <template v-if="map">
       <baseLayerSwitch :map="map"/>
-      <layerTree />
+      <layerTree @checkedChange="checkedChange(arguments)"/>
     </template>
   </div>
 </template>
 
 <script>
-import {initLayers} from "@/util/baseLayer.js";
 import baseLayerSwitch from "@/components/mapTool/baseLayerSwitch.vue";
 import layerTree from "@/components/mapTool/layerTree.vue";
-import { getMapObject, loadDefaultLayers } from "@/layers/layerAgent.js"
 
-// import mainLine from "@/layers/mainLine.js";
+import {initLayers} from "@/util/baseLayer.js";
+import { handlerLayerByTree, loadDefaultLayers } from "@/layers/layerAgent.js"
+
 
 export default {
   name: "gis2d",
@@ -29,7 +29,11 @@ export default {
     }
   },
   methods: {
-
+    // 控制树点击
+    checkedChange(data) {
+      console.log("控制树点击");
+      handlerLayerByTree(this.map, data[0], data[1]);
+    },
     // 初始化创建地图
     createdView() {
 

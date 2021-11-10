@@ -79,7 +79,9 @@ export default {
           })
         }
       })
-      console.log(checkedTree);
+
+      this.$emit('checkedChange',checkedTree, this.getAllLayerId());
+
     },
 
     // 默认勾选
@@ -98,8 +100,31 @@ export default {
         checkedTree.push({layerId: key, fid:checkFid})
       });
 
-      console.log(checkedTree);
+      this.$emit('checkedChange',checkedTree, this.getAllLayerId());
     },
+
+    // 获取树中所有图层id
+    getAllLayerId() {
+      let regex = /businessLayer_\d+$/m;
+      let allLayerId = [];
+
+      let parseTreeJson = function (treeNodes) {
+        if (!treeNodes || !treeNodes.length) return;
+        for (let i = 0, len = treeNodes.length; i < len; i++) {
+            let childs = treeNodes[i].children;
+
+            if(regex.exec(treeNodes[i].key)){
+              allLayerId.push(treeNodes[i].key);
+            };
+            if (childs && childs.length > 0) {
+                parseTreeJson(childs);
+            }
+        }
+      };
+
+      parseTreeJson(this.treeData);
+      return allLayerId
+    }
   },
 
 
