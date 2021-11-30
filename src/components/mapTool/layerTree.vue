@@ -30,7 +30,7 @@
 <script>
 
 import { Button, Tree } from 'ant-design-vue';
-import { getBaseJson } from "@/network/staticData.js";
+import { baseJson } from "@/network/staticData.js";
 
 
 export default {
@@ -51,7 +51,7 @@ export default {
 
   methods: {
     async getTreeData() {
-        await getBaseJson("Huai_NorthTransfer_tree.json").then(res => {
+        await baseJson("Huai_NorthTransfer_tree.json").then(res => {
         this.treeData = res.treeData;
         this.defaultKeys = res.defaultCheck;
       })
@@ -108,6 +108,7 @@ export default {
       let regex = /businessLayer_\d+$/m;
       let allLayerId = [];
 
+      // 递归搜索图层id
       let parseTreeJson = function (treeNodes) {
         if (!treeNodes || !treeNodes.length) return;
         for (let i = 0, len = treeNodes.length; i < len; i++) {

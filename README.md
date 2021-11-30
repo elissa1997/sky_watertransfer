@@ -1,19 +1,13 @@
-# huai_northwatertransfer_2.0
+# 淮水北调线路_2.0
 
-## Project setup
-```
-npm install
-```
+# 已安装第三方依赖
 
-### Compiles and hot-reloads for development
-```
-npm run serve
-```
-
-### Compiles and minifies for production
-```
-npm run build
-```
-
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
+- [x] IconPark
+- [x] Arcgis
+- [x] AntVue(按需)
+- [ ] dayjs
+- [ ] echarts
+- [ ] gcoord
+- [ ] qs
+- [ ] v-viewer
+- [ ] vue-pdf

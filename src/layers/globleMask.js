@@ -1,12 +1,12 @@
 // 全球遮罩图层
 import Vue from 'vue';
-import { getBaseJson } from "@/network/staticData.js";
+import { baseJson } from "@/network/staticData.js";
 
 const arcgisModules = Vue.prototype.$arcgisModules;
 
 async function getData() {
   let data = undefined;
-  await getBaseJson("Huai_NorthTransfer_mask.json").then(res => {
+  await baseJson("Huai_NorthTransfer_mask.json").then(res => {
     data = res;
   })
   return data;

@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 // 访问接口
-export function instance_live(config) {
+export function instance_api(config) {
     const instance = axios.create({
         baseURL: '/ahjs/',
         timeout: 8000,

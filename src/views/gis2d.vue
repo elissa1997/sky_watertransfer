@@ -13,7 +13,7 @@ import baseLayerSwitch from "@/components/mapTool/baseLayerSwitch.vue";
 import layerTree from "@/components/mapTool/layerTree.vue";
 
 import {initLayers} from "@/util/baseLayer.js";
-import { handlerLayerByTree, loadDefaultLayers } from "@/layers/layerAgent.js"
+import { handlerLayerByTree, loadDefaultLayers, layerTest } from "@/layers/layerAgent.js"
 
 
 export default {
@@ -77,6 +77,7 @@ export default {
         // globleMask(this.map);
         // mainLine(this.map);
         loadDefaultLayers(this.map);
+        layerTest(this.map);
       })
 
       this.view.ui.remove("zoom"); //清除放大缩小按钮

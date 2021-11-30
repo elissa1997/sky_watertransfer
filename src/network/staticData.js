@@ -1,6 +1,7 @@
 import {instance_static} from "./axios";
 
-export function getBaseJson(fileName) {
+// 静态json文件
+export function baseJson(fileName) {
   return instance_static({
     url: 'json/'+fileName,
     method: 'get'
