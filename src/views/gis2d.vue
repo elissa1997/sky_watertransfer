@@ -5,40 +5,59 @@
       <baseLayerSwitch :map="map"/>
       <layerTree @checkedChange="checkedChange(arguments)"/>
     </template>
+
+    <a-modal v-model="modal.visible" :title="modal.title" :footer="null">
+      <modalConten v-if="modal.visible" :from="modal.from" :data="modal.data"/>
+    </a-modal>
+
   </div>
 </template>
 
 <script>
+import { Modal } from 'ant-design-vue';
+Modal.install(Vue);
+import Vue from 'vue'
+import featurePopup from "@/components/modal/featurePopup.vue";
 import baseLayerSwitch from "@/components/mapTool/baseLayerSwitch.vue";
 import layerTree from "@/components/mapTool/layerTree.vue";
+import modalConten from "@/components/modal/index.vue";
 
 import {initLayers} from "@/util/baseLayer.js";
-import { handlerLayerByTree, loadDefaultLayers, layerTest } from "@/layers/layerAgent.js"
+import { handlerLayerByTree, loadDefaultLayers } from "@/layers/layerAgent.js"
 
 
 export default {
   name: "gis2d",
   components: {
+    AModal:Modal,
+    featurePopup,
     baseLayerSwitch,
-    layerTree
+    layerTree,
+    modalConten
   },
   data() {
     return {
-      map: null,
-      view: null,
+      map: undefined,
+      view: undefined,
+      modal: {
+        visible: false,
+        title: undefined,
+        data: undefined,
+        from: undefined
+      }
     }
   },
   methods: {
     // 控制树点击
     checkedChange(data) {
       console.log("控制树点击");
-      handlerLayerByTree(this.map, data[0], data[1]);
+      handlerLayerByTree(this.map, this.view, data[0], data[1]);
     },
     // 初始化创建地图
-    createdView() {
+    async createdView() {
 
       let tileInfo = this.$arcgisModules.TileInfo.create({
-        spatialReference: {wkid: 3857},
+        spatialReference: {wkid: 4326},
         numLODs: 20
       });
 
@@ -50,12 +69,24 @@ export default {
         })
       })
 
+      // let anHuiExtents = new this.$arcgisModules.Extent({
+      //   xmin: 12780501.0538,
+      //   ymin: 3426136.3483,
+      //   xmax: 13324502.7707,
+      //   ymax: 4114204.0916,
+      //   spatialReference: { wkid: 102100 }
+      // });
+
       this.view = new this.$arcgisModules.MapView({
         map: this.map,
         container: "mapView",
         showLabels: true,
         center: [117.408142,33.755000],
-        zoom: 9,
+        // extent: anHuiExtents,
+        // spatialReference: {
+        //   wkid: 102100
+        // },
+        zoom: 10,
         constraints: {
           lods: tileInfo.lods,
           minZoom: 3 ,
@@ -70,20 +101,63 @@ export default {
           actions: [] // 清空事件按钮 （缩放至、...）
         }
       });
-
+      // this.popup = this.view.popup;
       // 地图就绪
-      this.view.when(() => {
+  
+      await this.view.when(async () => {
         this.$message.success('地图加载完成');
-        // globleMask(this.map);
-        // mainLine(this.map);
         loadDefaultLayers(this.map);
-        layerTest(this.map);
+        this.featureClick();
+        // this.test();
       })
 
       this.view.ui.remove("zoom"); //清除放大缩小按钮
       this.view.ui.remove("attribution"); //清除底部powered by ESRI
 
+
     },
+
+
+    //要素点击
+    featureClick() {
+      this.view.popup.autoOpenEnabled = false;
+      
+      this.view.on('click', event => {
+        this.view.hitTest(event).then( response => {
+          if (response.results.length > 0) {
+            let feature = response.results[0];
+            console.log(feature)
+            if (  feature.graphic.layer.id === "businessLayer_01" || feature.graphic.layer.id === "businessLayer_02" ||
+                  feature.graphic.layer.id === "businessLayer_03" || feature.graphic.layer.id === "businessLayer_04"
+            ) {
+              this.view.popup.open({
+                title: feature.graphic.attributes.name,
+                location: feature.mapPoint,
+                content: "加载中",
+              })
+                const p = Vue.extend(featurePopup);
+                let vm = new p({
+                  propsData: {
+                    attributes: feature.graphic.attributes,
+                    layerId: feature.graphic.layer.id
+                  }
+                })
+                vm.$mount();
+                vm.$nextTick(()=>{ this.view.popup.content = vm.$el });
+                vm.$on('modal',  () => { this.openModal(feature.graphic.attributes.name, feature.graphic.attributes, feature.graphic.layer.id) })
+            }
+          }
+        })
+      })
+    },
+
+    // 打开弹窗
+    openModal(title, data, from) {
+      this.modal.visible = true;
+      this.modal.title = title;
+      this.modal.data = data;
+      this.modal.from = from
+    }
 
   },
 

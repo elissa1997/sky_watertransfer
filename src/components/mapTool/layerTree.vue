@@ -12,6 +12,7 @@
         :tree-data="treeData"
         :defaultCheckedKeys="defaultKeys"
         @check="treeCheck"
+        @select="treeClick"
       >
         <img slot="businessLayer_01"  src="/dist/icon/riverPath_blue_128.svg">
         <img slot="businessLayer_02"  src="/dist/icon/pumpStation_red_128.svg">
@@ -124,7 +125,14 @@ export default {
       };
 
       parseTreeJson(this.treeData);
-      return allLayerId
+      return allLayerId.sort();
+    },
+
+    // 树点击
+    treeClick(selectedKeys,e) {
+      let layerId = selectedKeys[0].replace(/-FID\d+/s,``) || undefined;
+      let fid = Number(selectedKeys[0].replace(/businessLayer_\d+-FID/s,``)) || undefined;
+      console.log(selectedKeys);
     }
   },
 

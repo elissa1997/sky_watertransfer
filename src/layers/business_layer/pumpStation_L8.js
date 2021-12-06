@@ -2,15 +2,14 @@
 import {pumpStationList} from "@/network/pumpStation.js"
 
 const axios_params = {
-  action: "getAllJsonS4",
-  level: "30",
+  action: "getAllJsonB4",
   line_cd: "7f73d92fd9bc4d6fad84f2311d96fbaf"
 }
 
 export async function featureLayer() {
   let template = {
-    id: "businessLayer_03",
-    title: "大型闸站",
+    id: "businessLayer_02",
+    title: "八级泵站",
     visible: true,
     labelingInfo: {
       "labelExpressionInfo": {
@@ -29,29 +28,28 @@ export async function featureLayer() {
       "type": "simple",
       "symbol": {
         "type": "picture-marker",
-        "url": "/dist/icon/waterGate_red_128.svg",
+        "url": "/dist/icon/pumpStation_red_128.svg",
         "width": 20,
         "height": 20
-      },
-      "visualVariables": [
-        {
-        "type": "rotation",
-        "field": "angle",
-        "rotationType": "geographic"
-        }
-      ]
+      }
     },
     labelsVisible: true,
     fields: [
-      {"name": "FID", "type": "oid"},
-      {"name": "name", "type": "string"},
-      {"name": "x_coord", "type": "string"},
-      {"name": "y_coord", "type": "string"},
-      {"name": "height", "type": "integer"},
-      {"name": "desc", "type": "string"},
-      {"name": "stcd", "type": "string"},
-      {"name": "angle", "type": "string"},
-      {"name": "desc", "type": "string"},
+      {"type": "oid","name": "FID"},
+      {"type": "string","name": "name"},
+      {"type": "string","name": "stcd"},
+      {"type": "string","name": "number"},
+      {"type": "string","name": "z"},
+      {"type": "string","name": "dwz"},
+      {"type": "string","name": "mpQacc"},
+      {"type": "string","name": "desc"},
+      {"type": "string","name": "mpQi"},
+      {"type": "string","name": "tm"},
+      {"type": "string","name": "omcn"},
+      {"type": "string","name": "omPwr"},
+      {"type": "string","name": "installedPower"},
+      {"type": "string","name": "q"},
+      {"type": "string","name": "designZ"}
     ],
     outFields: ["*"],
     geometryType: "point",

@@ -4,6 +4,7 @@ export async function initArcGisJs() {
   let moduleJsPath = [
     "esri/Basemap",
     "esri/Map",
+    "esri/WebMap",
     'esri/views/MapView',
     "esri/core/watchUtils",
     "esri/core/promiseUtils",
@@ -37,8 +38,10 @@ export async function initArcGisJs() {
   ]
   let moduleNames = moduleJsPath.map(path => (path.match('[^/]+(?!.*/)')[0]));
   let options = {
-    url: "http://10.34.0.115:8383/dist/arcgis/4.18/init.js",
-    css: "http://10.34.0.115:8383/dist/arcgis/4.18/esri/css/main.css"
+    url: "http://10.34.192.71:8080/static/arcgis/4.19/init.js",
+    css: "http://10.34.192.71:8080/static/arcgis/4.19/esri/css/main.css"
+    // url: "https://js.arcgis.com/4.20/",
+    // css:"https://js.arcgis.com/4.20/esri/themes/light/main.css",
   };
   let arcgisModules = await loadModules(moduleJsPath, options);
 

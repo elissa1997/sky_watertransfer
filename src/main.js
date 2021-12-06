@@ -5,6 +5,8 @@ import router from './router';
 // import 'ant-design-vue/dist/antd.css';
 import { message } from 'ant-design-vue';
 import '@/assets/public.scss';
+import '@/assets/esri_reset.scss';
+import '@/assets/ant_reset.scss';
 import {install} from '@icon-park/vue/es/all';
 import { initArcGisJs } from "@/util/loadGisModules";
 Vue.config.productionTip = false
