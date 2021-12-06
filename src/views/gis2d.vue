@@ -3,7 +3,7 @@
     <div class="mapView" id="mapView"></div>
     <template v-if="map">
       <baseLayerSwitch :map="map"/>
-      <layerTree @checkedChange="checkedChange(arguments)"/>
+      <layerTree @checkedChange="checkedChange(arguments)" @treeClick="treeClick(arguments)"/>
     </template>
 
     <a-modal v-model="modal.visible" :title="modal.title" :footer="null">
@@ -22,9 +22,9 @@ import baseLayerSwitch from "@/components/mapTool/baseLayerSwitch.vue";
 import layerTree from "@/components/mapTool/layerTree.vue";
 import modalConten from "@/components/modal/index.vue";
 
-import {initLayers} from "@/util/baseLayer.js";
+import {initLayers} from "@/layers/baseLayer.js";
 import { handlerLayerByTree, loadDefaultLayers } from "@/layers/layerAgent.js"
-
+import { centerList } from "@/config/area_center.js"
 
 export default {
   name: "gis2d",
@@ -48,11 +48,35 @@ export default {
     }
   },
   methods: {
-    // 控制树点击
+    // 控制树勾选
     checkedChange(data) {
-      console.log("控制树点击");
+      console.log("控制树勾选");
       handlerLayerByTree(this.map, this.view, data[0], data[1]);
     },
+
+    // 控制树点击
+    treeClick(data) {
+      let type = data[0];
+      let id = data[1];
+      if (type === "featurePoint") {
+        let layer = this.map.findLayerById(id.layerId);
+        if (layer) {
+          let feature = layer.source.items.filter(item=>item.attributes.FID == Number(id.fid))
+          this.view.goTo({
+            target: feature[0].geometry,
+            zoom: 14
+          })
+        }else{this.$message.warning('此图层还未加载，请先勾选此图层任意项目');}
+      }else{
+        let geometry = centerList(id);
+        this.view.goTo({
+          target: geometry,
+          zoom: 12
+        })
+      }
+    },
+
+
     // 初始化创建地图
     async createdView() {
 

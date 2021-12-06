@@ -130,9 +130,20 @@ export default {
 
     // 树点击
     treeClick(selectedKeys,e) {
-      let layerId = selectedKeys[0].replace(/-FID\d+/s,``) || undefined;
-      let fid = Number(selectedKeys[0].replace(/businessLayer_\d+-FID/s,``)) || undefined;
-      console.log(selectedKeys);
+      let select = selectedKeys[0];
+      let regex = /(businessLayer_\d+-FID)|(sz)|(hb)|(bb)/m;
+      if(regex.exec(select)){
+        let featurePointRegex = /businessLayer_\d+-FID\d+/m;
+        if (featurePointRegex.exec(select)) {
+          // 要素点点击
+          let layerId = select.replace(/-FID\d+/s,``);
+          let fid = select.replace(/businessLayer_\d+-FID/s,``);
+          this.$emit('treeClick', 'featurePoint', {layerId,fid});
+        }else{
+          // 地区点击
+          this.$emit('treeClick', 'area', select);
+        }
+      }
     }
   },
 
