@@ -23,7 +23,7 @@ import {  Table } from 'ant-design-vue';
 import loading from "@/components/modal/loading.vue"
 import noData from "@/components/modal/noData.vue"
 import dateRangeGroup from "@/components/modal/dateRangeGroup.vue";
-import waterStatisticsChart from "@/components/modal/gateStation/waterStatisticsChart.vue";
+import waterStatisticsChart from "@/components/modal/pumpStation/waterStatisticsChart.vue";
 
 import { transferApi } from "@/network/liveData.js";
 export default {
@@ -135,7 +135,6 @@ export default {
   },
   mounted() {
     // this.dateUnfied();
-    let str = "2021-12-07 23:00:00"
   },
   computed: {
     getWaterStatisticsParams: function () {
@@ -144,7 +143,7 @@ export default {
         stcd: this.attributes.stcd,
         startTime: this.unfiedDate[0],
         endTime: this.unfiedDate[1],
-        type: "2"
+        type: "1"
       }
     }
   },

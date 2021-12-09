@@ -79,7 +79,7 @@ export default {
           {key: "z",name: "闸上水位"},
           {key: "dwz",name: "闸下水位"},
           {key: "diversionZ",name: "引水水位"},
-          {key: "q",name: "设计流量"},
+          {key: "q",name: "流量"},
           {key: "designQ",name: "设计流量"},
           {key: "number",name: "孔数"},
           // {key: "gateH",name: "孔门开度"},

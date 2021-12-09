@@ -1,21 +1,41 @@
 <template>
   <div class="tabIndex">
     <a-tabs v-model="activeKey">
-      <a-tab-pane key="1" tab="实时水位">Content of Tab Pane 1</a-tab-pane>
-      <a-tab-pane key="2" tab="设备详情" force-render>Content of Tab Pane 2</a-tab-pane>
-      <a-tab-pane key="3" tab="水量统计">Content of Tab Pane 3</a-tab-pane>
+      <a-tab-pane key="1" tab="实时水位">
+        <liveWaterLevel v-if="activeKey === '1'" :attributes="attributes"/>
+      </a-tab-pane>
+      <a-tab-pane key="2" tab="设备详情" force-render>
+        <deviceStatus v-if="activeKey === '2'" :attributes="attributes"/>
+      </a-tab-pane>
+      <a-tab-pane key="3" tab="水量统计">
+        <waterStatistics v-if="activeKey === '3'" :attributes="attributes"/>
+      </a-tab-pane>
     </a-tabs>
   </div>
 </template>
 
 <script>
+import liveWaterLevel from "@/components/modal/pumpStation/liveWaterLevel.vue";
+import deviceStatus from "@/components/modal/pumpStation/deviceStatus.vue";
+import waterStatistics from "@/components/modal/pumpStation/waterStatistics.vue";
+
 import { Tabs } from 'ant-design-vue';
 
 export default {
   name: "tabIndex",
+  props: {
+    attributes: {
+      type: Object,
+      default: undefined
+    }
+  },
   components: {
     ATabs:Tabs,
-    ATabPane:Tabs.TabPane
+    ATabPane:Tabs.TabPane,
+
+    liveWaterLevel,
+    deviceStatus,
+    waterStatistics
   },
   data() {
     return {
