@@ -1,5 +1,5 @@
 // 八级泵站图层设置
-import {pumpStationList} from "@/network/pumpStation.js"
+import {transferApi} from "@/network/liveData.js"
 
 const axios_params = {
   action: "getAllJsonS4",
@@ -53,7 +53,7 @@ export async function featureLayer() {
     source: []
   }
 
-  await pumpStationList(axios_params).then(res => {
+  await transferApi(axios_params).then(res => {
     template.source = res.source;
   })
 

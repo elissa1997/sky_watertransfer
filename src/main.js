@@ -1,6 +1,8 @@
 import Vue from 'vue';
 import App from './App.vue';
 import router from './router';
+import dayjs from "dayjs"
+import * as echarts from 'echarts';
 // import Antd from 'ant-design-vue';
 // import 'ant-design-vue/dist/antd.css';
 import { message } from 'ant-design-vue';
@@ -15,6 +17,8 @@ const initParamsStart = async () => {
   try {
     Vue.prototype.$arcgisModules = await initArcGisJs();
     Vue.prototype.$message = message;
+    Vue.prototype.$dayjs = dayjs;
+    Vue.prototype.$echarts = echarts;
   } catch (error) {
     console.log(error);
   }

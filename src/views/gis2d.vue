@@ -6,9 +6,7 @@
       <layerTree @checkedChange="checkedChange(arguments)" @treeClick="treeClick(arguments)"/>
     </template>
 
-    <a-modal v-model="modal.visible" :title="modal.title" :footer="null">
-      <modalConten v-if="modal.visible" :from="modal.from" :data="modal.data"/>
-    </a-modal>
+    <gisModal :modal="modal"/>
 
   </div>
 </template>
@@ -20,7 +18,7 @@ import Vue from 'vue'
 import featurePopup from "@/components/modal/featurePopup.vue";
 import baseLayerSwitch from "@/components/mapTool/baseLayerSwitch.vue";
 import layerTree from "@/components/mapTool/layerTree.vue";
-import modalConten from "@/components/modal/index.vue";
+import gisModal from "@/components/modal/index.vue";
 
 import {initLayers} from "@/layers/baseLayer.js";
 import { handlerLayerByTree, loadDefaultLayers } from "@/layers/layerAgent.js"
@@ -33,7 +31,7 @@ export default {
     featurePopup,
     baseLayerSwitch,
     layerTree,
-    modalConten
+    gisModal
   },
   data() {
     return {

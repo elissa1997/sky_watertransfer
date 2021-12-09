@@ -5,7 +5,7 @@
 - [x] IconPark
 - [x] Arcgis
 - [x] AntVue(按需)
-- [ ] dayjs
+- [x] dayjs
 - [ ] echarts
 - [ ] gcoord
 - [ ] qs

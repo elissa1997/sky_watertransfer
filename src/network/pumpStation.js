@@ -1,7 +1,7 @@
 import {instance_api} from "./axios";
 
-// 泵站列表
-export function pumpStationList(params) {
+// 泵站/闸站列表
+export function stationList(params) {
   return instance_api({
     url: 'indexZBController.api',
     method: 'get',
