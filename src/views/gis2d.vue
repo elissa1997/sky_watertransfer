@@ -4,6 +4,7 @@
     <template v-if="map">
       <baseLayerSwitch :map="map"/>
       <layerTree @checkedChange="checkedChange(arguments)" @treeClick="treeClick(arguments)"/>
+      <infoPanel/>
     </template>
 
     <gisModal :modal="modal"/>
@@ -18,6 +19,7 @@ import Vue from 'vue'
 import featurePopup from "@/components/modal/featurePopup.vue";
 import baseLayerSwitch from "@/components/mapTool/baseLayerSwitch.vue";
 import layerTree from "@/components/mapTool/layerTree.vue";
+import infoPanel from "@/components/mapTool/infoPanel/tabIndex.vue";
 import gisModal from "@/components/modal/index.vue";
 
 import {initLayers} from "@/layers/baseLayer.js";
@@ -31,6 +33,7 @@ export default {
     featurePopup,
     baseLayerSwitch,
     layerTree,
+    infoPanel,
     gisModal
   },
   data() {

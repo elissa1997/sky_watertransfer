@@ -59,6 +59,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+  $fullWidth: 490px;
   #baseMapSwitch {
     display: flex;
     position: absolute;
@@ -70,7 +71,7 @@ export default {
     // box-shadow: 0px 0px 10px #0000002e;
     // transition: all cubic-bezier(0.46, 0.03, 0.52, 0.96) 0.5s;
 
-    width: 427px;
+    width: $fullWidth;
     overflow: hidden;
 
     @include grossGlass;
@@ -79,7 +80,7 @@ export default {
   }
 
   .warp {
-    width: 427px;
+    width: calc($fullWidth - 34px);
     display: flex;
     align-items: center;
     justify-content: space-evenly;
