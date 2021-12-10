@@ -162,7 +162,7 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
-#deviceChart{}
+// #deviceChart{}
 
 #chart {
   margin-top: 10px;

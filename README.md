@@ -6,7 +6,7 @@
 - [x] Arcgis
 - [x] AntVue(按需)
 - [x] dayjs
-- [ ] echarts
+- [x] echarts
 - [ ] gcoord
 - [ ] qs
 - [ ] v-viewer
