@@ -4,6 +4,7 @@
     <template v-if="map">
       <baseLayerSwitch :map="map"/>
       <layerTree @checkedChange="checkedChange(arguments)" @treeClick="treeClick(arguments)"/>
+      <overViewPic/>
       <infoPanel/>
     </template>
 
@@ -20,6 +21,8 @@ import featurePopup from "@/components/modal/featurePopup.vue";
 import baseLayerSwitch from "@/components/mapTool/baseLayerSwitch.vue";
 import layerTree from "@/components/mapTool/layerTree.vue";
 import infoPanel from "@/components/mapTool/infoPanel/tabIndex.vue";
+import overViewPic from "@/components/button/overViewPic.vue";
+
 import gisModal from "@/components/modal/index.vue";
 
 import {initLayers} from "@/layers/baseLayer.js";
@@ -34,6 +37,7 @@ export default {
     baseLayerSwitch,
     layerTree,
     infoPanel,
+    overViewPic,
     gisModal
   },
   data() {

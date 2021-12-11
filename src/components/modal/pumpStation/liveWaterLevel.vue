@@ -1,27 +1,30 @@
 <template>
   <div id="liveWaterLevel">
-
-    <div class="operat">
-      <a-range-picker v-model="dateRange" valueFormat="YYYY-MM-DD:HH" format="YYYY-MM-DD:HH" :showTime="{valueFormat:'HH',format:'HH'}"/>
-      <div class="btnGroup">
-        <a-button class="btn" @click="openFlowModal">水位流量</a-button>
+    <loading v-if="loading"/>
+    <template v-else>
+      <div class="operat">
+        <a-range-picker v-model="dateRange" valueFormat="YYYY-MM-DD:HH" format="YYYY-MM-DD:HH" :showTime="{valueFormat:'HH',format:'HH'}"/>
+        <div class="btnGroup">
+          <a-button class="btn" @click="openFlowModal">水位流量</a-button>
+        </div>
       </div>
-    </div>
-    <!-- {{attributes}} -->
-    <noData v-if="chartData.time.length === 0"/>
-    <chart v-else class="chart" :chartData="chartData"/>
+      <!-- {{attributes}} -->
+      <noData v-if="chartData.time.length === 0"/>
+      <chart v-else class="chart" :chartData="chartData"/>
 
-    <a-modal v-model="modal.visible" :title="modal.title" :footer="null" centered :width="600">
-      <div v-if="modal.title === '水位流量历史数据'">
-        <a-table :columns="flowModalData.columns" :data-source="flowModalData.data" rowKey="tm" size="small" />
-      </div>
-    </a-modal>
+      <a-modal v-model="modal.visible" :title="modal.title" :footer="null" centered :width="600">
+        <div v-if="modal.title === '水位流量历史数据'">
+          <a-table :columns="flowModalData.columns" :data-source="flowModalData.data" rowKey="tm" size="small" />
+        </div>
+      </a-modal>
+    </template>
   </div>
 </template>
 
 <script>
-import noData from "@/components/public/noData.vue"
-import chart from "@/components/modal/pumpStation/waterLevelChart.vue"
+import loading from "@/components/public/loading.vue";
+import noData from "@/components/public/noData.vue";
+import chart from "@/components/modal/pumpStation/waterLevelChart.vue";
 
 import { DatePicker, Button, Table } from 'ant-design-vue';
 import { transferApi } from "@/network/liveData.js";
@@ -38,12 +41,13 @@ export default {
     ARangePicker:DatePicker.RangePicker,
     AButton:Button,
     ATable:Table,
-
+    loading,
     noData,
     chart
   },
   data() {
     return {
+      loading: false,
       dateRange: [],
       modal: {
         visible: false,
@@ -77,8 +81,8 @@ export default {
     },
 
     //获取数据
-    getData() {
-      transferApi(this.chartParams).then(res=>{
+    async getData() {
+      await transferApi(this.chartParams).then(res=>{
         // console.log(res.obj);
         this.handlerRawData(res.obj);
         this.flowModalData.data = res.obj.all;
@@ -123,8 +127,10 @@ export default {
   },
   watch: {
     dateRange: {
-      handler() {
-        this.getData();
+      async handler() {
+        this.loading = true;
+        await this.getData();
+        this.loading = false;
       },
       immediate: false,
       deep: true
