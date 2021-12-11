@@ -20,7 +20,7 @@
 </template>
 
 <script>
-import noData from "@/components/modal/noData.vue"
+import noData from "@/components/public/noData.vue"
 import chart from "@/components/modal/pumpStation/waterLevelChart.vue"
 
 import { DatePicker, Button, Table } from 'ant-design-vue';

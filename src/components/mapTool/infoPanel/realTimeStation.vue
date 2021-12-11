@@ -59,7 +59,7 @@
 import { Badge, Table, Tooltip } from 'ant-design-vue';
 
 import {transferApi} from "@/network/liveData.js";
-import loading from "@/components/modal/loading.vue";
+import loading from "@/components/public/loading.vue";
 
 export default {
   name: "realTimeStation",
@@ -114,6 +114,7 @@ export default {
           this.gateStationList.data.push(element.attributes)
         });
         this.formatGateStationList();
+        this.resortGateStationList();
       })
 
       // 获取泵站数据
@@ -124,13 +125,12 @@ export default {
         });
         this.formatPumpStationList();
       })
-      setTimeout(() => {
-        this.loading = false
-      }, 100);
+
+      this.loading = false;
     },
 
+    // 格式化闸站数据
     formatGateStationList() {
-      // 时间格式化
       this.gateStationList.data.map(ele => {
         ele.tm = this.$dayjs(ele.tm).format("MM-DD HH:mm");
         ele.z = parseFloat(ele.z.substring(0,ele.z.length-1)).toFixed(2) + "m";
@@ -143,6 +143,19 @@ export default {
       })
     },
 
+    // 手动指定闸站顺序
+    resortGateStationList() {
+      let manual = ["何巷闸","新胡洼闸","西坝口闸"].reverse();
+      manual.forEach(name => {
+        this.gateStationList.data.map((item,index) => {
+          if(item.name == name){
+              this.gateStationList.data.unshift(this.gateStationList.data.splice(index , 1)[0]);
+          }
+        })
+      })
+    },
+
+    // 格式化泵站数据
     formatPumpStationList() {
       this.pumpStationList.data.map(ele => {
         ele.tm = (ele.tm !== "-")?this.$dayjs(ele.tm).format("MM-DD HH:mm"):"-";

@@ -7,7 +7,7 @@
 </template>
 
 <script>
-import loading from "@/components/modal/loading.vue";
+import loading from "@/components/public/loading.vue";
 
 import { DatePicker } from 'ant-design-vue';
 import { transferApi } from "@/network/liveData.js";

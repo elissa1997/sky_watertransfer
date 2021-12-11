@@ -33,8 +33,8 @@
 </template>
 
 <script>
-import noData from "@/components/modal/noData.vue";
-import loading from "@/components/modal/loading.vue";
+import noData from "@/components/public/noData.vue";
+import loading from "@/components/public/loading.vue";
 import gateChart from "@/components/modal/gateStation/gateChart.vue";
 
 import { transferApi } from "@/network/liveData.js";

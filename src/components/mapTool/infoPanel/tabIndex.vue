@@ -8,7 +8,7 @@
         <realTimeStation v-if="activeKey === '2'"/>
       </a-tab-pane>
       <a-tab-pane key="3" tab="取水信息">
-
+        <waterUser v-if="activeKey === '3'"/>
       </a-tab-pane>
     </a-tabs>
   </div>
@@ -16,7 +16,8 @@
 
 <script>
 import { Tabs } from 'ant-design-vue';
-import realTimeStation from "@/components/mapTool/infoPanel/realTimeStation.vue"
+import realTimeStation from "@/components/mapTool/infoPanel/realTimeStation.vue";
+import waterUser from "@/components/mapTool/infoPanel/waterUser.vue";
 
 export default {
   name: "tabIndex",
@@ -25,7 +26,8 @@ export default {
     ATabs:Tabs,
     ATabPane:Tabs.TabPane,
 
-    realTimeStation
+    realTimeStation,
+    waterUser
   },
   data() {
     return {

@@ -20,8 +20,8 @@
 <script>
 import {  Table } from 'ant-design-vue';
 
-import loading from "@/components/modal/loading.vue"
-import noData from "@/components/modal/noData.vue"
+import loading from "@/components/public/loading.vue"
+import noData from "@/components/public/noData.vue"
 import dateRangeGroup from "@/components/modal/dateRangeGroup.vue";
 import waterStatisticsChart from "@/components/modal/pumpStation/waterStatisticsChart.vue";
 
