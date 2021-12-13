@@ -28,13 +28,13 @@ module.exports = {
                 '^/arcgis': 'arcgis'//process.env.PATH_REWRITE ||
             }
         },
-        // '/terrain': {
-        //     target:  'http://10.34.0.118:8081' ,
-        //     changeOrigin: true,
-        //     pathRewrite: {
-        //     '^/terrain': 'terrain' 
-        //     }
-        // }
+        '/local': {
+            target:  'http://10.34.192.118:18080' ,
+            changeOrigin: true,
+            pathRewrite: {
+            '^/local': 'ahjs' 
+            }
+        }
     }
   },
 

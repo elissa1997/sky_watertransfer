@@ -8,7 +8,7 @@
         <realTimeStation v-if="activeKey === '2'"/>
       </a-tab-pane>
       <a-tab-pane key="3" tab="取水信息">
-        <waterUser v-if="activeKey === '3'"/>
+        <waterUser v-if="activeKey === '3'" @waterUserAllTable="waterUserAllTable"/>
       </a-tab-pane>
     </a-tabs>
   </div>
@@ -34,7 +34,11 @@ export default {
       activeKey: "1"
     }
   },
-  methods: {},
+  methods: {
+    waterUserAllTable(data) {
+      this.$emit('waterUserAllTable',data);
+    }
+  },
   mounted() {},
   watch: {}
 }

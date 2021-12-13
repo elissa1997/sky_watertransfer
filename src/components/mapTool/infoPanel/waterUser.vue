@@ -21,7 +21,7 @@
           <div class="lable">取水户</div>  <div class="value">{{waterUseVolGroup.num}}</div>
         </div>
 
-        <a-button type="primary">
+        <a-button type="primary" @click="allTable">
           <icon-table theme="outline" size="16" fill="#ffffff" :strokeWidth="3"/>
           详细表格
         </a-button>
@@ -184,6 +184,10 @@ export default {
     foldItem(item) {
       item.collapse = !item.collapse;
       this.$forceUpdate();
+    },
+
+    allTable() {
+      this.$emit('waterUserAllTable',this.cods);
     }
 
 
@@ -210,7 +214,8 @@ export default {
 <style lang="scss" scoped>
 #waterUser{
   padding: 10px;
-  // min-height: 100%;
+  height: calc(60vh - 46px);
+  overflow-y: auto;
 }
 
 .card {
@@ -225,7 +230,7 @@ export default {
   display: flex;
   justify-content: space-around;
   align-items: center;
-
+  box-shadow: 0px 3px 8px -5px #00000036;
   .name {
     font-size: 16px;
     font-weight: 600;

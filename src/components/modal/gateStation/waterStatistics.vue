@@ -22,7 +22,7 @@ import {  Table } from 'ant-design-vue';
 
 import loading from "@/components/public/loading.vue"
 import noData from "@/components/public/noData.vue"
-import dateRangeGroup from "@/components/modal/dateRangeGroup.vue";
+import dateRangeGroup from "@/components/public/dateRangeGroup.vue";
 import waterStatisticsChart from "@/components/modal/gateStation/waterStatisticsChart.vue";
 
 import { transferApi } from "@/network/liveData.js";

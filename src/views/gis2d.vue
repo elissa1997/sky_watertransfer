@@ -4,8 +4,9 @@
     <template v-if="map">
       <baseLayerSwitch :map="map"/>
       <layerTree @checkedChange="checkedChange(arguments)" @treeClick="treeClick(arguments)"/>
+      <projectPlan @openPlan="openProjectPlan"/>
       <overViewPic/>
-      <infoPanel/>
+      <infoPanel @waterUserAllTable="openWaterUserAllTable"/>
     </template>
 
     <gisModal :modal="modal"/>
@@ -21,6 +22,7 @@ import featurePopup from "@/components/modal/featurePopup.vue";
 import baseLayerSwitch from "@/components/mapTool/baseLayerSwitch.vue";
 import layerTree from "@/components/mapTool/layerTree.vue";
 import infoPanel from "@/components/mapTool/infoPanel/tabIndex.vue";
+import projectPlan from "@/components/button/projectPlan.vue";
 import overViewPic from "@/components/button/overViewPic.vue";
 
 import gisModal from "@/components/modal/index.vue";
@@ -37,6 +39,7 @@ export default {
     baseLayerSwitch,
     layerTree,
     infoPanel,
+    projectPlan,
     overViewPic,
     gisModal
   },
@@ -186,6 +189,14 @@ export default {
       this.modal.title = title;
       this.modal.data = data;
       this.modal.from = from
+    },
+
+    openProjectPlan(data) {
+      this.openModal("工程概况", data, "projectPlan");
+    },
+
+    openWaterUserAllTable(data) {
+      this.openModal("全部取水户列表", data, "waterUserAllTable");
     }
 
   },

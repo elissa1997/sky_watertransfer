@@ -1,6 +1,6 @@
 <template>
   <div id="overViewPic">
-    <a-button type="primary" @click="overview_open">调水概化图</a-button>
+    <a-button type="primary" size="large" @click="openOverview">调水概化图</a-button>
   </div>
 </template>
 
@@ -27,7 +27,7 @@ export default {
     }
   },
   methods: {
-    overview_open() {
+    openOverview() {
       const $viewer = this.$viewerApi({
         options:this.options,
         images: this.images
