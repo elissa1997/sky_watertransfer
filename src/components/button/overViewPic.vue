@@ -1,6 +1,10 @@
 <template>
   <div id="overViewPic">
-    <a-button type="primary" size="large" @click="openOverview">调水概化图</a-button>
+    
+    <a-button type="primary" size="large" @click="openOverview">
+      <icon-clue theme="outline" size="16" fill="#ffffff" :strokeWidth="3"/>
+      调水概化图
+    </a-button>
   </div>
 </template>
 
@@ -45,5 +49,17 @@ export default {
   position: absolute;
   bottom: 10px;
   right: 10px;
+
+  ::v-deep .ant-btn{
+    width: 135px;
+    display: flex;
+    align-items: center;
+    // padding: 0 8px;
+  }
+
+  ::v-deep .i-icon{
+    height: 21px;
+    margin-right: 5px;
+  }
 }
 </style>

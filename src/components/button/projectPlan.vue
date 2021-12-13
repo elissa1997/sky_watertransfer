@@ -1,6 +1,9 @@
 <template>
   <div id="projectPlan">
-    <a-button type="primary" size="large" @click="openPlan">工程概况</a-button>
+    <a-button type="primary" size="large" @click="openPlan">
+      <icon-building-one theme="outline" size="16" fill="#ffffff" :strokeWidth="3"/>
+      工程概况
+      </a-button>
   </div>
 </template>
 
@@ -31,5 +34,16 @@ export default {
   position: absolute;
   bottom: 60px;
   right: 10px;
+  ::v-deep .ant-btn{
+    width: 135px;
+    display: flex;
+    align-items: center;
+    // padding: 0 8px;
+  }
+
+  ::v-deep .i-icon{
+    height: 21px;
+    margin-right: 5px;
+  }
 }
 </style>

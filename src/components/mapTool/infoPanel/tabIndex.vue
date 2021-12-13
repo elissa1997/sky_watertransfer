@@ -2,7 +2,7 @@
   <div id="tabIndex">
     <a-tabs v-model="activeKey">
       <a-tab-pane key="1" tab="年内调水信息">
-
+        <transferInfo  v-if="activeKey === '1'"/>
       </a-tab-pane>
       <a-tab-pane key="2" tab="测站实时信息">
         <realTimeStation v-if="activeKey === '2'"/>
@@ -16,6 +16,7 @@
 
 <script>
 import { Tabs } from 'ant-design-vue';
+import transferInfo from "@/components/mapTool/infoPanel/transferInfo.vue";
 import realTimeStation from "@/components/mapTool/infoPanel/realTimeStation.vue";
 import waterUser from "@/components/mapTool/infoPanel/waterUser.vue";
 
@@ -25,7 +26,7 @@ export default {
   components: {
     ATabs:Tabs,
     ATabPane:Tabs.TabPane,
-
+    transferInfo,
     realTimeStation,
     waterUser
   },

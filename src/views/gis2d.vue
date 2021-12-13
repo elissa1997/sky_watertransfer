@@ -160,7 +160,7 @@ export default {
             let feature = response.results[0];
             console.log(feature)
             if (  feature.graphic.layer.id === "businessLayer_01" || feature.graphic.layer.id === "businessLayer_02" ||
-                  feature.graphic.layer.id === "businessLayer_03" || feature.graphic.layer.id === "businessLayer_04"
+                  feature.graphic.layer.id === "businessLayer_03"
             ) {
               this.view.popup.open({
                 title: feature.graphic.attributes.name,
@@ -177,6 +177,8 @@ export default {
                 vm.$mount();
                 vm.$nextTick(()=>{ this.view.popup.content = vm.$el });
                 vm.$on('modal',  () => { this.openModal(feature.graphic.attributes.name, feature.graphic.attributes, feature.graphic.layer.id) })
+            }else if ( feature.graphic.layer.id === "businessLayer_08" ) {
+              this.openModal(feature.graphic.attributes.name, feature.graphic.attributes, "businessLayer_08")
             }
           }
         })
