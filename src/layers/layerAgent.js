@@ -60,7 +60,7 @@ export async function handlerLayerByTree(map, view, checkKeys, allLayerId) {
       if (!isLoadOnMap) {
         // 地图未加载该图层，先加载图层 
         
-        // console.log(id);
+        console.log(id);
         let layer = new arcgisModules.FeatureLayer(await layerObj[id].featureLayer());
         // layer.visible = true;
         map.add(layer);
@@ -92,7 +92,7 @@ export async function handlerLayerByTree(map, view, checkKeys, allLayerId) {
     }
     
   }
-  console.log("默认图层加载完成");
+  // console.log("默认图层加载完成");
 }
 
 export async function layerTest(map) {

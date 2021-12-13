@@ -46,7 +46,7 @@ export async function featureLayer() {
     source: []
   }
 
-  await baseJson("layer/gateStation_small.json").then(res => {
+  await baseJson("layer/culvert.json").then(res => {
     template.source = res;
   })
   return template;
