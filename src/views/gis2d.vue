@@ -6,7 +6,7 @@
       <layerTree @checkedChange="checkedChange(arguments)" @treeClick="treeClick(arguments)"/>
       <projectPlan @openPlan="openProjectPlan"/>
       <overViewPic/>
-      <infoPanel @waterUserAllTable="openWaterUserAllTable"/>
+      <infoPanel @waterUserAllTable="openWaterUserAllTable" @openCommand="openCommand"/>
     </template>
 
     <gisModal :modal="modal"/>
@@ -199,6 +199,10 @@ export default {
 
     openWaterUserAllTable(data) {
       this.openModal("全部取水户列表", data, "waterUserAllTable");
+    },
+
+    openCommand(data) {
+      this.openModal("调水指令", data, "transferCommand");
     }
 
   },

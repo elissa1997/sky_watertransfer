@@ -2,7 +2,7 @@
   <div id="tabIndex">
     <a-tabs v-model="activeKey">
       <a-tab-pane key="1" tab="年内调水信息">
-        <transferInfo  v-if="activeKey === '1'"/>
+        <transferInfo  v-if="activeKey === '1'" @openCommand="openCommand"/>
       </a-tab-pane>
       <a-tab-pane key="2" tab="测站实时信息">
         <realTimeStation v-if="activeKey === '2'"/>
@@ -38,6 +38,10 @@ export default {
   methods: {
     waterUserAllTable(data) {
       this.$emit('waterUserAllTable',data);
+    },
+
+    openCommand(data) {
+      this.$emit('openCommand',data)
     }
   },
   mounted() {},

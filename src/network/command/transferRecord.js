@@ -8,3 +8,11 @@ export function transferRecordList(params) {
     params
   })
 }
+
+export function transferRecordDetail(params) {
+  return instance_command_test({
+    url: 'gateway/only.api',
+    method: 'get',
+    params
+  })
+}

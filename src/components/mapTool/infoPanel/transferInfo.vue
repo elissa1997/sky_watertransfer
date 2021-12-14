@@ -20,11 +20,11 @@
 
             <div class="item">
               <div class="lable">调水总量</div>
-              <div class="value">{{item.totalWw}}</div>
+              <div class="value">{{item.totalWw}}(万m³)</div>
             </div>
 
             <div class="item">
-              <!-- {{item.status}} -->
+              <!-- {{item.status === '0 '}} -->
               <a-tag color="green" v-if="item.status === '1'">调水已结束</a-tag>
               <a-tag color="blue" v-if="item.status === '0'">调水进行中</a-tag>
             </div>
@@ -35,19 +35,29 @@
           <div class="operat">
             <a-button type="default" @click="foldItem(item)">
               <component :is="(item.collapse)?'icon-up-c':'icon-down-c'" theme="outline" size="16" fill="#969696" :strokeWidth="3"/>
-              查看详情
+              每日水量
             </a-button>
 
-            <a-button type="default" @click="foldItem(item)">
+            <a-button type="default">
               <icon-broadcast-one theme="outline" size="16" fill="#969696" :strokeWidth="3"/>
               流程概览
             </a-button>
 
-            <a-button type="default" @click="foldItem(item)">
+            <a-button type="default" @click="openCommand(item)">
               <icon-workbench theme="outline" size="16" fill="#969696" :strokeWidth="3"/>
               调水指令
             </a-button>
 
+          </div>
+
+          <div class="dailyWaterVolume" v-if="item.collapse">
+            <!-- <a-alert message="" type="info" show-icon /> -->
+            <div class="tips">各泵站水量单位为 万m³</div>
+            <a-table class="table" :columns="dailyWaterVolume.colums" :data-source="dailyWaterVolume.data" rowKey="ts" size="small" :pagination="false">
+              <!-- <div slot="wat_t_amnt_ww" slot-scope="text, record">{{record.wat_t_amnt_ww.toFixed(2)}}</div>
+              <div slot="appr_yr_ww" slot-scope="text, record">{{record.appr_yr_ww.toFixed(2)}}</div>
+              <div slot="current_year_ww" slot-scope="text, record">{{record.current_year_ww.toFixed(2)}}</div> -->
+            </a-table>
           </div>
 
         </div>
@@ -58,10 +68,10 @@
 </template>
 
 <script>
-import { Table, Button, Tag } from 'ant-design-vue';
+import { Table, Button, Tag, Alert } from 'ant-design-vue';
 import noData from "@/components/public/noData.vue";
 import loading from "@/components/public/loading.vue";
-import { transferRecordList } from "@/network/command/transferRecord.js";
+import { transferRecordList, transferRecordDetail } from "@/network/command/transferRecord.js";
 export default {
   name: "transferInfo",
   props: {},
@@ -69,6 +79,7 @@ export default {
     ATable:Table,
     AButton:Button,
     ATag:Tag,
+    AAlert:Alert,
     noData,
     loading
   },
@@ -76,6 +87,16 @@ export default {
     return {
       loading: false,
       recordList: [],
+      dailyWaterVolume: {
+        colums: [
+          { title: '时间', dataIndex: 'ts' },
+          { title: '固镇站', dataIndex: 'gzbz' },
+          { title: '娄宋站', dataIndex: 'lsbz' },
+          { title: '宿州站', dataIndex: 'szbz' },
+          { title: '四铺站', dataIndex: 'spbz' },
+        ],
+        data: []
+      },
     }
   },
   methods: {
@@ -92,18 +113,38 @@ export default {
       this.loading = false;
     },
 
+    async getTransferRecordDetail(item) {
+      await transferRecordDetail(this.transferRecordDetailParams(item)).then(res => {
+        this.dailyWaterVolume.data = res.data;
+      })
+    },
+
     foldItem(item) {
       item.collapse = !item.collapse;
+      // console.log(item);
+      this.getTransferRecordDetail(item);
+    },
+
+    openCommand(item) {
+      this.$emit('openCommand', item);
     }
   },
   mounted() {
-    // this.getTransferRecordList();
+    this.getTransferRecordList();
   },
   computed: {
     transferRecordListParams: function () {
       return {
         action: "regulationList",
         line_cd: "7f73d92fd9bc4d6fad84f2311d96fbaf"
+      }
+    },
+    transferRecordDetailParams: function () {
+      return function(item){
+        return {
+          action: "regulationStationWwm",
+          regCd: item.reg_cd
+        }
       }
     }
   },
@@ -113,6 +154,8 @@ export default {
 <style lang="scss" scoped>
 #transferInfo{
   padding: 10px;
+  height: calc(60vh - 46px);
+  overflow-y: auto;
 }
 
 .recordList {
@@ -147,10 +190,11 @@ export default {
 
   .operat {
     display: flex;
-    padding: 5px;
+    padding: 10px;
     align-items: center;
     justify-content: space-around;
     border-top: 1px solid #00000018;
+    box-shadow: 0px 3px 8px -5px #00000036;
   }
 
   ::v-deep .i-icon{
@@ -162,6 +206,26 @@ export default {
     display: flex;
     align-items: center;
     padding: 0 8px;
+  }
+
+  .dailyWaterVolume {
+    margin-top: 5px;
+
+    .tips {
+      padding: 5px 10px;
+      margin: 10px 5px 5px 5px;
+      background-color: #f5f5f5;
+      border-radius: 5px;
+    }
+
+    ::v-deep .ant-table-small {
+      border: 0px;
+      > .ant-table-content > .ant-table-body {
+        border-radius: 5px;
+        margin: 0px !important;
+        background-color: #fff;
+      }
+    }
   }
 }
 </style>

@@ -38,7 +38,9 @@ export default {
     width: 135px;
     display: flex;
     align-items: center;
-    // padding: 0 8px;
+    background-color: #0bb408;
+    border: 1px solid #0bb408;
+
   }
 
   ::v-deep .i-icon{

@@ -1,6 +1,6 @@
 <template>
   <div id="modalIndex">
-    <a-modal v-model="modal.visible" :title="modal.title" :footer="null" :width="width" centered v-drag-modal>
+    <a-modal v-model="modal.visible" :title="modal.title" :footer="null" :width="width" destroyOnClose centered v-drag-modal>
       <pumpStation v-if="modal.visible && modal.from === 'businessLayer_02'" :attributes="modal.data"/>
       <gateStation v-if="modal.visible && modal.from === 'businessLayer_03'" :attributes="modal.data"/>
       <pdfView v-if="modal.visible && modal.from === 'projectPlan'" :src="modal.data"/>
@@ -36,6 +36,7 @@ export default {
     return {
       width: 400,
       modalWidthByFrom: {
+        full: ["transferCommand"],
         large: ["businessLayer_08","projectPlan"],
         medium: ["businessLayer_02", "businessLayer_03", "waterUserAllTable"],
         small: []
@@ -48,6 +49,10 @@ export default {
         const element = this.modalWidthByFrom[key];
         if (element.includes(this.modal.from)) {
           switch (key) {
+            case "full":
+            this.width = "99vw";
+            break;
+
             case "large":
             this.width = 1300;
             break;
