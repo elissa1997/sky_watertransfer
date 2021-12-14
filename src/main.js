@@ -11,6 +11,9 @@ import '@/assets/esri_reset.scss';
 import '@/assets/ant_reset.scss';
 import {install} from '@icon-park/vue/es/all';
 import { initArcGisJs } from "@/util/loadGisModules";
+import '@/util/drag.js';
+// Vue.directive('drag',  drag);
+
 Vue.config.productionTip = false
 //加载需要异步查询的参数、数据 如：esri gis模块，将异步方法同步执行完后再初始化vue，
 const initParamsStart = async () => {

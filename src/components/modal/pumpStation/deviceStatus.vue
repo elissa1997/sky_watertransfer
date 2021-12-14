@@ -22,7 +22,7 @@
         </div>
       </div>
 
-      <a-modal v-model="modal.visible" :title="modal.title" :footer="null" centered :width="600">
+      <a-modal v-model="modal.visible" :title="modal.title" :footer="null" centered :width="600" v-drag-modal>
         <div class="gateHightDetail">
           <deviceChart v-if="modal.visible" :chartData="modal.data"/>
         </div>

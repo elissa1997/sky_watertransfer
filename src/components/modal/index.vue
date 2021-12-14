@@ -1,6 +1,6 @@
 <template>
   <div id="modalIndex">
-    <a-modal v-model="modal.visible" :title="modal.title" :footer="null" :width="width" centered>
+    <a-modal v-model="modal.visible" :title="modal.title" :footer="null" :width="width" centered v-drag-modal>
       <pumpStation v-if="modal.visible && modal.from === 'businessLayer_02'" :attributes="modal.data"/>
       <gateStation v-if="modal.visible && modal.from === 'businessLayer_03'" :attributes="modal.data"/>
       <pdfView v-if="modal.visible && modal.from === 'projectPlan'" :src="modal.data"/>

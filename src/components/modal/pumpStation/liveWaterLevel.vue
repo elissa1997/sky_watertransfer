@@ -12,7 +12,7 @@
       <noData v-if="chartData.time.length === 0"/>
       <chart v-else class="chart" :chartData="chartData"/>
 
-      <a-modal v-model="modal.visible" :title="modal.title" :footer="null" centered :width="600">
+      <a-modal v-model="modal.visible" :title="modal.title" :footer="null" centered :width="600" v-drag-modal>
         <div v-if="modal.title === '水位流量历史数据'">
           <a-table :columns="flowModalData.columns" :data-source="flowModalData.data" rowKey="tm" size="small" />
         </div>

@@ -1,16 +1,19 @@
-.ant-modal-content {
-  .ant-modal-header {
-    padding: 10px 15px !important;
-  }
+.ant-modal {
+  padding-bottom: 0px !important;
+  .ant-modal-content {
+    .ant-modal-header {
+      padding: 10px 15px !important;
+    }
+    
+    .ant-modal-close-x {
+      width: 42px !important;
+      height: 42px !important;
+      line-height: 42px !important;
+    }
   
-  .ant-modal-close-x {
-    width: 42px !important;
-    height: 42px !important;
-    line-height: 42px !important;
-  }
-
-  .ant-modal-body {
-    padding: 0px !important;
+    .ant-modal-body {
+      padding: 0px !important;
+    }
   }
 }
 

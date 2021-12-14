@@ -29,7 +29,7 @@ module.exports = {
             }
         },
         '/local': {
-            target:  'http://10.34.192.118:18080' ,
+            target:  'http://192.168.0.110:8080' ,
             changeOrigin: true,
             pathRewrite: {
             '^/local': 'ahjs' 
