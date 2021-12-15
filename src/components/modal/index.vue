@@ -5,7 +5,8 @@
       <gateStation v-if="modal.visible && modal.from === 'businessLayer_03'" :attributes="modal.data"/>
       <pdfView v-if="modal.visible && modal.from === 'projectPlan'" :src="modal.data"/>
       <waterUserAllTable v-if="modal.visible && modal.from === 'waterUserAllTable'" :cods="modal.data"/>
-      <videoIframe  v-if="modal.visible && modal.from === 'businessLayer_08'" :attributes="modal.data"/>
+      <videoIframe v-if="modal.visible && modal.from === 'businessLayer_08'" :attributes="modal.data"/>
+      <command v-if="modal.visible && modal.from === 'transferCommand'"/>
     </a-modal>
   </div>
 </template>
@@ -16,6 +17,7 @@ import pumpStation from "@/components/modal/pumpStation/tabIndex.vue";
 import gateStation from "@/components/modal/gateStation/tabIndex.vue";
 import waterUserAllTable from "@/components/modal/waterUserAllTable.vue";
 import videoIframe from "@/components/modal/videoIframe.vue";
+import command from "@/views/command/index.vue";
 
 export default {
   name: "modalIndex",
@@ -30,7 +32,8 @@ export default {
     pumpStation,
     gateStation,
     waterUserAllTable,
-    videoIframe
+    videoIframe,
+    command
   },
   data() {
     return {
@@ -50,7 +53,7 @@ export default {
         if (element.includes(this.modal.from)) {
           switch (key) {
             case "full":
-            this.width = "99vw";
+            this.width = "calc(98vw - 77px)";
             break;
 
             case "large":
