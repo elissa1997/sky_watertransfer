@@ -11,6 +11,7 @@
 
     <div class="content">
       <plan v-if="status === 0"/>
+      <notice v-if="status === 1"/>
     </div>
     <div class="stepControl">
       <a-button type="primary" @click="nextStep" :disabled="status >= 5">确认执行下一步</a-button>
@@ -21,6 +22,7 @@
 <script>
 import { Steps, Button } from 'ant-design-vue';
 import plan from "@/views/command/plan.vue";
+import notice from "@/views/command/notice.vue";
 
 export default {
   name: "index",
@@ -35,7 +37,8 @@ export default {
     AStep:Steps.Step,
     AButton:Button,
 
-    plan
+    plan,
+    notice
   },
   data() {
     return {

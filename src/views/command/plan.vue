@@ -23,12 +23,17 @@
           360、QQ等国产浏览器请切换为<b>急速模式</b>
         </p>
       </a-upload-dragger>
+
+      <div class="btnGroup">
+        <a-button type="primary">保存</a-button>
+        <a-button>取消</a-button>
+      </div>
     </div>
   </div>
 </template>
 
 <script>
-import { Input, Upload } from 'ant-design-vue';
+import { Input, Upload, Button } from 'ant-design-vue';
 import noData from "@/components/public/noData.vue";
 import pdfView from "@/components/public/pdfView.vue";
 export default {
@@ -37,6 +42,7 @@ export default {
   components: {
     AInput:Input,
     AUploadDragger:Upload.Dragger,
+    AButton:Button,
     noData,
     pdfView
   },
@@ -72,6 +78,14 @@ export default {
       margin-top: 10px;
       height: 40%;
     }
+  }
+}
+
+.btnGroup {
+  margin-top: 10px;
+  text-align: center;
+  ::v-deep .ant-btn:not(:last-child) {
+    margin-right: 20px;
   }
 }
 </style>
