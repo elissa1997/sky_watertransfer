@@ -95,9 +95,6 @@ export default {
     border-bottom-left-radius: 5px;
     border-top-left-radius: 5px;
     box-shadow: 2px 0px 9px -5px #00000059;
-    ::v-deep .i-icon{
-      height: 24px;
-    }
   }
 
 

@@ -59,10 +59,9 @@ export default {
 
     // padding: 0 8px;
   }
-
-  ::v-deep .i-icon{
-    height: 21px;
-    margin-right: 5px;
+  
+  ::v-deep .i-icon {
+    margin-right: 8px;
   }
 }
 </style>

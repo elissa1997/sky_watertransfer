@@ -42,10 +42,9 @@ export default {
     border: 1px solid #0bb408;
 
   }
-
-  ::v-deep .i-icon{
-    height: 21px;
-    margin-right: 5px;
+  
+  ::v-deep .i-icon {
+    margin-right: 8px;
   }
 }
 </style>

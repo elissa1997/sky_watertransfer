@@ -183,9 +183,7 @@ export default {
       @include title_text;
     }
 
-    .i-icon {
-      height: 24px;
-    }
+
   }
 
   .tree {

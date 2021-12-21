@@ -120,10 +120,6 @@ export default {
       .metaItem {
         display: flex;
         align-items: center;
-        ::v-deep .i-icon{
-          height: 20px;
-          margin-right: 10px;
-        }
       }
     }
 

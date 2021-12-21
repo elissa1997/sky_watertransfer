@@ -197,11 +197,6 @@ export default {
     box-shadow: 0px 3px 8px -5px #00000036;
   }
 
-  ::v-deep .i-icon{
-    height: 16px;
-    margin-right: 5px;
-  }
-
   ::v-deep .ant-btn{
     display: flex;
     align-items: center;

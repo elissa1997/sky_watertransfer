@@ -248,12 +248,6 @@ export default {
 
   }
 
-
-  ::v-deep .i-icon{
-    height: 16px;
-    margin-right: 5px;
-  }
-
   ::v-deep .ant-btn{
     display: flex;
     align-items: center;

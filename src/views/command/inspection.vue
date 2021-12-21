@@ -72,8 +72,5 @@ export default {
   display: flex;
   align-items: center;
 
-  ::v-deep  .i-icon {
-    height: 20px;
-  }
 }
 </style>
