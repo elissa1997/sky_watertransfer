@@ -2,6 +2,7 @@
   <div id="gis2d">
     <div class="mapView" id="mapView"></div>
     <template v-if="map">
+      <!-- <displayCommand/> -->
       <baseLayerSwitch :map="map"/>
       <layerTree @checkedChange="checkedChange(arguments)" @treeClick="treeClick(arguments)"/>
       <projectPlan @openPlan="openProjectPlan"/>
@@ -18,13 +19,14 @@
 import { Modal } from 'ant-design-vue';
 Modal.install(Vue);
 import Vue from 'vue'
-import featurePopup from "@/components/modal/featurePopup.vue";
+import displayCommand from "@/components/mapTool/displayCommand.vue";
 import baseLayerSwitch from "@/components/mapTool/baseLayerSwitch.vue";
 import layerTree from "@/components/mapTool/layerTree.vue";
 import infoPanel from "@/components/mapTool/infoPanel/tabIndex.vue";
 import projectPlan from "@/components/button/projectPlan.vue";
 import overViewPic from "@/components/button/overViewPic.vue";
 
+import featurePopup from "@/components/modal/featurePopup.vue";
 import gisModal from "@/components/modal/index.vue";
 
 import {initLayers} from "@/layers/baseLayer.js";
@@ -35,12 +37,13 @@ export default {
   name: "gis2d",
   components: {
     AModal:Modal,
-    featurePopup,
+    displayCommand,
     baseLayerSwitch,
     layerTree,
     infoPanel,
     projectPlan,
     overViewPic,
+    featurePopup,
     gisModal
   },
   data() {

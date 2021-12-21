@@ -3,8 +3,7 @@ import App from './App.vue';
 import router from './router';
 import dayjs from "dayjs"
 import * as echarts from 'echarts';
-// import Antd from 'ant-design-vue';
-// import 'ant-design-vue/dist/antd.css';
+
 import { message } from 'ant-design-vue';
 import '@/assets/public.scss';
 import '@/assets/esri_reset.scss';
