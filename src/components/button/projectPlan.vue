@@ -22,7 +22,7 @@ export default {
   },
   methods: {
     openPlan() {
-      this.$emit('openPlan',"/dist/pdf/[2019]652.pdf");
+      this.$emit('openPlan',"/dist/pdf/2019_652.pdf");
     }
   },
   mounted() {},

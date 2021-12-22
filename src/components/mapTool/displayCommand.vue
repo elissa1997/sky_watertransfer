@@ -2,8 +2,9 @@
   <div id="displayCommand">
     <div class="lable">调水指令</div>
     <marquee-text :duration="8" :repeat="10" class="scrollText" v-if="!loading">
-      <span>&emsp;&emsp;{{command}}&emsp;&emsp;</span>
+      <span>&emsp;&emsp;调度指令测试数据&emsp;&emsp;</span>
     </marquee-text>
+    <div class="switch" @click="loading = !loading"></div>
   </div>
 </template>
 
@@ -32,7 +33,7 @@ export default {
     }
   },
   mounted() {
-    this.getCommand();
+    // this.getCommand();
   },
   computed: {
     transferCommandParams: function () {
@@ -75,5 +76,9 @@ export default {
   color: #ff4d4f;
   font-weight: 700;
   width: calc(100% - 80px);
+}
+
+.switch {
+  width: 2px;
 }
 </style>
