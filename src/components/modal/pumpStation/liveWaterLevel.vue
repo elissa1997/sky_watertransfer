@@ -83,9 +83,13 @@ export default {
     //获取数据
     async getData() {
       await transferApi(this.chartParams).then(res=>{
+        if (res.status != 1) {
+          this.handlerRawData(res.obj);
+          this.flowModalData.data = res.obj.all;
+        }else {
+          
+        }
         // console.log(res.obj);
-        this.handlerRawData(res.obj);
-        this.flowModalData.data = res.obj.all;
       })
     },
 
