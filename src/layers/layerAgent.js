@@ -13,14 +13,15 @@ import * as businessLayer_05 from "@/layers/business_layer/gateStation_small.js"
 import * as businessLayer_06 from "@/layers/business_layer/culvert.js";
 import * as businessLayer_07 from "@/layers/business_layer/lake.js";
 import * as businessLayer_08 from "@/layers/business_layer/video.js";
+import * as businessLayer_09 from "@/layers/business_layer/administrative_division.js";
 
-import * as businessLayer_10 from "@/layers/business_layer/HB_user.js";
-import * as businessLayer_11 from "@/layers/business_layer/HB_storage.js";
-import * as businessLayer_12 from "@/layers/business_layer/HB_line.js";
-import * as businessLayer_13 from "@/layers/business_layer/SZ_user.js";
-import * as businessLayer_14 from "@/layers/business_layer/SZ_storage.js";
-import * as businessLayer_15 from "@/layers/business_layer/SZ_line.js";
-import * as businessLayer_16 from "@/layers/business_layer/BB_user.js";
+import * as businessLayer_30 from "@/layers/business_layer/HB_user.js";
+import * as businessLayer_31 from "@/layers/business_layer/HB_storage.js";
+import * as businessLayer_32 from "@/layers/business_layer/HB_line.js";
+import * as businessLayer_33 from "@/layers/business_layer/SZ_user.js";
+import * as businessLayer_34 from "@/layers/business_layer/SZ_storage.js";
+import * as businessLayer_35 from "@/layers/business_layer/SZ_line.js";
+import * as businessLayer_36 from "@/layers/business_layer/BB_user.js";
 
 const layerObj = {
   businessLayer_01,
@@ -31,14 +32,15 @@ const layerObj = {
   businessLayer_06,
   businessLayer_07,
   businessLayer_08,
+  businessLayer_09,
 
-  businessLayer_10,
-  businessLayer_11,
-  businessLayer_12,
-  businessLayer_13,
-  businessLayer_14,
-  businessLayer_15,
-  businessLayer_16,
+  businessLayer_30,
+  businessLayer_31,
+  businessLayer_32,
+  businessLayer_33,
+  businessLayer_34,
+  businessLayer_35,
+  businessLayer_36,
 };
 
 // 默认加载图层

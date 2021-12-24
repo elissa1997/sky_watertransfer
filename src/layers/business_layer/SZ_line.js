@@ -2,7 +2,7 @@ import {baseJson} from "@/network/staticData.js"
 
 export async function featureLayer(){
   let template = {
-    id: "businessLayer_15",
+    id: "businessLayer_35",
     title: "宿州-线路",
     visible: true,
     // labelingInfo: {
