@@ -225,6 +225,7 @@ export default {
 <style lang="scss" scoped>
   #gis2d {
     position: relative;
+    overflow-x: hidden;
   }
 
   .mapView {

@@ -1,6 +1,10 @@
 <template>
-  <div id="tabIndex">
-    <a-tabs v-model="activeKey">
+  <div id="tabIndex" :class="{collapse: collapse}">
+    <div class="toggle" @click="collapse = !collapse">
+        <component :is="(collapse)?'icon-menu-unfold-one':'icon-menu-fold-one'" theme="outline" size="24" fill="#099e07" :strokeWidth="3"/>
+    </div>
+
+    <a-tabs v-model="activeKey" class="tabs">
       <a-tab-pane key="1" tab="年内调水信息">
         <transferInfo  v-if="activeKey === '1'" @openCommand="openCommand"/>
       </a-tab-pane>
@@ -32,6 +36,7 @@ export default {
   },
   data() {
     return {
+      collapse: false,
       activeKey: "1"
     }
   },
@@ -50,16 +55,44 @@ export default {
 </script>
 <style lang="scss" scoped>
 #tabIndex{
-  @include grossGlass;
-  @include boxShadow;
+
   @include animation_cubic-bezier;
   position: absolute;
   top: 110px;
   right: 10px;
   // padding: 10px;
-  border-radius: 5px;
   // width: 427px;
   width: 490px;
   height: 60vh;
+}
+
+.collapse {
+  right: -495px !important;
+}
+
+.tabs {
+  @include grossGlass;
+  @include boxShadow;
+  border-radius: 5px;
+  ::v-deep .i-icon {
+    margin-right: 8px;
+  }
+}
+
+.toggle {
+  @include grossGlass;
+  @include boxShadow;
+  padding: 5px;
+  // border-radius: 5px;
+  border-top-left-radius: 5px;
+  border-bottom-left-radius: 5px;
+  position: absolute;
+  left: -34px;
+  top: calc((60vh - 34px) / 2);
+  display: flex;
+  align-items: center;
+  ::v-deep .i-icon {
+    margin-right: 0px;
+  }
 }
 </style>
