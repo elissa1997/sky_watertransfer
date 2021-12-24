@@ -12,7 +12,6 @@
 </template>
 
 <script>
-import pdf from 'vue-pdf'
 export default {
   name: "pdfView",
   props: {
@@ -26,23 +25,17 @@ export default {
     }
   },
   components: {
-    pdf
   },
   data() {
     return {
-      numPages: undefined
+
     }
   },
   methods: {
-    getNumPages() {
-      let loadingTask = pdf.createLoadingTask(this.src)
-      loadingTask.promise.then(pdf => {
-        this.numPages = pdf.numPages
-      })
-    },
+
   },
   mounted() {
-    // this.getNumPages();
+
   },
   watch: {}
 }

@@ -24,7 +24,6 @@
     "v-viewer": "^1.6.4",
     "vue": "^2.6.11",
     "vue-marquee-text-component": "^1.2.0",
-    "vue-pdf": "^4.3.0",
     "vue-router": "^3.2.0"
   },
   "devDependencies": {
