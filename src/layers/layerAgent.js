@@ -24,23 +24,23 @@ import * as businessLayer_35 from "@/layers/business_layer/SZ_line.js";
 import * as businessLayer_36 from "@/layers/business_layer/BB_user.js";
 
 const layerObj = {
-  businessLayer_01,
-  businessLayer_02,
-  businessLayer_03,
-  businessLayer_04,
-  businessLayer_05,
-  businessLayer_06,
-  businessLayer_07,
-  businessLayer_08,
-  businessLayer_09,
+  businessLayer_01: {layer: businessLayer_01, index: 1},
+  businessLayer_02: {layer: businessLayer_02, index: 8},
+  businessLayer_03: {layer: businessLayer_03, index: 7},
+  businessLayer_04: {layer: businessLayer_04, index: 6},
+  businessLayer_05: {layer: businessLayer_05, index: 5},
+  businessLayer_06: {layer: businessLayer_06, index: 4},
+  businessLayer_07: {layer: businessLayer_07, index: 3},
+  businessLayer_08: {layer: businessLayer_08, index: 2},
+  businessLayer_09: {layer: businessLayer_09, index: 0},
 
-  businessLayer_30,
-  businessLayer_31,
-  businessLayer_32,
-  businessLayer_33,
-  businessLayer_34,
-  businessLayer_35,
-  businessLayer_36,
+  businessLayer_30: {layer: businessLayer_30, index: 14},
+  businessLayer_31: {layer: businessLayer_31, index: 12},
+  businessLayer_32: {layer: businessLayer_32, index: 10},
+  businessLayer_33: {layer: businessLayer_33, index: 13},
+  businessLayer_34: {layer: businessLayer_34, index: 11},
+  businessLayer_35: {layer: businessLayer_35, index: 9},
+  businessLayer_36: {layer: businessLayer_36, index: 15},
 };
 
 // 默认加载图层
@@ -63,9 +63,10 @@ export async function handlerLayerByTree(map, view, checkKeys, allLayerId) {
         // 地图未加载该图层，先加载图层 
         
         // console.log(id);
-        let layer = new arcgisModules.FeatureLayer(await layerObj[id].featureLayer());
+        let layer = new arcgisModules.FeatureLayer(await layerObj[id].layer.featureLayer());
+        let index = layerObj[id].index;
         // layer.visible = true;
-        map.add(layer);
+        map.add(layer, index);
         
       }else{
         // 地图已加载该图层，visible设为true
