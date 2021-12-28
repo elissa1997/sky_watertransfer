@@ -2,8 +2,8 @@
   <div id="notice">
     <div class="noticeView">
       <div class="operat">
-        <a-button type="primary">添加方案</a-button>
-        <a-button>修改方案</a-button>
+        <a-button type="primary" @click="addNotice">发布预通知</a-button>
+        <a-button>修改通知</a-button>
         <a-button type="primary">确认收到</a-button>
       </div>
       <div class="content">
@@ -74,7 +74,11 @@ export default {
       }
     }
   },
-  methods: {},
+  methods: {
+    addNotice() {
+      this.$emit('addNotice');
+    }
+  },
   mounted() {},
   watch: {}
 }

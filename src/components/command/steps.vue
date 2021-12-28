@@ -13,7 +13,7 @@ export default {
   props: {
     steps: {
       type: Array,
-      default: () => ["调水方案", "调水预通知", "自检上报", "调水巡查", "工作会议", "实时调水"]
+      default: () => ["调水方案", "调水预通知", "自检上报", "调水巡查", "工作会议", "实施调水"]
     },
     current: {
       type: Number,

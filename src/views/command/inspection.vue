@@ -1,7 +1,7 @@
 <template>
   <div id="inspection">
     <div class="operat">
-      <a-button type="primary">添加巡查情况</a-button>
+      <a-button type="primary" @click="addInspection">添加巡查情况</a-button>
     </div>
     <a-table :columns="selfCheckData.colums" :data-source="selfCheckData.data" rowKey="id" :pagination="false" >
       <a-tag color="green" slot="status" slot-scope="status">{{status}}</a-tag>
@@ -50,6 +50,10 @@ export default {
   methods: {
     openDetail(row) {
       console.log(row);
+    },
+
+    addInspection() {
+      this.$emit('addInspection');
     }
   },
   mounted() {},
