@@ -127,7 +127,13 @@ export default {
     // 根据取水户获取水量
     async getWaterUseVolList() {
       await waterUserApi(this.waterUseVolListParams).then(res => {
-        this.waterUseVolList = res.data;
+        this.waterUseVolList = res.data.map(ele => {
+          ele.wat_t_amnt_ww = ele.wat_t_amnt_ww || 0;
+          ele.appr_yr_ww = ele.appr_yr_ww || 0;
+          ele.current_year_ww = ele.current_year_ww || 0;
+
+          return ele;
+        })
         this.groupWaterUseVol();
       })
     },
@@ -167,9 +173,9 @@ export default {
       let used = 0.00;     // 取水量
       let num = 0;         // 数量
       arr.forEach(item => {
-        permit += item.wat_t_amnt_ww;
-        plan += item.appr_yr_ww;
-        used += item.current_year_ww;
+        permit += item.wat_t_amnt_ww || 0;
+        plan += item.appr_yr_ww || 0;
+        used += item.current_year_ww || 0;
         num += 1;
       });
 
