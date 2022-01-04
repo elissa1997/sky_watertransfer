@@ -1,6 +1,6 @@
 <template>
   <div id="modalIndex">
-    <a-modal v-model="modal.visible" :title="modal.title" :footer="null" width="50vw">
+    <a-modal v-model="modal.visible" :title="modal.title" :footer="null" width="40vw">
       <addNotice v-if="modal.visible && modal.from === 'addNotice'" :modalData="modal.data"/>
       <addSelfCheck v-if="modal.visible && modal.from === 'addSelfCheck'" :modalData="modal.data"/>
       <addInspection v-if="modal.visible && modal.from === 'addInspection'" :modalData="modal.data"/>

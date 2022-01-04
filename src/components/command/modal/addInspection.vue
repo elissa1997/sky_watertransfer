@@ -1,7 +1,7 @@
 <template>
   <div id="addInspection">
     <a-form :label-col="{ span: 4 }" :wrapper-col="{ span: 19 }">
-      <a-form-item label="指令下达单位"><a-tag>当前登录用户(上级管理单位)</a-tag></a-form-item>
+      <a-form-item label="巡查单位"><a-tag>当前登录用户(上级管理单位)</a-tag></a-form-item>
       <a-form-item label="巡查内容">
         <a-textarea placeholder="巡查内容" :auto-size="{ minRows: 5, maxRows: 15 }"/>
       </a-form-item>
