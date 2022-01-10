@@ -182,6 +182,8 @@ export default {
                 vm.$on('modal',  () => { this.openModal(feature.graphic.attributes.name, feature.graphic.attributes, feature.graphic.layer.id) })
             }else if ( feature.graphic.layer.id === "businessLayer_08" ) {
               this.openModal(feature.graphic.attributes.name, feature.graphic.attributes, "businessLayer_08")
+            }else if ( feature.graphic.layer.id === "businessLayer_30" || feature.graphic.layer.id === "businessLayer_33" || feature.graphic.layer.id === "businessLayer_36") {
+              this.openModal(feature.graphic.attributes.name, feature.graphic.attributes, "waterUser")
             }
           }
         })

@@ -6,6 +6,7 @@
       <pdfView v-if="modal.visible && modal.from === 'projectPlan'" :src="modal.data"/>
       <waterUserAllTable v-if="modal.visible && modal.from === 'waterUserAllTable'" :cods="modal.data"/>
       <videoIframe v-if="modal.visible && modal.from === 'businessLayer_08'" :attributes="modal.data"/>
+      <waterUser v-if="modal.visible && modal.from === 'waterUser'" :attributes="modal.data"/>
       <command v-if="modal.visible && modal.from === 'transferCommand'"/>
     </a-modal>
   </div>
@@ -17,6 +18,7 @@ import pumpStation from "@/components/modal/pumpStation/tabIndex.vue";
 import gateStation from "@/components/modal/gateStation/tabIndex.vue";
 import waterUserAllTable from "@/components/modal/waterUserAllTable.vue";
 import videoIframe from "@/components/modal/videoIframe.vue";
+import waterUser from "@/components/modal/waterUser/tabIndex.vue";
 import command from "@/views/command/index.vue";
 
 export default {
@@ -33,6 +35,7 @@ export default {
     gateStation,
     waterUserAllTable,
     videoIframe,
+    waterUser,
     command
   },
   data() {
@@ -40,8 +43,8 @@ export default {
       width: 400,
       modalWidthByFrom: {
         full: ["transferCommand"],
-        large: ["businessLayer_08","projectPlan"],
-        medium: ["businessLayer_02", "businessLayer_03", "waterUserAllTable"],
+        large: ["businessLayer_08", "projectPlan"],
+        medium: ["businessLayer_02", "businessLayer_03", "waterUserAllTable", "waterUser"],
         small: []
       }
     }
