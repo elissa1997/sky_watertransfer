@@ -6,32 +6,26 @@
         <a-button>修改通知</a-button>
         <a-button type="primary">确认收到</a-button>
       </div>
-      <div class="content">
+      <div class="content" v-if="notice.content">
         <div class="title">关于印发淮水北调工程水量调度方案的通知</div>
         
         <div class="meta">
           <div class="metaItem">
             <icon-calendar theme="outline" size="20" fill="#7a7a7a" :strokeWidth="3"/>
-            <span>{{$dayjs().format('YYYY-MM-DD')}}</span>
+            <span>{{notice.publishTime}}</span>
           </div>
 
           <div class="metaItem">
             <icon-people theme="outline" size="20" fill="#7a7a7a" :strokeWidth="3"/>
-            <span>淮洪新河河道管理局</span>
+            <span>{{notice.unitName}}</span>
           </div>
         </div>
 
         <div class="contentText">
-          1.4水量调度原则<br />
-          水量调度遵循节水为先、总量控制、定额管理、统筹兼顾的原则。并服从防洪排涝调度，保证防洪安全。优先使用当地地表水，合理利用香涧湖及淮河水。调水期香涧湖及淮河水源区水质达到地表水III类标准。<br />
-          <br />
-          1.5供水范围<br />
-          淮北市(含濉溪县城)、宿州市(含符离集镇)两市工业用水，一般年份考虑蚌埠市香涧湖周边农业灌溉和输水沿线蚌埠市固镇县城、宿州市灵璧县城以及宿州市北部萧县县城的工业发展用水，特别干旱年份以保障重要工业用水为主。<br />
-          <br />
-          1.6供水目标<br />
-          以淮北、宿州两市工业用水为主，兼顾输水沿线城镇补水、农业灌溉和生态用水。
+          {{notice.content}}
         </div>
       </div>
+      <noData v-else/>
     </div>
 
     <div class="receive">
@@ -43,7 +37,9 @@
 </template>
 
 <script>
+import { noticeContent } from "@/network/command/notice.js";
 import { Button, Table, Tag } from 'ant-design-vue';
+import noData from "@/components/public/noData.vue";
 
 export default {
   name: "notice",
@@ -51,7 +47,8 @@ export default {
   components: {
     AButton:Button,
     ATable:Table,
-    ATag:Tag
+    ATag:Tag,
+    noData
   },
   data() {
     return {
@@ -71,15 +68,42 @@ export default {
           {id: "6", name: "贾窝站", type: "市管站点", status: "确认收到", time: "2021-12-17"},
 
         ]
+      },
+      notice: {
+        title: undefined,
+        unitName: undefined,
+        publishTime: undefined,
+        content: undefined
       }
     }
   },
   methods: {
     addNotice() {
       this.$emit('addNotice');
+    },
+    getNoticeContent() {
+      noticeContent(this.getNoticeContent_params).then(res => {
+        if (res.data.length) {
+          this.notice.title = res.data[0].noticeName;
+          this.notice.unitName = res.data[0].initUnitName;
+          this.notice.publishTime = this.$dayjs(res.data[0].createTime).format("YYYY-MM-DD");
+          this.notice.content = res.data[0].workContent;
+        }
+        // console.log(res);
+      })
     }
   },
-  mounted() {},
+  mounted() {
+    this.getNoticeContent();
+  },
+  computed: {
+    getNoticeContent_params: function (params) {
+      return {
+        action: "sendNoticeList",
+        initUnitCode: "10011021"
+      }
+    }
+  },
   watch: {}
 }
 </script>

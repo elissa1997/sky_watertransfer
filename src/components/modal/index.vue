@@ -7,7 +7,7 @@
       <waterUserAllTable v-if="modal.visible && modal.from === 'waterUserAllTable'" :cods="modal.data"/>
       <videoIframe v-if="modal.visible && modal.from === 'businessLayer_08'" :attributes="modal.data"/>
       <waterUser v-if="modal.visible && modal.from === 'waterUser'" :attributes="modal.data"/>
-      <command v-if="modal.visible && modal.from === 'transferCommand'"/>
+      <command v-if="modal.visible && modal.from === 'transferCommand'" :regData="modal.data"/>
     </a-modal>
   </div>
 </template>

@@ -55,7 +55,9 @@ export default {
       this.$emit('addSelfCheck');
     }
   },
-  mounted() {},
+  mounted() {
+    console.log("自检")
+  },
   watch: {}
 }
 </script>
