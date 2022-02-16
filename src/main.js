@@ -13,6 +13,8 @@ import { initArcGisJs } from "@/util/loadGisModules";
 import '@/util/drag.js';
 // Vue.directive('drag',  drag);
 
+import { userInfo } from "@/network/user.js";
+
 Vue.config.productionTip = false
 //加载需要异步查询的参数、数据 如：esri gis模块，将异步方法同步执行完后再初始化vue，
 const initParamsStart = async () => {
@@ -21,6 +23,9 @@ const initParamsStart = async () => {
     Vue.prototype.$message = message;
     Vue.prototype.$dayjs = dayjs;
     Vue.prototype.$echarts = echarts;
+    userInfo().then(res => {
+      console.log(res);
+    })
   } catch (error) {
     console.log(error);
   }
