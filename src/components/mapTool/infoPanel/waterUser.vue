@@ -259,6 +259,10 @@ export default {
     align-items: center;
     padding: 0 8px;
   }
+
+  ::v-deep .i-icon {
+    margin-right: 8px;
+  }
 }
 
 .table {

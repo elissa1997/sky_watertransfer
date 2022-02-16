@@ -74,9 +74,7 @@ export default {
   @include grossGlass;
   @include boxShadow;
   border-radius: 5px;
-  ::v-deep .i-icon {
-    margin-right: 8px;
-  }
+
 }
 
 .toggle {
