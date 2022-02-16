@@ -1,5 +1,14 @@
 <template>
   <div id="transferInfo">
+    <div class="yearSelect">
+      <icon-left-c theme="outline" size="20" fill="#11998e" :strokeWidth="3" @click="year--" style="cursor: pointer;"/>
+      <p class="yearNum">{{year}}</p>
+      <icon-right-c theme="outline" size="20" fill="#11998e" :strokeWidth="3" @click="(year >= Number($dayjs().format('YYYY')))?year = Number($dayjs().format('YYYY')):year++" style="cursor: pointer;"/>
+
+      <a-button type="primary" size="small" style="margin-left: 20px" :disabled="year === Number($dayjs().format('YYYY'))" @click="year = Number($dayjs().format('YYYY'))">
+        回到今年
+      </a-button>
+    </div>
     <loading v-if="loading"/>
     <template v-else>
       <noData v-if="recordList.length === 0"/>
@@ -86,6 +95,7 @@ export default {
   data() {
     return {
       loading: false,
+      year: this.$dayjs().format("YYYY"),
       recordList: [],
       dailyWaterVolume: {
         colums: [
@@ -158,6 +168,24 @@ export default {
   overflow-y: auto;
 }
 
+.yearSelect {
+  display: inline-flex;
+  align-items: center;
+  padding: 2px 5px;
+  border-radius: 5px;
+  background-color: #ffffffbd;
+  margin-bottom: 10px;
+  .yearNum{
+    font-size: 20px;
+    font-weight: 700;
+    margin: 0px 10px;
+    background: linear-gradient(61deg, #11998e, #38ef7d);
+    color: transparent;
+    background-clip: text;
+    -webkit-background-clip: text;
+  }
+}
+
 .recordList {
   background-color: #fff;
   border-radius: 5px;
@@ -186,6 +214,8 @@ export default {
       color: #383838;
     }
 
+
+
   }
 
   .operat {
@@ -195,6 +225,10 @@ export default {
     justify-content: space-around;
     border-top: 1px solid #00000018;
     box-shadow: 0px 3px 8px -5px #00000036;
+
+    ::v-deep .i-icon {
+      margin-right: 8px;
+    }
   }
 
   ::v-deep .ant-btn{
