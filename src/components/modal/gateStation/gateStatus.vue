@@ -11,9 +11,9 @@
           </div>
 
           <div class="itemHeight">
-            <div v-if="item.gateH === '888'"><a-badge status="processing" />闸门提出水面</div>
-            <div v-else-if="item.gateH === '999'"><a-badge status="success" />闸门全开</div>
-            <div v-else-if="item.gateH === '444'"><a-badge status="warning" />闸门关闭</div>
+            <div v-if="item.gateH === 888"><a-badge status="processing" />闸门提出水面</div>
+            <div v-else-if="item.gateH === 999"><a-badge status="success" />闸门全开</div>
+            <div v-else-if="item.gateH === 444"><a-badge status="warning" />闸门关闭</div>
             <div v-else>
               <a-badge status="processing" />闸门开度: 
               <span class="heightNum">{{item.gateH}}</span>
