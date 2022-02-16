@@ -10,7 +10,7 @@
 
 <script>
 import MarqueeText from 'vue-marquee-text-component'
-import { transferCommand, transferCommand_loacl } from "@/network/command/displayCommand.js";
+import { transferCommand } from "@/network/command/displayCommand.js";
 export default {
   name: "displayCommand",
   props: {},
@@ -26,7 +26,7 @@ export default {
   methods: {
     async getCommand() {
       this.loading = true;
-      await transferCommand_loacl(this.transferCommandParams).then(res => {
+      await transferCommand(this.transferCommandParams).then(res => {
         this.command = res.data[0].inscontent
       })
       this.loading = false;
