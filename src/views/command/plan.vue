@@ -1,16 +1,18 @@
 <template>
   <div id="plan">
+
     <div class="preView">
-      <pdfView :height="'100%'" :src="'/dist/pdf/transfer_1_plan.pdf'"/>
+      <pdfView v-if="uploaded && pdfSrc" :height="'100%'" :src="pdfSrc"/>
+      <noData v-else/>
     </div>
     <div class="upload">
-      <a-input placeholder="请输入文件标题"></a-input>
+      <a-input v-model="upload.planName" placeholder="请输入文件标题或选择文件后自动填写"></a-input>
       <a-upload-dragger
         class="uploadArea"
         name="file"
-        :multiple="true"
-        action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
-        
+        :multiple="false"
+        :file-list="upload.fileList" :remove="handleRemove" :before-upload="beforeUpload"
+        accept=".pdf"
       >
         <p class="ant-upload-drag-icon">
           <icon-upload-one theme="outline" size="40" fill="#1890ff" :strokeWidth="3"/>
@@ -25,9 +27,12 @@
       </a-upload-dragger>
 
       <div class="btnGroup">
-        <a-button type="primary">保存</a-button>
+        <a-button type="primary" :disabled="upload.fileList.length === 0" :loading="upload.uploading" @click="handleUpload">保存</a-button>
         <a-button>取消</a-button>
+        <!-- <a-button @click="testUpload">测试上传完成</a-button> -->
       </div>
+    {{regData}}
+
     </div>
   </div>
 </template>
@@ -36,9 +41,15 @@
 import { Input, Upload, Button } from 'ant-design-vue';
 import noData from "@/components/public/noData.vue";
 import pdfView from "@/components/public/pdfView.vue";
+import { uploadPlan, listPlan } from "@/network/command/plan.js";
 export default {
   name: "plan",
-  props: {},
+  props: {
+    regData: {
+      type: Object,
+      default: undefined
+    },
+  },
   components: {
     AInput:Input,
     AUploadDragger:Upload.Dragger,
@@ -48,11 +59,88 @@ export default {
   },
   data() {
     return {
-      pdfSrc: "/dist/pdf/transfer_1_plan.pdf"
+      pdfSrc: undefined,
+      uploaded: undefined, //已上传文件
+      upload: {
+        planName: undefined,
+        fileList: [],
+        uploading: false,
+      }
     }
   },
-  methods: {},
-  mounted() {},
+  methods: {
+    handleRemove(file) {
+      const index = this.upload.fileList.indexOf(file);
+      const newFileList = this.upload.fileList.slice();
+      newFileList.splice(index, 1);
+      this.upload.fileList = newFileList;
+    },
+    beforeUpload(file) {
+      if (this.upload.fileList.length >= 1) {
+          this.$message.warning("请先删除已选择/已上传文件");
+        
+      }else{
+          
+        if (file.type === "application/pdf") {
+          this.upload.fileList = [...this.upload.fileList, file];
+          this.upload.planName = file.name;
+        }else{
+          this.$message.warning("请上传PDF类型文件");
+        }
+      }
+      return false;
+    },
+    handleUpload() {
+      const { upload } = this;
+      const formData = new FormData();
+      formData.append('planName', this.upload.planName);
+      formData.append('endTime', '2021-12-02 20:10:32');
+      formData.append('recordUnitCode', '1001');
+      formData.append('recordUnitName', '	安徽省水利厅');
+      formData.append('regCd', this.regData.reg_cd);
+
+      upload.fileList.forEach(file => {
+        formData.append('file', file);
+      });
+      this.upload.uploading = true;
+      uploadPlan(formData, { action: "doAdd" }).then(res => {
+        if (res.code === "1") {
+          this.upload.uploading = false;
+          this.getPlanList();
+        }
+      })
+    },
+
+    getPlanList() {
+      listPlan(this.getPlanList_params).then(res => {
+        if (res.data.length) {
+          this.uploaded = res.data[0];
+        }
+        // console.log(res.data[0], this.uploaded);
+      }).finally(() => {
+        this.pdfSrc = undefined;
+        this.pdfSrc = "/local/gateway/only.api?action=previewFile&file_cd="+this.uploaded.fileId
+      })
+    },
+
+    testUpload() {
+      console.log(this.upload.fileList[0])
+      this.upload.fileList[0].status = "done";
+    }
+  },
+  mounted() {
+    this.getPlanList();
+  },
+  computed: {
+    getPlanList_params: function (params) {
+      return {
+        action: "list",
+        recordUnitCode: "1001",
+        regCd: this.regData.reg_cd,
+
+      }
+    }
+  },
   watch: {}
 }
 </script>

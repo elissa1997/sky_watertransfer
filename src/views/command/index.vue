@@ -1,14 +1,13 @@
 <template>
   <div id="index">
     <steps :current="current" @changeDisplay="changeDisplay"/>
-
     <div class="content">
-      <plan v-if="displayNum === 0"/>
-      <notice v-if="displayNum === 1" @addNotice="addNotice"/>
-      <selfCheck v-if="displayNum === 2" @addSelfCheck="addSelfCheck"/>
-      <inspection v-if="displayNum === 3" @addInspection="addInspection"/>
-      <div v-if="displayNum === 4">工作会议</div>
-      <execute v-if="displayNum === 5" @addCommand="addCommand"/>
+      <plan v-if="displayNum === 0" :regData="regData"/>
+      <notice v-if="displayNum === 1" @addNotice="addNotice" :regData="regData"/>
+      <selfCheck v-if="displayNum === 2" @addSelfCheck="addSelfCheck" :regData="regData"/>
+      <inspection v-if="displayNum === 3" @addInspection="addInspection" :regData="regData"/>
+      <div v-if="displayNum === 4" :regData="regData">工作会议</div>
+      <execute v-if="displayNum === 5" @addCommand="addCommand" :regData="regData"/>
     </div>
     <div class="stepControl">
       <a-button type="primary" @click="nextStep" :disabled="current >= 5">确认执行下一步</a-button>
@@ -32,9 +31,13 @@ import modal from "@/components/command/modal/index.vue";
 export default {
   name: "index",
   props: {
+    regData: {
+      type: Object,
+      default: undefined
+    },
     transferStep: {
       type: Number,
-      default: 5
+      default: 1
     }
   },
   components: {
@@ -55,8 +58,8 @@ export default {
         // marginBottom: '10px',
         boxShadow: '#0000001f 0px 7px 8px -8px',
       },
-      current: 0,
-      displayNum: 0,
+      current: undefined,
+      displayNum: undefined,
       modal: {
         visible: false,
         title: undefined,
