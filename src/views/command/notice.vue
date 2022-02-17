@@ -32,6 +32,8 @@
       <a-table :columns="receiveData.colums" :data-source="receiveData.data" rowKey="id" :pagination="false" >
         <a-tag color="green" slot="status" slot-scope="status">{{status}}</a-tag>
       </a-table>
+
+      {{regData}}
     </div>
   </div>
 </template>
@@ -43,7 +45,12 @@ import noData from "@/components/public/noData.vue";
 
 export default {
   name: "notice",
-  props: {},
+  props: {
+    regData: {
+      type: Object,
+      default: undefined
+    },
+  },
   components: {
     AButton:Button,
     ATable:Table,
@@ -91,6 +98,11 @@ export default {
         }
         // console.log(res);
       })
+    },
+
+    // 函数名统一refreshByClose，供子弹窗关闭后刷新使用
+    refreshByClose(){
+      this.getNoticeContent();
     }
   },
   mounted() {

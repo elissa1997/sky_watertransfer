@@ -3,7 +3,7 @@
     <steps :current="current" @changeDisplay="changeDisplay"/>
     <div class="content">
       <plan v-if="displayNum === 0" :regData="regData"/>
-      <notice v-if="displayNum === 1" @addNotice="addNotice" :regData="regData"/>
+      <notice v-if="displayNum === 1" @addNotice="addNotice" :regData="regData" ref="notice"/>
       <selfCheck v-if="displayNum === 2" @addSelfCheck="addSelfCheck" :regData="regData"/>
       <inspection v-if="displayNum === 3" @addInspection="addInspection" :regData="regData"/>
       <div v-if="displayNum === 4" :regData="regData">工作会议</div>
@@ -13,7 +13,7 @@
       <a-button type="primary" @click="nextStep" :disabled="current >= 5">确认执行下一步</a-button>
     </div>
 
-    <modal :modal="modal"/>
+    <modal :modal="modal" @close="close"/>
   </div>
 </template>
 
@@ -82,7 +82,7 @@ export default {
       this.modal = {
         visible: true,
         title: "发布预通知",
-        data: undefined,
+        data: this.regData,
         from: "addNotice"
       }
     },
@@ -114,7 +114,12 @@ export default {
       }
     },
 
-
+    close(data) {
+      if (data.refresh) {
+        this.$refs[data.refName].refreshByClose();
+      }
+      this.modal.visible = false;
+    }
 
 
 

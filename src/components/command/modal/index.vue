@@ -1,7 +1,7 @@
 <template>
   <div id="modalIndex">
     <a-modal v-model="modal.visible" :title="modal.title" :footer="null" width="40vw">
-      <addNotice v-if="modal.visible && modal.from === 'addNotice'" :modalData="modal.data"/>
+      <addNotice v-if="modal.visible && modal.from === 'addNotice'" :modalData="modal.data" @close="close"/>
       <addSelfCheck v-if="modal.visible && modal.from === 'addSelfCheck'" :modalData="modal.data"/>
       <addInspection v-if="modal.visible && modal.from === 'addInspection'" :modalData="modal.data"/>
       <addCommand v-if="modal.visible && modal.from === 'addCommand'" :modalData="modal.data"/>
@@ -32,7 +32,12 @@ export default {
   data() {
     return {}
   },
-  methods: {},
+  methods: {
+    close(data) {
+      this.$emit('close', data);
+      // this.modal.visible = false;
+    }
+  },
   mounted() {},
   watch: {}
 }
