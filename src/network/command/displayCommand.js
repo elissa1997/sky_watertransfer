@@ -1,4 +1,4 @@
-import {instance_api, instance_command_test} from "../axios.js";
+import {instance_api, instance_test_local} from "../axios.js";
 
 // 获取调水指令
 export function transferCommand(params) {

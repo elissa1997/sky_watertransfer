@@ -52,7 +52,7 @@ export function instance_static(config) {
 }
 
 // 访问调水指令_本地
-export function instance_command_test(config) {
+export function instance_test_local(config) {
     const instance = axios.create({
         baseURL: '/local/',
         timeout: 8000,
