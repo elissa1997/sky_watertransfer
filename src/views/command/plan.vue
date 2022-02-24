@@ -1,11 +1,11 @@
 <template>
   <div id="plan">
 
-    <div class="preView">
+    <div class="preView" :style="{width:(this.$userInfo.type === 'A')?'70%':'100%'}">
       <pdfView v-if="uploaded && pdfSrc" :height="'100%'" :src="pdfSrc"/>
       <noData v-else/>
     </div>
-    <div class="upload">
+    <div class="upload" v-if="this.$userInfo.type === 'A'">
       <a-input v-model="upload.planName" placeholder="请输入文件标题或选择文件后自动填写"></a-input>
       <a-upload-dragger
         class="uploadArea"
@@ -31,7 +31,7 @@
         <a-button>取消</a-button>
         <!-- <a-button @click="testUpload">测试上传完成</a-button> -->
       </div>
-    {{regData}}
+    <!-- {{regData}} -->
 
     </div>
   </div>
@@ -119,7 +119,12 @@ export default {
         // console.log(res.data[0], this.uploaded);
       }).finally(() => {
         this.pdfSrc = undefined;
-        this.pdfSrc = "/local/gateway/only.api?action=previewFile&file_cd="+this.uploaded.fileId
+        if (this.uploaded) {
+          let url = undefined;
+          (this.$env === "development")?url = "/local/": url = "/ahjs/";
+          this.pdfSrc = url + "gateway/only.api?action=previewFile&file_cd="+this.uploaded.fileId
+          console.log(this.pdfSrc);
+        }
       })
     },
 
@@ -152,7 +157,7 @@ export default {
 }
 
 .preView {
-  width: 70%;
+  // width: 70%;
   height: 100%;
   padding: 10px;
   border: 1px solid #00000021;
