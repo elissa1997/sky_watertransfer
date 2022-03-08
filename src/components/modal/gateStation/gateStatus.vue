@@ -7,7 +7,7 @@
         <div class="gateItem" v-for="(item,index) in gateStatusList" :key="index" @click="openGateHModal(item)">
           <div class="itemMeta">
             <span class="NO">{{item.title}}</span>
-            <a-tag color="blue">{{item.stcd}}</a-tag>
+            <!-- <a-tag color="blue">{{item.stcd}}</a-tag> -->
           </div>
 
           <div class="itemHeight">

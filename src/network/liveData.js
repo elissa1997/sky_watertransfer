@@ -18,3 +18,11 @@ export function waterUserApi(params) {
   })
 }
 
+// 请求图片文件，检测内网
+// export function intranet(params) {
+//   return instance_api({
+//     url: 'images/ahjs/icon-home.png',
+//     method: 'get',
+//     params
+//   })
+// }
