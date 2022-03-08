@@ -13,6 +13,11 @@ const routes = [
     path: '/gis2d',
     name: 'gis2d',
     component: () => import('@/views/gis2d.vue')
+  },
+  {
+    path: '/test',
+    name: 'test',
+    component: () => import('@/views/test.vue')
   }
 ]
 
