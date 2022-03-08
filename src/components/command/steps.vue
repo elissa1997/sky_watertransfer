@@ -1,6 +1,6 @@
 <template>
   <div id="steps">
-    <div class="stepItem" v-for="(item,index) in steps" :key="index" :class="{active: index == current, display: index == displayNum}" @click="changeDisplay(index)">
+    <div class="stepItem" v-for="(item,index) in steps" :key="index" :class="{active: index+1 == current, display: index+1 == displayNum}" @click="changeDisplay(index)">
       <div class="number">{{index+1}}</div>
       <div class="text">{{item}}</div>
     </div>
@@ -13,12 +13,12 @@ export default {
   props: {
     steps: {
       type: Array,
-      default: () => ["调水方案", "调水预通知", "自检上报", "调水巡查", "工作会议", "实施调水"]
+      default: () => ["调水方案", "调水预通知", "工作会议", "巡查情况" ,"实施调水", "信息上报"]
     },
     current: {
       type: Number,
       default: 0
-    }
+    },
   },
   components: {},
   data() {
@@ -29,9 +29,9 @@ export default {
   methods: {
     changeDisplay(num) {
       // console.log(num);
-      if (num <= this.current) {
-        this.displayNum = num;
-        this.$emit('changeDisplay', num);
+      if (num < this.current) {
+        this.displayNum = num+1;
+        this.$emit('changeDisplay', num+1);
       }else {
         this.$message.warning(this.steps[num]+"还未开始");
       }
@@ -43,10 +43,15 @@ export default {
   watch: {
     current: {
       handler (newValue, oldValue) {
-        this.displayNum = newValue
+        // console.log(newValue)
+        if (newValue === 7) {
+          this.displayNum = 6
+        }else{
+          this.displayNum = newValue
+        }
       },
       deep: false,
-
+      immediate: true
     }
   }
 }

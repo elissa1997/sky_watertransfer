@@ -2,9 +2,13 @@
   <div id="modalIndex">
     <a-modal v-model="modal.visible" :title="modal.title" :footer="null" width="40vw">
       <addNotice v-if="modal.visible && modal.from === 'addNotice'" :modalData="modal.data" @close="close"/>
-      <addSelfCheck v-if="modal.visible && modal.from === 'addSelfCheck'" :modalData="modal.data"/>
-      <addInspection v-if="modal.visible && modal.from === 'addInspection'" :modalData="modal.data"/>
-      <addCommand v-if="modal.visible && modal.from === 'addCommand'" :modalData="modal.data"/>
+      <addSelfCheck v-if="modal.visible && modal.from === 'addSelfCheck'" :modalData="modal.data" @close="close"/>
+      <addInspection v-if="modal.visible && modal.from === 'addInspection'" :modalData="modal.data" @close="close"/>
+      <addExecute v-if="modal.visible && modal.from === 'addExecute'" :modalData="modal.data" @close="close"/>
+      <addWaterVol v-if="modal.visible && modal.from === 'addWaterVol'" :modalData="modal.data" @close="close"/>
+      <addWaterVol v-if="modal.visible && modal.from === 'updateWaterVol'" :modalData="modal.data.reg" :record="modal.data.record" @close="close"/>
+
+      <detailExecute  v-if="modal.visible && modal.from === 'executeDetail'" :modalData="modal.data" />
     </a-modal>
   </div>
 </template>
@@ -13,7 +17,9 @@
 import addNotice from "@/components/command/modal/addNotice.vue";
 import addSelfCheck from "@/components/command/modal/addSelfCheck.vue";
 import addInspection from "@/components/command/modal/addInspection.vue";
-import addCommand from "@/components/command/modal/addCommand.vue";
+import addExecute from "@/components/command/modal/addExecute.vue";
+import addWaterVol from "@/components/command/modal/addWaterVol.vue";
+import detailExecute from "@/components/command/modal/detailExecute.vue";
 
 export default {
   name: "index",
@@ -27,7 +33,9 @@ export default {
     addNotice,
     addSelfCheck,
     addInspection,
-    addCommand,
+    addExecute,
+    addWaterVol,
+    detailExecute
   },
   data() {
     return {}

@@ -2,15 +2,19 @@
   <div id="index">
     <steps :current="current" @changeDisplay="changeDisplay"/>
     <div class="content">
-      <plan v-if="displayNum === 0" :regData="regData"/>
-      <notice v-if="displayNum === 1" @addNotice="addNotice" :regData="regData" ref="notice"/>
-      <selfCheck v-if="displayNum === 2" @addSelfCheck="addSelfCheck" :regData="regData"/>
-      <inspection v-if="displayNum === 3" @addInspection="addInspection" :regData="regData"/>
-      <div v-if="displayNum === 4" :regData="regData">工作会议</div>
-      <execute v-if="displayNum === 5" @addCommand="addCommand" :regData="regData"/>
+      <plan v-if="displayNum === 1" :regData="regData"/>
+      <notice v-if="displayNum === 2" @addNotice="addNotice" :regData="regData" ref="notice"/>
+      <!-- <selfCheck v-if="displayNum === 3" @addSelfCheck="addSelfCheck" :regData="regData" ref="selfCheck"/> -->
+      <meeting v-if="displayNum === 3" :regData="regData" />
+      <inspection v-if="displayNum === 4" @addInspection="addInspection" :regData="regData" ref="inspection"/>
+      <execute v-if="displayNum === 5" @addExecute="addExecute" @executeDetail="executeDetail" :regData="regData" ref="execute"/>
+      <reportWaterVol v-if="displayNum === 6 || displayNum === 7" @addWaterVol="addWaterVol" @updateWaterVol="updateWaterVol" :regData.sync="regData" ref="reportWaterVol"/>
     </div>
-    <div class="stepControl">
-      <a-button type="primary" @click="nextStep" :disabled="current >= 5">确认执行下一步</a-button>
+    <div class="stepControl" v-if="$userInfo.type === 'A'">
+      <a-button type="primary" @click="nextStep" :disabled="current >= 7">
+        <template v-if="current <= 5">确认执行下一步</template>
+        <template v-if="current === 6 || current === 7 ">本次调水完成</template>
+      </a-button>
     </div>
 
     <modal :modal="modal" @close="close"/>
@@ -18,13 +22,17 @@
 </template>
 
 <script>
+
+import { next } from "@/network/command/transferRecord.js"
 import { Button } from 'ant-design-vue';
 import steps from "@/components/command/steps.vue";
 import plan from "@/views/command/plan.vue";
 import notice from "@/views/command/notice.vue";
 import selfCheck from "@/views/command/selfCheck.vue";
 import inspection from "@/views/command/inspection.vue";
+import meeting from "@/views/command/meeting.vue";
 import execute from "@/views/command/execute.vue";
+import reportWaterVol from "@/views/command/reportWaterVol.vue";
 
 import modal from "@/components/command/modal/index.vue";
 
@@ -35,10 +43,6 @@ export default {
       type: Object,
       default: undefined
     },
-    transferStep: {
-      type: Number,
-      default: 1
-    }
   },
   components: {
 
@@ -48,7 +52,9 @@ export default {
     notice,
     selfCheck,
     inspection,
+    meeting,
     execute,
+    reportWaterVol,
 
     modal
   },
@@ -70,8 +76,12 @@ export default {
   },
   methods: {
     nextStep() {
-      this.current = this.current + 1;
-      this.displayNum = this.current;
+      next(this.next_params_data.params, this.next_params_data.data).then(res => {
+        if(res.code === "1"){
+          this.current = this.current + 1;
+          this.displayNum = this.current;
+        }
+      })
     },
 
     changeDisplay(num) {
@@ -91,7 +101,7 @@ export default {
       this.modal = {
         visible: true,
         title: "上报自检情况",
-        data: undefined,
+        data: this.regData,
         from: "addSelfCheck"
       }
     },
@@ -100,17 +110,44 @@ export default {
       this.modal = {
         visible: true,
         title: "添加巡查情况",
-        data: undefined,
+        data: this.regData,
         from: "addInspection"
       }
     },
 
-    addCommand() {
+    addExecute() {
       this.modal = {
         visible: true,
         title: "下达指令",
-        data: undefined,
-        from: "addCommand"
+        data: this.regData,
+        from: "addExecute"
+      }
+    },
+
+    executeDetail(record) {
+      this.modal = {
+        visible: true,
+        title: "指令详情",
+        data: record,
+        from: "executeDetail"
+      }
+    },
+
+    addWaterVol() {
+      this.modal = {
+        visible: true,
+        title: "水量上报",
+        data: this.regData,
+        from: "addWaterVol"
+      }
+    },
+
+    updateWaterVol(record) {
+      this.modal = {
+        visible: true,
+        title: "水量上报修改",
+        data: {reg:this.regData, record},
+        from: "updateWaterVol"
       }
     },
 
@@ -125,8 +162,22 @@ export default {
 
   },
   mounted() {
-    this.current = this.transferStep;
+    this.current = Number(this.regData.status);
     this.displayNum = this.current;
+  },
+  computed: {
+    next_params_data: function (params) {
+      return {
+        params: {
+          action: "updateProgress"
+        },
+
+        data: {
+          reg_cd: this.regData.reg_cd,
+          status: this.displayNum + 1
+        }
+      }
+    }
   },
   watch: {}
 }
