@@ -1,23 +1,33 @@
 <template>
   <div id="execute">
     <div class="operat">
-      <a-button type="primary" @click="addCommand">下达指令</a-button>
+      <a-button type="primary" @click="addExecute" v-if="$userInfo.type === 'A'">下达指令</a-button>
     </div>
-    <a-table :columns="executeData.colums" :data-source="executeData.data" rowKey="id" :pagination="false" >
-      <a-tag :color="(status === '确认收到')?'green':'orange'" slot="status" slot-scope="status">{{status}}</a-tag>
-      <span slot="action" slot-scope="text, record" @click="openDetail(record)">
-        <a class="action"><icon-preview-open theme="outline" size="20" fill="#1890ff" :strokeWidth="3"/>详情</a>
+    <a-table class="table" :columns="executeData.colums" :data-source="executeData.data" rowKey="instructionRef.id" :pagination="false" >
+      <span slot="ts" slot-scope="ts">{{$dayjs(ts).format("YYYY-MM-DD HH:mm")}}</span>
+      <a-tag :color="(status === '0')?'orange':'green'" slot="status" slot-scope="status">{{(status === '0')?'暂未确认':'确认收到'}}</a-tag>
+      <span class="actionWarp" slot="action" slot-scope="text, record">
+        <a class="action"  @click="openDetail(record)"><icon-preview-open theme="outline" size="20" fill="#1890ff" :strokeWidth="3"/>详情</a>
+        <a class="action" v-if="$userInfo.type != 'A'" @click="receive(record)" :disabled="record.instructionRef.zt === '1'">
+          <icon-check-correct theme="outline" size="20" :fill="(record.instructionRef.zt === '1')?'#bfbfbf':'#1890ff'" :strokeWidth="3"/>收到指令
+        </a>
       </span>
     </a-table>
   </div>
 </template>
 
 <script>
+import { executeList, receiveExecute } from "@/network/command/execute.js"
 import { Button, Table, Tag } from 'ant-design-vue';
 
 export default {
   name: "execute",
-  props: {},
+  props: {
+    regData: {
+      type: Object,
+      default: undefined
+    },
+  },
   components: {
       ATable:Table,
       ATag:Tag,
@@ -27,29 +37,70 @@ export default {
     return {
       executeData: {
         colums:[
-          { title: '指令下达单位', dataIndex: 'commandDepart' },
-          { title: '指令内容', dataIndex: 'commandContent' },
-          { title: '指令接收单位', dataIndex: 'executeDepart' },
-          { title: '状态', dataIndex: 'status', scopedSlots: { customRender: 'status' }, },
-          { title: '时间', dataIndex: 'time' },
+          { title: '指令下达单位', dataIndex: 'createUnitName' },
+          { title: '指令内容', dataIndex: 'content' },
+          { title: '指令接收单位', dataIndex: 'instructionRef.unitName' },
+          { title: '状态', dataIndex: 'instructionRef.zt', scopedSlots: { customRender: 'status' }, },
+          { title: '时间', dataIndex: 'ts', scopedSlots: { customRender: 'ts' } },
           { title: '操作', scopedSlots: { customRender: 'action' } },
         ],
-        data:[
-          {id: "1", commandDepart: "淮洪新河河道管理局", commandContent: "宿州市所属泵站全部开启", executeDepart: "宿州市水利局", supervisedDepart: "何巷闸", status: "确认收到", time: "2021-12-17"},
-          {id: "2", commandDepart: "淮洪新河河道管理局", commandContent: "蚌埠市所属泵站全部开启", executeDepart: "蚌埠市水利局", supervisedDepart: "五河站", status: "确认收到", time: "2021-12-17"},
-          {id: "3", commandDepart: "宿州市水利局", commandContent: "娄宋泵站开启", executeDepart: "娄宋泵站", status: "等待确认", time: "2021-12-17"},
-          {id: "4", commandDepart: "宿州市水利局", commandContent: "带山口泵站开启", executeDepart: "岱山口泵站", status: "确认收到", time: "2021-12-17"},
-          {id: "5", commandDepart: "蚌埠市水利局", commandContent: "固镇泵站关闭", executeDepart: "固镇泵站", status: "等待确认", time: "2021-12-17"},
-        ]
+        data:[]
       }
     }
   },
   methods: {
-    addCommand() {
-      this.$emit('addCommand');
+    addExecute() {
+      this.$emit('addExecute');
+    },
+
+    openDetail(record) {
+      this.$emit('executeDetail', record);
+    },
+
+    getExecuteList() {
+      executeList(this.getExecuteList_params).then(res => {
+        if (res.code === "1") {
+          this.executeData.data = res.data;
+        }
+      })
+    },
+
+    // 函数名统一refreshByClose，供子弹窗关闭后刷新使用
+    refreshByClose(){
+      this.getExecuteList()
+      // console.log("刷新操作");
+    },
+
+    receive(record) {
+      receiveExecute({action: "confirmInstruction", id: record.instructionRef.id}).then(res => {
+        // console.log(res);
+        if (res.code === "1") {
+          this.getExecuteList()
+        }
+      })
+      // console.log(record)
     }
   },
-  mounted() {},
+  mounted() {
+    this.getExecuteList();
+  },
+  computed: {
+    getExecuteList_params: function (params) {
+      if (this.$userInfo.type === "A") {
+        return {
+          "action": "instructionList",
+          "regCd": this.regData.reg_cd,
+        // "instructionRef.unitCode": this.$userInfo.unitCode_
+        }
+      }else {
+        return {
+          "action": "instructionList",
+          "regCd": this.regData.reg_cd,
+          "instructionRef.unitCode": this.$userInfo.unitCode_
+        }
+      }
+    }
+  },
   watch: {}
 }
 </script>
@@ -63,9 +114,22 @@ export default {
   padding: 10px;
   border-bottom: 1px solid #00000021;
 }
+
+.actionWarp {
+  display: flex;
+}
+
 .action {
   display: flex;
   align-items: center;
+}
 
+.action:not(:first-of-type) {
+  margin-left: 10px;
+}
+
+.table {
+  height: calc(100% - 60px);
+  overflow-y: auto;
 }
 </style>
