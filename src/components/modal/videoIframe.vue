@@ -2,7 +2,7 @@
   <div id="videoIframe">
     <iframe 
       class="iframe"
-      :src="'http://10.34.0.115:8383/fx/video.api?action=videoPlay&zdbm_='+this.attributes.zdbm"
+      :src="'http://10.34.0.115:8383/fx/video.do?action=videoPlay&zdbm_='+this.attributes.zdbm"
     />
     <!-- {{attributes}} -->
   </div>

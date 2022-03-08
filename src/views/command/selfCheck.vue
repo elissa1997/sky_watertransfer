@@ -1,7 +1,7 @@
 <template>
   <div id="selfCheck">
     <div class="operat">
-      <a-button type="primary" @click="addSelfCheck">上报自检情况</a-button>
+      <a-button type="primary" @click="addSelfCheck" v-if="this.$userInfo.type === 'B' || this.$userInfo.type === 'D'">上报自检情况</a-button>
     </div>
     <a-table :columns="selfCheckData.colums" :data-source="selfCheckData.data" rowKey="id" :pagination="false" >
       <a-tag color="green" slot="status" slot-scope="status">{{status}}</a-tag>
@@ -9,15 +9,22 @@
         <a class="action"><icon-preview-open theme="outline" size="20" fill="#1890ff" :strokeWidth="3"/>详情</a>
       </span>
     </a-table>
+    <!-- {{regData}} -->
   </div>
 </template>
 
 <script>
+import { selfCheckList } from '@/network/command/selfCheck.js';
 import { Button, Table, Tag } from 'ant-design-vue';
 
 export default {
   name: "selfCheck",
-  props: {},
+  props: {
+    regData: {
+      type: Object,
+      default: undefined
+    },
+  },
   components: {
     ATable:Table,
     ATag:Tag,
@@ -27,36 +34,55 @@ export default {
     return {
       selfCheckData:{
         colums:[
-          { title: '自检单位', dataIndex: 'selfCheckDepart' },
-          { title: '自检单位类型', dataIndex: 'selfCheckDepartType' },
-          { title: '自检内容', dataIndex: 'selfCheckContent' },
-          // { title: '管理单位', dataIndex: 'receiveDepart' },
-          { title: '状态', dataIndex: 'status', scopedSlots: { customRender: 'status' }, },
-          { title: '时间', dataIndex: 'time' },
+          { title: '自检单位', dataIndex: 'feedbackUnitName' },
+          // { title: '自检单位类型', dataIndex: 'selfCheckDepartType' },
+          { title: '自检内容', dataIndex: 'handleContent' },
+          { title: '接收单位', dataIndex: 'receiveUnitName' },
+          // { title: '状态', dataIndex: 'status', scopedSlots: { customRender: 'status' }, },
+          { title: '时间', dataIndex: 'feedbackTime' },
           { title: '操作', scopedSlots: { customRender: 'action' } },
         ],
         data: [
-          // {id: "1", name: "宿州市水利局", type: "市管单位", status: "确认收到", time: "2021-12-17"},
-          // {id: "2", name: "蚌埠市水利局", type: "市管单位", status: "确认收到", time: "2021-12-17"},
-          {id: "1", selfCheckDepart: "何巷闸", selfCheckDepartType: "省管站点", selfCheckContent: "自检正常，暂未发现问题", status: "自检完成", time: "2021-12-17"},
-          {id: "2", selfCheckDepart: "五河站", selfCheckDepartType: "省管站点", selfCheckContent: "自检正常，暂未发现问题", status: "自检完成", time: "2021-12-17"},
-          {id: "3", selfCheckDepart: "娄宋站", selfCheckDepartType: "市管站点", selfCheckContent: "自检正常，暂未发现问题", status: "自检完成", time: "2021-12-17"},
-          {id: "4", selfCheckDepart: "固镇站", selfCheckDepartType: "市管站点", selfCheckContent: "自检正常，暂未发现问题", status: "自检完成", time: "2021-12-17"},
 
         ]
       }
     }
   },
   methods: {
+    getSelfCheckList() {
+      selfCheckList(this.getSelfCheckList_params).then(res => {
+        // console.log(res);
+        if (res.data.length) {
+          this.selfCheckData.data = res.data;
+        }
+      })
+    },
+
+
     openDetail(row) {
       console.log(row);
     },
+
+
     addSelfCheck() {
       this.$emit('addSelfCheck');
+    },
+
+    // 函数名统一refreshByClose，供子弹窗关闭后刷新使用
+    refreshByClose(){
+      this.getSelfCheckList();
     }
   },
   mounted() {
-    console.log("自检")
+    this.getSelfCheckList();
+  },
+  computed: {
+    getSelfCheckList_params: function (params) {
+      return {
+        action: "list",
+        regCd: this.regData.reg_cd
+      }
+    }
   },
   watch: {}
 }
