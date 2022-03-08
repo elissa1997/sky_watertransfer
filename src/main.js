@@ -13,19 +13,22 @@ import { initArcGisJs } from "@/util/loadGisModules";
 import '@/util/drag.js';
 // Vue.directive('drag',  drag);
 
+import { checkToken } from "@/util/checkToken.js";
 import { saveUserInfo } from "@/util/saveUserInfo.js";
 
 Vue.config.productionTip = false
 //加载需要异步查询的参数、数据 如：esri gis模块，将异步方法同步执行完后再初始化vue，
 const initParamsStart = async () => {
   try {
+    // checkToken("token");
     Vue.prototype.$env = process.env.NODE_ENV
     Vue.prototype.$arcgisModules = await initArcGisJs();
     Vue.prototype.$message = message;
     Vue.prototype.$dayjs = dayjs;
     Vue.prototype.$echarts = echarts;
     Vue.prototype.$userInfo = await saveUserInfo();
-    // console.log(await saveUserInfo());
+    
+    Vue.config.devtools = true;
   } catch (error) {
     console.log(error);
   }
