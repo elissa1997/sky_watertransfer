@@ -8,6 +8,9 @@
       <projectPlan @openPlan="openProjectPlan"/>
       <overViewPic/>
       <infoPanel @waterUserAllTable="openWaterUserAllTable" @openCommand="openCommand"/>
+      <test v-if="$env === 'development'"/>
+      <!-- <test/> -->
+
     </template>
 
     <gisModal :modal="modal"/>
@@ -29,6 +32,8 @@ import overViewPic from "@/components/button/overViewPic.vue";
 import featurePopup from "@/components/modal/featurePopup.vue";
 import gisModal from "@/components/modal/index.vue";
 
+import test from "@/components/userInfo_test.vue";
+
 import {initLayers} from "@/layers/baseLayer.js";
 import { handlerLayerByTree, loadDefaultLayers } from "@/layers/layerAgent.js"
 import { centerList } from "@/config/area_center.js"
@@ -44,7 +49,8 @@ export default {
     projectPlan,
     overViewPic,
     featurePopup,
-    gisModal
+    gisModal,
+    test
   },
   data() {
     return {
@@ -207,7 +213,7 @@ export default {
     },
 
     openCommand(data) {
-      this.openModal("调水指令", data, "transferCommand");
+      this.openModal("调水指令-(用户："+this.$userInfo.unitName_+")", data, "transferCommand");
     }
 
   },
