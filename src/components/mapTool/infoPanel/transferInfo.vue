@@ -1,13 +1,13 @@
 <template>
   <div id="transferInfo">
     <div class="yearSelect">
-      <icon-left-c theme="outline" size="20" fill="#11998e" :strokeWidth="3" @click="year--" style="cursor: pointer;"/>
+      <icon-left-c theme="outline" size="20" fill="#11998e" :strokeWidth="3" @click="yearChange('min')" style="cursor: pointer;"/>
       <p class="yearNum">{{year}}</p>
-      <icon-right-c theme="outline" size="20" fill="#11998e" :strokeWidth="3" @click="(year >= Number($dayjs().format('YYYY')))?year = Number($dayjs().format('YYYY')):year++" style="cursor: pointer;"/>
+      <icon-right-c theme="outline" size="20" fill="#11998e" :strokeWidth="3" @click="yearChange('add')" style="cursor: pointer;"/>
 
-      <a-button type="primary" size="small" style="margin-left: 20px" :disabled="year === Number($dayjs().format('YYYY'))" @click="year = Number($dayjs().format('YYYY'))">
+      <!-- <a-button type="primary" size="small" style="margin-left: 20px" :disabled="year === Number($dayjs().format('YYYY'))" @click="yearChange('thisYear')">
         回到今年
-      </a-button>
+      </a-button> -->
     </div>
     <loading v-if="loading"/>
     <template v-else>
@@ -34,11 +34,12 @@
 
             <div class="item">
               <!-- {{item.status === '0 '}} -->
-              <a-tag color="green" v-if="item.status === '1'">调水已结束</a-tag>
-              <a-tag color="blue" v-if="item.status === '0'">调水进行中</a-tag>
+              <a-tag color="green" v-if="item.status === '7'">调水已结束</a-tag>
+              <a-tag color="blue" v-else>调水进行中</a-tag>
             </div>
 
           </div>
+
 
 
           <div class="operat">
@@ -47,10 +48,10 @@
               每日水量
             </a-button>
 
-            <a-button type="default">
+            <!-- <a-button type="default">
               <icon-broadcast-one theme="outline" size="16" fill="#969696" :strokeWidth="3"/>
               流程概览
-            </a-button>
+            </a-button> -->
 
             <a-button type="default" @click="openCommand(item)">
               <icon-workbench theme="outline" size="16" fill="#969696" :strokeWidth="3"/>
@@ -68,6 +69,8 @@
               <div slot="current_year_ww" slot-scope="text, record">{{record.current_year_ww.toFixed(2)}}</div> -->
             </a-table>
           </div>
+
+        <!-- {{item}} -->
 
         </div>
       </div>
@@ -110,6 +113,22 @@ export default {
     }
   },
   methods: {
+    yearChange(type) {
+      if (type === "min") {
+        (this.year <= 2021)?null:this.year--
+      }
+
+      if (type === "add") {
+        (this.year >= Number(this.$dayjs().format('YYYY')))?this.year = Number(this.$dayjs().format('YYYY')):this.year++
+      }
+
+      if (type === "thisYear") {
+        this.year = Number(this.$dayjs().format('YYYY'))
+      }
+
+      this.getTransferRecordList();
+    },
+
     async getTransferRecordList() {
       this.loading = true;
       await transferRecordList(this.transferRecordListParams).then(res => {
@@ -146,7 +165,9 @@ export default {
     transferRecordListParams: function () {
       return {
         action: "regulationList",
-        line_cd: "7f73d92fd9bc4d6fad84f2311d96fbaf"
+        line_cd: "7f73d92fd9bc4d6fad84f2311d96fbaf",
+        year: this.year
+
       }
     },
     transferRecordDetailParams: function () {
@@ -256,5 +277,9 @@ export default {
       }
     }
   }
+}
+
+.recordList:not(:first-of-type) {
+  margin-top: 10px;
 }
 </style>
