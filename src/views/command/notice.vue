@@ -1,47 +1,58 @@
 <template>
   <div id="notice">
-    <div class="noticeView">
-      <div class="operat">
-        <a-button type="primary" @click="addNotice">发布预通知</a-button>
-        <a-button>修改通知</a-button>
-        <a-button type="primary">确认收到</a-button>
-      </div>
-      <div class="content" v-if="notice.content">
-        <div class="title">关于印发淮水北调工程水量调度方案的通知</div>
-        
-        <div class="meta">
-          <div class="metaItem">
-            <icon-calendar theme="outline" size="20" fill="#7a7a7a" :strokeWidth="3"/>
-            <span>{{notice.publishTime}}</span>
-          </div>
+    <div class="preView" :style="{width:(this.$userInfo.type === 'A')?'70%':'100%'}">
+      <a-button class="receiveBtn" type="primary" @click="handleReceive" v-if="loggedInreceiveUnit && this.$userInfo.type != 'A'" :disabled="loggedInreceiveUnit.status === '1'">
+        {{(loggedInreceiveUnit.status === '0')?'确认签收':'已签收'}} 
+      </a-button>
 
-          <div class="metaItem">
-            <icon-people theme="outline" size="20" fill="#7a7a7a" :strokeWidth="3"/>
-            <span>{{notice.unitName}}</span>
-          </div>
-        </div>
-
-        <div class="contentText">
-          {{notice.content}}
-        </div>
-      </div>
+      <pdfView v-if="uploaded && pdfSrc" :height="'100%'" :src="pdfSrc"/>
       <noData v-else/>
     </div>
 
-    <div class="receive">
-      <a-table :columns="receiveData.colums" :data-source="receiveData.data" rowKey="id" :pagination="false" >
-        <a-tag color="green" slot="status" slot-scope="status">{{status}}</a-tag>
-      </a-table>
+    <a-tabs default-active-key="1" style="width: calc(30% - 10px);" v-if="this.$userInfo.type === 'A'">
+      <a-tab-pane key="1" tab="发布方案">
+        <div class="upload">
+          <a-input v-model="upload.planName" placeholder="请输入文件标题或选择文件后自动填写"></a-input>
 
-      {{regData}}
-    </div>
+          <a-upload
+            name="file"
+            :multiple="false"
+            :file-list="upload.fileList" :remove="handleRemove" :before-upload="beforeUpload"
+            accept=".pdf"
+          >
+            <a-button block class="btnInnerCenter"> 
+              <icon-upload-one theme="outline" size="16" fill="#9b9b9b" :strokeWidth="3"/> 
+              点击选择文件 
+            </a-button>
+          </a-upload>
+          <div class="receiveTree">
+            <unitAndContacsList @unitChange="unitChange" @contactsChange="contactsChange" @isSendSMS="isSendSMS"/>
+          </div>
+
+          <div class="btnGroup">
+            <a-button type="primary" :disabled="upload.fileList.length === 0" :loading="upload.uploading" @click="handleUpload">保存</a-button>
+            <a-button>取消</a-button>
+          </div>
+
+        </div>
+      </a-tab-pane>
+      <a-tab-pane key="2" tab="签收情况" force-render>
+        <a-table bordered class="receiveTable" v-if="uploaded" :columns="receiveUnitColums" :data-source="uploaded.noticeOrgList" rowKey="id" :pagination="false" size="middle" >
+          <a-tag :color="(status === '0')?'orange':'green'" slot="status" slot-scope="status">
+            {{(status === "0")?'暂未确认':'确认收到'}}
+          </a-tag>
+        </a-table>
+      </a-tab-pane>
+    </a-tabs>
   </div>
 </template>
 
 <script>
-import { noticeContent } from "@/network/command/notice.js";
-import { Button, Table, Tag } from 'ant-design-vue';
+import { Select, Input, Upload, Button, Table, Tag, Tabs } from 'ant-design-vue';
+import unitAndContacsList from "@/components/command/unitAndContacsList.vue";
 import noData from "@/components/public/noData.vue";
+import pdfView from "@/components/public/pdfView.vue";
+import { noticeContent, reciveNotice } from "@/network/command/notice.js";
 
 export default {
   name: "notice",
@@ -52,67 +63,198 @@ export default {
     },
   },
   components: {
+    ASelect:Select,
+    ASelectOption:Select.Option,
+    ASelectOptGroup:Select.OptGroup,
+    AInput:Input,
+    AUpload:Upload,
     AButton:Button,
     ATable:Table,
     ATag:Tag,
-    noData
+    ATabs:Tabs,
+    ATabPane:Tabs.TabPane,
+    unitAndContacsList,
+    noData,
+    pdfView
   },
   data() {
     return {
-      receiveData:{
-        colums:[
-          { title: '确认收到单位', dataIndex: 'name' },
-          { title: '单位类型', dataIndex: 'type' },
-          { title: '状态', dataIndex: 'status', scopedSlots: { customRender: 'status' }, },
-          { title: '时间', dataIndex: 'time' },
-        ],
-        data: [
-          {id: "1", name: "宿州市水利局", type: "市管单位", status: "确认收到", time: "2021-12-17"},
-          {id: "2", name: "蚌埠市水利局", type: "市管单位", status: "确认收到", time: "2021-12-17"},
-          {id: "3", name: "何巷闸", type: "省管站点", status: "确认收到", time: "2021-12-17"},
-          {id: "4", name: "五河站", type: "省管站点", status: "确认收到", time: "2021-12-17"},
-          {id: "5", name: "娄宋站", type: "市管站点", status: "确认收到", time: "2021-12-17"},
-          {id: "6", name: "贾窝站", type: "市管站点", status: "确认收到", time: "2021-12-17"},
+      pdfSrc: undefined,
+      uploaded: undefined, //已上传文件
 
-        ]
+      receiveUnitColums:[
+        { title: '确认收到单位', dataIndex: 'receiveUnitName' },
+        { title: '状态', dataIndex: 'status', scopedSlots: { customRender: 'status' } },
+      ],
+      
+      loggedInreceiveUnit: undefined,
+      upload: {
+        noticeName: undefined,
+        fileList: [],
+        uploading: false,
+        unitList: undefined,
+        SMS: {
+          isSend: true,
+          list: undefined,
+          sendUser: this.$userInfo.username_
+        }
       },
-      notice: {
-        title: undefined,
-        unitName: undefined,
-        publishTime: undefined,
-        content: undefined
-      }
     }
   },
   methods: {
-    addNotice() {
-      this.$emit('addNotice');
+    handleRemove(file) {
+      const index = this.upload.fileList.indexOf(file);
+      const newFileList = this.upload.fileList.slice();
+      newFileList.splice(index, 1);
+      this.upload.fileList = newFileList;
     },
-    getNoticeContent() {
-      noticeContent(this.getNoticeContent_params).then(res => {
-        if (res.data.length) {
-          this.notice.title = res.data[0].noticeName;
-          this.notice.unitName = res.data[0].initUnitName;
-          this.notice.publishTime = this.$dayjs(res.data[0].createTime).format("YYYY-MM-DD");
-          this.notice.content = res.data[0].workContent;
+    beforeUpload(file) {
+      if (this.upload.fileList.length >= 1) {
+          this.$message.warning("请先删除已选择/已上传文件");
+        
+      }else{
+          
+        if (file.type === "application/pdf") {
+          this.upload.fileList = [...this.upload.fileList, file];
+          this.upload.planName = file.name;
+        }else{
+          this.$message.warning("请上传PDF类型文件");
         }
-        // console.log(res);
+      }
+      return false;
+    },
+
+    handleUpload() {
+      // const { upload } = this;
+      // const formData = new FormData();
+      // formData.append('regCd', this.regData.reg_cd);
+      // formData.append('planName', this.upload.planName);
+      // // formData.append('endTime', '2021-12-02 20:10:32');
+      // formData.append('recordUnitCode', '1001');
+      // formData.append('recordUnitName', '安徽省水利厅');
+      // formData.append('unitstrs', this.upload.unitList);
+      // formData.append('author', this.$userInfo.username_);
+      // formData.append('authorName', this.$userInfo.realName_);
+      // formData.append('initUnitCode', this.$userInfo.unitCode_);
+      // formData.append('initUnitName', this.$userInfo.unitName_);
+
+      // if (this.upload.SMS.isSend) {
+      //   formData.append('sendFlag', "1");
+      //   formData.append('telstrs', this.upload.SMS.list);
+      //   formData.append('message', this.SMSContent);
+      //   formData.append('sendUser', this.upload.SMS.sendUser);
+      // }else{
+      //   formData.append('sendFlag', "0");
+      // }
+
+
+      
+      // if (this.uploaded) {
+      //   formData.append('id', this.uploaded.id);
+      // }
+
+      // upload.fileList.forEach(file => {
+      //   formData.append('file', file);
+      // });
+      // this.upload.uploading = true;
+      // uploadPlan(formData, { action: "saveTransferPlan" }).then(res => {
+      //   if (res.code === "1") {
+      //     this.upload.uploading = false;
+      //     this.getPlanList();
+      //   }
+      // })
+    },
+
+    async getNoticeContent() {
+      await noticeContent(this.getNoticeContent_params).then(res => {
+        if (res.data) {
+          this.uploaded = res.data[0];
+        }
+      }).finally(() => {
+        if (this.uploaded) {
+          let url = undefined;
+          (this.$env === "development")?url = "/local/": url = "/ahjs/";
+          this.pdfSrc = url + "gateway/only.do?action=previewFile&file_cd="+this.uploaded.fileId
+          console.log(this.pdfSrc);
+        }
       })
     },
 
     // 函数名统一refreshByClose，供子弹窗关闭后刷新使用
     refreshByClose(){
       this.getNoticeContent();
-    }
+    },
+
+    // 从已上传方案的签收单位列表中查找当前用户信息
+    checkReciveStatus() {
+      console.log(this.uploaded);
+      if (this.uploaded) {
+        for (let index = 0; index < this.uploaded.noticeOrgList.length; index++) {
+          const element = this.uploaded.noticeOrgList[index];
+          if (element.unitCode === this.$userInfo.unitCode_) {
+            // console.log(element);
+            this.loggedInreceiveUnit = element
+          }
+        }
+      }
+    },
+
+    // 接收单位树更改
+    unitChange(unitStringList) {
+      if (unitStringList.length) {
+        this.upload.unitList = unitStringList.join(",");
+      }
+      // console.log(unitStringList);
+    },
+
+    // 是否开启短信接收人
+    isSendSMS(enable) {
+      if (!enable) {
+        this.upload.SMS.list = null;
+        this.upload.SMS.isSend = false;
+      }else {
+        this.upload.SMS.isSend = true;
+      }
+    },
+
+    // 短信接收人更改
+    contactsChange(contactsList) {
+      if (contactsList && contactsList.length) {
+        this.upload.SMS.list = contactsList.join(",");
+      }else {
+        this.uploaded.SMS.list = undefined;
+      }
+      // console.log(contactsList);
+    },
+
+    // 点击签收
+    handleReceive() {
+        for (let index = 0; index < this.uploaded.planExtList.length; index++) {
+          const element = this.uploaded.planExtList[index];
+          if (element.unitCode === this.$userInfo.unitCode_) {
+            // console.log(element);
+            recivePlan(this.handleReceive_params(element.id)).then(res => {
+              // console.log(res);
+            }).finally(async () => {
+              await this.getPlanList();
+              this.checkReciveStatus();
+            })
+            // return element;
+          }
+        }
+      
+    },
   },
-  mounted() {
-    this.getNoticeContent();
+  async mounted() {
+    await this.getNoticeContent();
+    this.checkReciveStatus();
+
   },
   computed: {
     getNoticeContent_params: function (params) {
       return {
         action: "sendNoticeList",
-        initUnitCode: "10011021"
+        regCd: this.regData.reg_cd
       }
     }
   },
@@ -126,57 +268,64 @@ export default {
   height: 100%;
 
 }
-.noticeView {
-  width: 60%;
+.preView {
+  // width: 70%;
   height: 100%;
-  // padding: 10px;
+  padding: 10px;
   border: 1px solid #00000021;
   border-radius: 5px;
+  position: relative;
 
-  .operat {
-    padding: 10px;
-    border-bottom: 1px solid #00000021;
-    ::v-deep .ant-btn:not(:last-child) {
-      margin-right: 20px;
-    }
-  }
-
-  .content {
-    padding: 10px;
-
-    .title {
-      text-align: center;
-      line-height: 40px;
-      font-size: 25px;
-      font-weight: 700;
-      padding: 10px 0;
-    }
-
-    .meta {
-      padding: 5px 0;
-      display: flex;
-      justify-content: space-evenly;
-      align-items: center;
-      .metaItem {
-        display: flex;
-        align-items: center;
-      }
-    }
-
-    .contentText {
-      height: 500px;
-      overflow-y: auto;
-    }
-    
+  .receiveBtn {
+    position: absolute;
+    top: 20px;
+    left: 20px;
   }
 }
 
-.receive {
-  width: calc(40% - 10px);
-  height: 100%;
-  border: 1px solid #00000021;
-  // padding: 2px;
-  border-radius: 5px;
+.upload {
+  margin-top: 10px;
+  width: 100%;
 
+  .btnInnerCenter {
+    margin-top: 10px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    ::v-deep .i-icon {
+      margin-right: 5px;
+    }
+  }
+
+  .receiveTree {
+    margin-top: 10px;
+
+  }
+
+
+
+  ::v-deep .ant-upload.ant-upload-select {
+    display: unset;
+  }
+
+  // ::v-deep .ant-upload.ant-upload-drag p.ant-upload-drag-icon {
+  //   margin-bottom: 0px !important;
+  // }
+
+}
+
+.receiveTable {
+  margin-top: 10px;
+  height: 690px;
+  overflow-y: auto;
+}
+
+.btnGroup {
+  margin-top: 10px;
+  text-align: center;
+  ::v-deep .ant-btn:not(:last-child) {
+    margin-right: 20px;
+  }
 }
 </style>
