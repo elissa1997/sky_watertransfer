@@ -55,6 +55,7 @@
         <div class="table" v-if="item.collapse">
           <!-- {{item.children}} -->
           <a-table class="table" :columns="colums" :data-source="item.children" rowKey="wat_rig_owner" size="small" :pagination="false">
+          <div slot="wat_rig_owner" slot-scope="text, record" @click="openWaterUser(record)">{{record.wat_rig_owner}}</div>
           <div slot="wat_t_amnt_ww" slot-scope="text, record">{{record.wat_t_amnt_ww.toFixed(2)}}</div>
           <div slot="appr_yr_ww" slot-scope="text, record">{{record.appr_yr_ww.toFixed(2)}}</div>
           <div slot="current_year_ww" slot-scope="text, record">{{record.current_year_ww.toFixed(2)}}</div>
@@ -94,7 +95,7 @@ export default {
       waterUseVolGroup: {},
 
       colums: [
-        { title: '取水户名称', dataIndex: 'wat_rig_owner', width: 220 },
+        { title: '取水户名称', dataIndex: 'wat_rig_owner', width: 220, scopedSlots: { customRender: 'wat_rig_owner' } },
         { title: '许可量', dataIndex: 'wat_t_amnt_ww', width: 60, scopedSlots: { customRender: 'wat_t_amnt_ww' } },
         { title: '计划量', dataIndex: 'appr_yr_ww', width: 60,scopedSlots: { customRender: 'appr_yr_ww' } },
         { title: '取水量', dataIndex: 'current_year_ww', width: 60,scopedSlots: { customRender: 'current_year_ww' } }
@@ -102,6 +103,11 @@ export default {
     }
   },
   methods: {
+
+    // 单个取水户点击
+    openWaterUser(record) {
+      this.$emit('openWaterUser', record);
+    },
 
     // 获取需要的社会统一信用代码
     async getWaterUserCods() {
@@ -220,7 +226,7 @@ export default {
 <style lang="scss" scoped>
 #waterUser{
   padding: 10px;
-  height: calc(60vh - 46px);
+  height: calc($infoPanelHeight - 46px);
   overflow-y: auto;
 }
 
