@@ -5,6 +5,7 @@ export async function featureLayer(){
   let template = {
     id: "businessLayer_01",
     title: "输水线路",
+    minScale: 569000,
     visible: true,
     labelingInfo: {
       "labelExpressionInfo": {
@@ -28,8 +29,8 @@ export async function featureLayer(){
           "symbol": {
             "type": "simple-line",
             "miterLimit": 20,
-            "width": 5,
-            "color": [0, 46, 178, 1]
+            "width": 3,
+            "color": "#00ffcd"
           },
           "label": "地上"
         },
@@ -39,7 +40,7 @@ export async function featureLayer(){
             "type": "simple-line",
             "style": "short-dash",
             "miterLimit": 20,
-            "width": 5,
+            "width": 3,
             "color": [20, 180, 248, 1]
           },
           "label": "地下"

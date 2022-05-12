@@ -9,8 +9,7 @@ export async function localData(fileName) {
   return data;
 }
 
-export async function dictTrans(fileName, key, value) {
-  let dict = await localData(fileName);
+export function dictTrans(dict, key, value) {
   if (dict.length) {
     for (let index = 0; index < dict.length; index++) {
       const element = dict[index];

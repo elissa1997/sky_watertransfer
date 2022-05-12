@@ -66,7 +66,7 @@ export default {
       receiveUnit(this.getReceiveUnit_params).then(res => {
         if (res.data && res.data.length) {
           this.unit.tempList = res.data;
-          this.unit.unitTree = listToTree(res.data, "unitcode", "parent_unitcode", "1001")
+          this.unit.unitTree = listToTree(res.data, "unitcode", "parent_unitcode")
         }
       })
     },

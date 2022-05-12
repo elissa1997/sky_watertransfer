@@ -5,9 +5,10 @@
       <!-- <displayCommand/> -->
       <baseLayerSwitch :map="map"/>
       <layerTree @checkedChange="checkedChange(arguments)" @treeClick="treeClick(arguments)"/>
-      <projectPlan @openPlan="openProjectPlan"/>
-      <overViewPic/>
-      <infoPanel @waterUserAllTable="openWaterUserAllTable" @openCommand="openCommand"/>
+      <!-- <projectPlan @openPlan="openProjectPlan"/>
+      <overViewPic/> -->
+      <introduce/>
+      <infoPanel @waterUserAllTable="openWaterUserAllTable" @openCommand="openCommand" @openWaterUser="openWaterUser"/>
       <test v-if="$env === 'development'"/>
       <!-- <test/> -->
 
@@ -25,11 +26,13 @@ import Vue from 'vue'
 import displayCommand from "@/components/mapTool/displayCommand.vue";
 import baseLayerSwitch from "@/components/mapTool/baseLayerSwitch.vue";
 import layerTree from "@/components/mapTool/layerTree.vue";
+import introduce from "@/components/mapTool/introduce/tabIndex.vue"
 import infoPanel from "@/components/mapTool/infoPanel/tabIndex.vue";
 import projectPlan from "@/components/button/projectPlan.vue";
 import overViewPic from "@/components/button/overViewPic.vue";
 
-import featurePopup from "@/components/modal/featurePopup.vue";
+import popupPumpStation from "@/components/featurePopup/pumpStation.vue";
+import popupGateStation from "@/components/featurePopup/gateStation.vue";
 import gisModal from "@/components/modal/index.vue";
 
 import test from "@/components/userInfo_test.vue";
@@ -45,10 +48,10 @@ export default {
     displayCommand,
     baseLayerSwitch,
     layerTree,
+    introduce,
     infoPanel,
     projectPlan,
     overViewPic,
-    featurePopup,
     gisModal,
     test
   },
@@ -130,7 +133,7 @@ export default {
         zoom: 10,
         constraints: {
           lods: tileInfo.lods,
-          minZoom: 3 ,
+          minZoom: 10,
           maxZoom: 18,
           rotationEnabled: false
         },
@@ -147,7 +150,7 @@ export default {
   
       await this.view.when(async () => {
         this.$message.success('地图加载完成');
-        loadDefaultLayers(this.map);
+        loadDefaultLayers(this.map, this.view);
         this.featureClick();
         // this.test();
       })
@@ -155,7 +158,14 @@ export default {
       this.view.ui.remove("zoom"); //清除放大缩小按钮
       this.view.ui.remove("attribution"); //清除底部powered by ESRI
 
-
+      this.view.on("pointer-down", () => {
+        // let extent = this.view.extent;
+        // console.log("ymax:"+extent.ymax);
+        // console.log("xmax:"+extent.xmax);
+        // console.log("ymin:"+extent.ymin);
+        // console.log("xmin:"+extent.xmin);
+        
+      });
     },
 
 
@@ -167,25 +177,40 @@ export default {
         this.view.hitTest(event).then( response => {
           if (response.results.length > 0) {
             let feature = response.results[0];
-            console.log(feature)
-            if (  feature.graphic.layer.id === "businessLayer_01" || feature.graphic.layer.id === "businessLayer_02" ||
-                  feature.graphic.layer.id === "businessLayer_03"
-            ) {
+            if ( feature.graphic.layer.id === "businessLayer_01" ) {
+
+            }else if( feature.graphic.layer.id === "businessLayer_02" ){
+              // 泵站弹窗
               this.view.popup.open({
                 title: feature.graphic.attributes.name,
                 location: feature.mapPoint,
                 content: "加载中",
               })
-                const p = Vue.extend(featurePopup);
-                let vm = new p({
-                  propsData: {
-                    attributes: feature.graphic.attributes,
-                    layerId: feature.graphic.layer.id
-                  }
-                })
-                vm.$mount();
-                vm.$nextTick(()=>{ this.view.popup.content = vm.$el });
-                vm.$on('modal',  () => { this.openModal(feature.graphic.attributes.name, feature.graphic.attributes, feature.graphic.layer.id) })
+              const p = Vue.extend(popupPumpStation);
+              let vm = new p({
+                propsData: {
+                  attributes: feature.graphic.attributes,
+                }
+              })
+              vm.$mount();
+              vm.$nextTick(()=>{ this.view.popup.content = vm.$el });
+              vm.$on('modal',  () => { this.openModal(feature.graphic.attributes.name, feature.graphic.attributes, feature.graphic.layer.id) })
+            }else if( feature.graphic.layer.id === "businessLayer_03" ){
+              // 闸站弹窗
+              this.view.popup.open({
+                title: feature.graphic.attributes.name,
+                location: feature.mapPoint,
+                content: "加载中",
+              })
+              const p = Vue.extend(popupGateStation);
+              let vm = new p({
+                propsData: {
+                  attributes: feature.graphic.attributes,
+                }
+              })
+              vm.$mount();
+              vm.$nextTick(()=>{ this.view.popup.content = vm.$el });
+              vm.$on('modal',  () => { this.openModal(feature.graphic.attributes.name, feature.graphic.attributes, feature.graphic.layer.id) })
             }else if ( feature.graphic.layer.id === "businessLayer_08" ) {
               this.openModal(feature.graphic.attributes.name, feature.graphic.attributes, "businessLayer_08")
             }else if ( feature.graphic.layer.id === "businessLayer_30" || feature.graphic.layer.id === "businessLayer_33" || feature.graphic.layer.id === "businessLayer_36") {
@@ -214,6 +239,18 @@ export default {
 
     openCommand(data) {
       this.openModal("调水指令-(用户："+this.$userInfo.unitName_+")", data, "transferCommand");
+    },
+
+    openWaterUser(data) {
+      let props = {
+        addvcd:" ",
+        cert_num_mp_cds: (data.cert_num_codes.indexOf(",") > -1) ? null : data.cert_num_codes,
+        cods: data.owner_code,
+        ennmcd: " ",
+        name: data.wat_rig_owner,
+      }
+      // console.log(props);
+      this.openModal(data.wat_rig_owner, props, "waterUser");
     }
 
   },
@@ -238,6 +275,6 @@ export default {
 
   .mapView {
     width: 100%;
-    height: 100vh;
+    height: calc(100vh - 70px);
   }
 </style>

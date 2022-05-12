@@ -1,20 +1,19 @@
-export function listToTree(oldArr, idName, pidName, rootPid) {
-  oldArr.forEach(element => {
-    let parentId = element[pidName];
-    if(parentId !== rootPid){
-      oldArr.forEach(ele => {
-        // console.log(ele[idName], parentId)
-        if(ele[idName] === parentId){ //当内层循环的ID== 外层循环的parendId时，（说明有children），需要往该内层id里建个children并push对应的数组；
-          if(!ele.children){
-              ele.children = [];
-          }
-          ele.children.push(element);
-        }
-      });
-    }
-  });
-  // console.log(oldArr)  //此时的数组是在原基础上补充了children;
-  oldArr = oldArr.filter(ele => ele[pidName] === rootPid); //这一步是过滤，按树展开，将多余的数组剔除；
-  // console.log(oldArr)
-  return oldArr;
+export function listToTree(oldArr, idName, pidName) {
+  let result = []
+  let map = {}
+  if (!Array.isArray(oldArr)) {//验证data是不是数组类型
+      return []
+  }
+  oldArr.forEach(item => {//建立每个数组元素id和该对象的关系
+      map[item[idName]] = item //这里可以理解为浅拷贝，共享引用
+  })
+  oldArr.forEach(item => {
+      let parent = map[item[pidName]] //找到data中每一项item的爸爸
+      if (parent) {//说明元素有爸爸，把元素放在爸爸的children下面
+          (parent.children || (parent.children = [])).push(item)
+      } else {//说明元素没有爸爸，是根节点，把节点push到最终结果中
+          result.push(item) //item是对象的引用
+      }
+  })
+  return result //数组里的对象和data是共享的
 }

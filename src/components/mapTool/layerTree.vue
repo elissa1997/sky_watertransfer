@@ -167,7 +167,7 @@ export default {
     // padding: 10px 0px;
     border-radius: 5px;
     position: absolute;
-    top: 10px;
+    top: 100px;
     left: 10px;
     min-width: 300px;
   }
@@ -180,7 +180,9 @@ export default {
     border-bottom:0.5px solid #00000017;
     
     .title {
-      @include title_text;
+      font-size: 17px;
+      font-weight: 700;
+      color: $mainColor;
     }
 
 
@@ -188,7 +190,7 @@ export default {
 
   .tree {
     padding: 5px 10px;
-    max-height: 80vh;
+    max-height: calc(100vh - 70px - 100px - 37px - 10px);
     overflow-y: auto;
 
     img {

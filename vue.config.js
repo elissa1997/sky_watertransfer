@@ -1,4 +1,12 @@
 module.exports = {
+  chainWebpack: config => {
+    config
+        .plugin('html')
+        .tap(args => {
+            args[0].title = "淮水北调输水线路";
+            return args;
+        })
+  },
   productionSourceMap: false,
   publicPath: process.env.NODE_ENV === 'production' ? '/ahjs/ssxl/' : '/',
   // cli3 代理是从指定的target后面开始匹配的，不是任意位置；配置pathRewrite可以做替换
@@ -14,7 +22,7 @@ module.exports = {
             }
         },
         '/dist': {
-            target:  'http://10.34.192.71:8080/static/Huai_NorthWaterTransfer_2.0/' ,
+            target:  'http://10.34.0.118:8081/dist/' ,
             changeOrigin: true,
             pathRewrite: {
             // '^/dist': 'dist' 
@@ -29,10 +37,10 @@ module.exports = {
             }
         },
         '/local': {
-            target:  'http://127.0.0.1:8080' ,
+            target:  'http://127.0.0.1:8080/ahjs/' ,
             changeOrigin: true,
             pathRewrite: {
-            '^/local': 'ahjs' 
+            '^/local': '' 
             }
         }
     }

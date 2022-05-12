@@ -25,7 +25,8 @@
     "v-viewer": "^1.6.4",
     "vue": "^2.6.11",
     "vue-marquee-text-component": "^1.2.0",
-    "vue-router": "^3.2.0"
+    "vue-router": "^3.2.0",
+    "xlsx": "^0.18.5"
   },
   "devDependencies": {
     "@vue/cli-plugin-babel": "~4.5.0",

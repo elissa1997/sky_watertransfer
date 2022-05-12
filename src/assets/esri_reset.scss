@@ -13,15 +13,24 @@
   .esri-popup__main-container {
     border-radius: 5px;
     max-height: fit-content !important;
-    width: 350px !important;
+    width: 400px !important;
 
     .esri-popup__header {
       align-items: center;
       border-bottom: 1px solid #0000001f;
       .esri-popup__header-title {
-        font-size: 16px;
+        font-size: 17px;
         padding: 0px;
         margin: 0px 10px;
+        color: #1890ff!important;
+        font-weight: 700;
+      }
+
+      .esri-popup__header-title::before{
+        content: " ";
+        width: 4px;
+        background-color: #1890ff;
+        margin-right: 10px;
       }
     }
 

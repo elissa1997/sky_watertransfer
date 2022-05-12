@@ -1,5 +1,10 @@
 // 全局样式
 
+$introduceHeight: 400px;
+$infoPanelHeight: calc(100vh - 70px - 10px - $introduceHeight - 10px - 10px);
+$mainColor: #099e07;
+$mainColorHover: #42b641;
+
 body {
   margin: 0px;
 }
@@ -39,7 +44,7 @@ body {
 // 自定义公共样式
 @mixin grossGlass {
   backdrop-filter: blur(7px);
-  background-color: #ffffff7a;
+  background-color: #ffffffb3;
 }
 
 @mixin boxShadow {
@@ -53,13 +58,8 @@ body {
 @mixin title_text {
   font-size: 17px;
   font-weight: 700;
-  color: #1caa00;
+  color: $mainColor;
 }
 
-// ESRI样式覆盖
 
-// .esri-view .esri-view-surface--inset-outline:focus::after {
-//   outline: auto 0px Highlight !important;
-//   outline: auto 0px -webkit-focus-ring-color !important;
-// }
 

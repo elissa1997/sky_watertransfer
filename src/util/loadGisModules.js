@@ -18,6 +18,7 @@ export async function initArcGisJs() {
     "esri/layers/GraphicsLayer",
     "esri/layers/ElevationLayer",
     "esri/layers/BaseElevationLayer",
+    "esri/layers/BaseDynamicLayer",
     "esri/layers/FeatureLayer",
     "esri/layers/GroupLayer",
     "esri/layers/WebTileLayer",
@@ -33,6 +34,7 @@ export async function initArcGisJs() {
     "esri/layers/support/TileInfo",
     "esri/Camera",
     "esri/config",
+    "esri/request",
     "dojo/on",
     "dojo/domReady!"
   ]

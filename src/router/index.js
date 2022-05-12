@@ -7,16 +7,25 @@ const routes = [
   {
     path: '/',
     name: 'Home',
-    redirect: '/gis2d'
+    redirect: '/gis2d',
+    meta: {
+      headerDisplay: true
+    },
   },
   {
     path: '/gis2d',
     name: 'gis2d',
+    meta: {
+      headerDisplay: true
+    },
     component: () => import('@/views/gis2d.vue')
   },
   {
     path: '/test',
     name: 'test',
+    meta: {
+      headerDisplay: true
+    },
     component: () => import('@/views/test.vue')
   }
 ]
