@@ -1,13 +1,18 @@
 <template>
   <div id="transferInfo">
-    <div class="yearSelect">
-      <icon-left-c theme="outline" size="20" fill="#11998e" :strokeWidth="3" @click="yearChange('min')" style="cursor: pointer;"/>
-      <p class="yearNum">{{year}}</p>
-      <icon-right-c theme="outline" size="20" fill="#11998e" :strokeWidth="3" @click="yearChange('add')" style="cursor: pointer;"/>
+    <div class="tool">
+      <div class="yearSelect">
+        <icon-left-c theme="outline" size="20" fill="#11998e" :strokeWidth="3" @click="yearChange('min')" style="cursor: pointer;"/>
+        <p class="yearNum">{{year}}</p>
+        <icon-right-c theme="outline" size="20" fill="#11998e" :strokeWidth="3" @click="yearChange('add')" style="cursor: pointer;"/>
+        <!-- <a-button type="primary" size="small" style="margin-left: 20px" :disabled="year === Number($dayjs().format('YYYY'))" @click="yearChange('thisYear')">
+          回到今年
+        </a-button> -->
+      </div>
 
-      <!-- <a-button type="primary" size="small" style="margin-left: 20px" :disabled="year === Number($dayjs().format('YYYY'))" @click="yearChange('thisYear')">
-        回到今年
-      </a-button> -->
+      <div class="refresh" @click="getTransferRecordList">
+        <icon-refresh theme="outline" size="20" fill="#11998e"/>
+      </div>
     </div>
     <loading v-if="loading"/>
     <template v-else>
@@ -55,7 +60,7 @@
 
             <a-button type="default" @click="openCommand(item)">
               <icon-workbench theme="outline" size="16" fill="#969696" :strokeWidth="3"/>
-              调水指令
+              调水过程
             </a-button>
 
           </div>
@@ -115,7 +120,7 @@ export default {
   methods: {
     yearChange(type) {
       if (type === "min") {
-        (this.year <= 2021)?null:this.year--
+        (this.year <= 2020)?null:this.year--
       }
 
       if (type === "add") {
@@ -150,7 +155,6 @@ export default {
 
     foldItem(item) {
       item.collapse = !item.collapse;
-      // console.log(item);
       this.getTransferRecordDetail(item);
     },
 
@@ -185,25 +189,42 @@ export default {
 <style lang="scss" scoped>
 #transferInfo{
   padding: 10px;
-  height: calc(60vh - 46px);
+  height: calc($infoPanelHeight - 46px);
   overflow-y: auto;
 }
 
-.yearSelect {
-  display: inline-flex;
+.tool{
+  display: flex;
   align-items: center;
-  padding: 2px 5px;
-  border-radius: 5px;
-  background-color: #ffffffbd;
   margin-bottom: 10px;
-  .yearNum{
-    font-size: 20px;
-    font-weight: 700;
-    margin: 0px 10px;
-    background: linear-gradient(61deg, #11998e, #38ef7d);
-    color: transparent;
-    background-clip: text;
-    -webkit-background-clip: text;
+  .yearSelect {
+    height: 35px;
+    display: flex;
+    align-items: center;
+    padding: 0px 5px;
+    border-radius: 5px;
+    background-color: #ffffffbd;
+    .yearNum{
+      font-size: 20px;
+      font-weight: 700;
+      margin: 0px 10px;
+      background: linear-gradient(61deg, #11998e, #38ef7d);
+      color: transparent;
+      background-clip: text;
+      -webkit-background-clip: text;
+    }
+  }
+
+  .refresh {
+    margin-left: 5px;
+    height: 35px;
+    width: 35px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 5px;
+    background-color: #ffffffbd;
+    cursor: pointer;
   }
 }
 
