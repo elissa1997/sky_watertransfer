@@ -12,7 +12,7 @@
         <realTimeStation v-if="activeKey === '2'"/>
       </a-tab-pane>
       <a-tab-pane key="3" tab="取水信息">
-        <waterUser v-if="activeKey === '3'" @waterUserAllTable="waterUserAllTable"/>
+        <waterUser v-if="activeKey === '3'" @waterUserAllTable="waterUserAllTable" @openWaterUser="openWaterUser"/>
       </a-tab-pane>
     </a-tabs>
   </div>
@@ -47,6 +47,10 @@ export default {
 
     openCommand(data) {
       this.$emit('openCommand',data)
+    },
+
+    openWaterUser(data) {
+      this.$emit('openWaterUser',data)
     }
   },
   mounted() {},
@@ -58,12 +62,25 @@ export default {
 
   @include animation_cubic-bezier;
   position: absolute;
-  top: 110px;
+  top: calc(10px + $introduceHeight + 10px);
   right: 10px;
   // padding: 10px;
   // width: 427px;
   width: 490px;
   height: 60vh;
+  height: $infoPanelHeight;
+
+  ::v-deep .ant-tabs-tab-active {
+    color: $mainColor;
+  }
+
+  ::v-deep .ant-tabs-tab:hover {
+    color: $mainColorHover;
+  }
+
+  ::v-deep .ant-tabs-ink-bar {
+    background-color: $mainColor;
+  }
 }
 
 .collapse {
@@ -86,7 +103,7 @@ export default {
   border-bottom-left-radius: 5px;
   position: absolute;
   left: -34px;
-  top: calc((60vh - 34px) / 2);
+  top: calc(($infoPanelHeight - 34px) / 2);
   display: flex;
   align-items: center;
   ::v-deep .i-icon {

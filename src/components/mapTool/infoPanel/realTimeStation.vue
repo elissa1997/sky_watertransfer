@@ -4,7 +4,11 @@
     <template v-else>
       <div class="gateList">
         <div class="title">
-          <div class="text">大型闸站信息</div>
+          <div class="text">
+            大型闸站信息
+            <a-button type="primary" @click="exportGateXLSX" style="margin-left: 5px;">导出</a-button>
+          </div>
+
           <div class="legend">
             <a-badge status="processing" text="闸门开启" />
             <a-badge status="warning" text="闸门全关" />
@@ -12,7 +16,7 @@
 
           </div>
         </div>
-        <a-table class="table" :columns="gateStationList.columns" :data-source="gateStationList.data" rowKey="name" size="small" :pagination="false">
+        <a-table class="table" :columns="gateStationList.columns" :data-source="gateStationList.data" rowKey="name" size="small" :pagination="false" :rowClassName="rowClassName">
           <div slot="gateH" slot-scope="text, record">
             <a-badge status="default" v-if="record.gateH === ''"/>
             <template v-else>
@@ -46,20 +50,26 @@
 
       <div class="pumpList">
         <div class="title">
-          <div class="text">泵站信息</div>
+          <div class="text">
+            泵站信息
+            <a-button type="primary" @click="exportPumpXLSX" style="margin-left: 5px;">导出</a-button>
+          </div>
         </div>
-        <a-table class="table" :columns="pumpStationList.columns" :data-source="pumpStationList.data" rowKey="name" size="small" :pagination="false"/>
+        <a-table class="table" :columns="pumpStationList.columns" :data-source="pumpStationList.data" rowKey="name" size="small" :pagination="false" :rowClassName="rowClassName"/>
       </div>
+
 
     </template>
   </div>
 </template>
 
 <script>
-import { Badge, Table, Tooltip } from 'ant-design-vue';
+import { Badge, Table, Tooltip, Button } from 'ant-design-vue';
 
 import {transferApi} from "@/network/liveData.js";
 import loading from "@/components/public/loading.vue";
+
+import * as XLSX from "xlsx";
 
 export default {
   name: "realTimeStation",
@@ -68,7 +78,7 @@ export default {
     ABadge:Badge,
     ATable:Table,
     ATooltip:Tooltip,
-
+    AButton:Button,
     loading
   },
   data() {
@@ -163,6 +173,55 @@ export default {
         ele.dwz = (ele.dwz !== "-")?parseFloat(ele.dwz.substring(0,ele.dwz.length-1)).toFixed(2) + "m":"-";
         return ele;
       })
+    },
+
+    // 表格根据奇偶行匹配class
+    rowClassName(record, index) {
+      let className = 'light';
+      if (index % 2 === 1) className = 'dark';
+      return className;
+    },
+
+    // 导出闸站
+    exportGateXLSX() {
+      let excelData = this.gateStationList.data.map(ele => {
+        let gateH = (typeof(ele.gateH) === "object")? ele.gateH.join(",") : ele.gateH;
+        return {
+          "测站名称": ele.name,
+          "采集时间": ele.tm,
+          "闸上水位": ele.z,
+          "闸下水位": ele.dwz,
+          "流量": ele.q,
+          "闸门": gateH,
+          "测站名称": ele.name,
+          "测站名称": ele.name
+        }
+      })
+
+      const data = XLSX.utils.json_to_sheet(excelData);
+      const wb = XLSX.utils.book_new()
+      XLSX.utils.book_append_sheet(wb, data, 'sheet1')
+      XLSX.writeFile(wb,'大型闸站信息.xlsx')
+    },
+
+    // 导出泵站
+    exportPumpXLSX() {
+      let excelData = this.gateStationList.data.map(ele => {
+        let gateH = (typeof(ele.gateH) === "object")? ele.gateH.join(",") : ele.gateH;
+        return {
+          "测站名称": ele.name,
+          "采集时间": ele.tm,
+          "上游水位": ele.z,
+          "下游水位": ele.dwz,
+          "台数": ele.omcn,
+          "功率": ele.number,
+        }
+      })
+
+      const data = XLSX.utils.json_to_sheet(excelData);
+      const wb = XLSX.utils.book_new()
+      XLSX.utils.book_append_sheet(wb, data, 'sheet1')
+      XLSX.writeFile(wb,'大型泵站信息.xlsx')
     }
   },
   mounted() {
@@ -174,8 +233,26 @@ export default {
 <style lang="scss" scoped>
 #realTimeStation{
   padding: 10px;
-  height: calc(60vh - 46px);
+  height: calc($infoPanelHeight - 46px);
   overflow-y: auto;
+
+
+  ::v-deep .ant-table .light{
+    background-color: #ffffff;
+  }
+  ::v-deep .ant-table .dark{
+    background-color: #f8f8f8;
+  }
+
+  ::v-deep .ant-table-thead {
+    background-color: #0b996e;
+    font-weight: 700;
+    th {
+      color: #fff !important;  
+    }
+  }
+
+  ::v-deep .ant-table-tbody > tr:hover>td { background-color:transparent!important }
 }
 
 .gateList{
