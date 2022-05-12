@@ -1,16 +1,22 @@
 <template>
-  <div id="baseMapSwitch" :class="{isCollapse: collapse}">
+  <div id="baseMapSwitch">
     
-
-      <div class="toggleBtn" @click="collapse = !collapse">
-        <component :is="(collapse)?'icon-menu-unfold-one':'icon-menu-fold-one'" theme="outline" size="24" fill="#099e07" :strokeWidth="3"/>
+      <div class="warp" :class="{isCollapse: collapse}">
+        <div class="mapList">
+          <div class="mapItem" v-for="map in baseMapList" :key="map.id" :class="{isVisible: map.visible}" @click="selectLayer(map.id)">
+            <img :src="require('@/assets/mapCover/'+map.id+'.jpg')">
+            <div class="lable">{{map.title}}</div>
+          </div>
+          
+          <div class="mapItem" @click="openOverview">
+            <img :src="require('@/assets/mapCover/overView.jpg')">
+            <div class="lable">概化图</div>
+          </div>
+        </div>
       </div>
 
-      <div class="warp">
-        <div class="mapItem" v-for="map in baseMapList" :key="map.id" :class="{isVisible: map.visible}" @click="selectLayer(map.id)">
-          <img :src="require('@/assets/mapCover/'+map.id+'.jpg')">
-          <div class="lable">{{map.title}}</div>
-        </div>
+      <div class="toggleBtn" @click="collapse = !collapse">
+        <component :is="(collapse)?'icon-menu-fold-one':'icon-menu-unfold-one'" theme="outline" size="24" fill="#099e07" :strokeWidth="3"/>
       </div>
 
     </div>
@@ -28,7 +34,13 @@ export default {
   data() {
     return {
       collapse: false,
-      baseMapList: undefined
+      baseMapList: undefined,
+      overView: {
+        images: [
+          '/dist/images/Huai_NorthTransfer_overview.jpg'
+        ],
+        options: { "navbar": false, "title": false, "toolbar": false }
+      }
     }
   },
   methods: {
@@ -44,7 +56,16 @@ export default {
 
           this.$forceUpdate();
       })
-    }
+    },
+
+    openOverview() {
+      const $viewer = this.$viewerApi({
+        options:this.overView.options,
+        images: this.overView.images
+      })
+
+      $viewer.zoom(5)
+    },
 
   },
   created() {
@@ -59,31 +80,34 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-  $fullWidth: 490px;
+  $fullWidth: 300px;
   #baseMapSwitch {
     display: flex;
     position: absolute;
     top:10px;
-    right: 10px;
+    left: 10px;
     border-radius: 5px;
     // background-color: #ffffff71;
     // backdrop-filter: blur(7px);
     // box-shadow: 0px 0px 10px #0000002e;
     // transition: all cubic-bezier(0.46, 0.03, 0.52, 0.96) 0.5s;
 
-    width: $fullWidth;
-    overflow: hidden;
+    // width: $fullWidth;
 
     @include grossGlass;
     @include boxShadow;
-    @include animation_cubic-bezier;
   }
 
   .warp {
+    overflow: hidden;
     width: calc($fullWidth - 34px);
-    display: flex;
-    align-items: center;
-    justify-content: space-evenly;
+    @include animation_cubic-bezier;
+    .mapList{
+      width: calc($fullWidth - 34px);
+      display: flex;
+      align-items: center;
+      justify-content: space-evenly;
+    }
   }
 
   .toggleBtn {
@@ -92,8 +116,8 @@ export default {
     align-items: center;
     padding: 0 5px;
     background-color: #ffffffbd;
-    border-bottom-left-radius: 5px;
-    border-top-left-radius: 5px;
+    border-bottom-right-radius: 5px;
+    border-top-right-radius: 5px;
     box-shadow: 2px 0px 9px -5px #00000059;
   }
 
@@ -101,11 +125,11 @@ export default {
 
   .mapItem {
     position: relative;
-    width: 70px;
-    height: 70px;
+    width: 60px;
+    height: 60px;
     cursor: pointer;
     border-radius: 5px;
-    margin: 10px;
+    margin: 10px 0px;
 
     img {
       border-radius: 5px;
@@ -133,7 +157,7 @@ export default {
 
 
   .isVisible {
-    box-shadow: 0px 0px 10px 2px #1cc111;
+    box-shadow: 0px 0px 10px 2px $mainColor;
   }
 
   .isCollapse {

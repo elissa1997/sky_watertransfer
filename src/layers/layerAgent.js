@@ -2,7 +2,7 @@ import Vue from 'vue';
 
 const arcgisModules = Vue.prototype.$arcgisModules;
 
-
+import imageLayer from "@/layers/imageLayer.js";
 import globleMask from "@/layers/globleMask.js";
 
 import * as businessLayer_01 from "@/layers/business_layer/mainLine.js";
@@ -44,7 +44,8 @@ const layerObj = {
 };
 
 // 默认加载图层
-export function loadDefaultLayers(map) {
+export function loadDefaultLayers(map, view) {
+  imageLayer(map, view);
   globleMask(map);
 }
 
@@ -56,7 +57,7 @@ export async function handlerLayerByTree(map, view, checkKeys, allLayerId) {
     let isChecKeys = checkKeys.find(layer => layer.layerId == id)
     let isLoadOnMap = map.findLayerById(id);
     // console.log(view)
-    // console.log(id, isChecKeys, isLoadOnMap);
+    console.log(id, isChecKeys, isLoadOnMap);
     if (isChecKeys) {
       // 已勾选
       if (!isLoadOnMap) {
@@ -95,7 +96,6 @@ export async function handlerLayerByTree(map, view, checkKeys, allLayerId) {
     }
     
   }
-  // console.log("默认图层加载完成");
 }
 
 export async function layerTest(map) {

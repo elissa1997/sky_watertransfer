@@ -51,6 +51,7 @@ export async function featureLayer() {
       {"type": "string","name": "diversionZ"},
       {"type": "string","name": "z"},
       {"type": "string","name": "desc"},
+      {"type": "string","name": "quote"},
       {"type": "string","name": "designQ"},
       {"type": "string","name": "tm"},
       {"type": "string","name": "dwz"},
@@ -67,7 +68,10 @@ export async function featureLayer() {
   }
 
   await transferApi(axios_params).then(res => {
-    template.source = res.source;
+    template.source = res.source.map(ele => {
+      ele.attributes.quote = JSON.stringify(ele.attributes.quote);
+      return ele;
+    });
   })
 
   return template;

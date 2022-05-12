@@ -47,17 +47,39 @@ export function initLayers(map) {
     copyright: "水科院"
   })
 
+  // 全国影像图
+  let AHSLIMG_CHINA = new arcgisModules.TileLayer({
+    id: 'AHSLIMG_CHINA',
+    title: "全国影像图",
+    url: "/arcgis/rest/services/AHSLIMG_CHINA/MapServer",
+  })
+  // 安徽省影像图
+  let AHSLIMG = new arcgisModules.TileLayer({
+    id: 'AHSLIMG',
+    title: "安徽省影像图",
+    url: "/arcgis/rest/services/AHSLIMG/MapServer",
+  })
+  // 水系标注与边界
+  let AHYX_ZH0717 = new arcgisModules.TileLayer({
+    id: 'AHYX_ZH0717',
+    title: "水系标注与边界",
+    url: "/arcgis/rest/services/AHYX_ZH0717/MapServer",
+  })
+
   const tdtImg = new arcgisModules.GroupLayer({id: "tdtImg", title: "天地图影像", visible: false});
   const tdtVec = new arcgisModules.GroupLayer({id: "tdtVec", title: "天地图矢量", visible: false});
   const tdtTer = new arcgisModules.GroupLayer({id: "tdtTer", title: "天地图地形", visible: false});
-  // const sl_zh = new arcgisModules.GroupLayer({id: "sl_zh", title: "水利综合图", visible: true});
+  const sl_zh = new arcgisModules.GroupLayer({id: "sl_zh", title: "水利综合", visible: false});
+  const slImg = new arcgisModules.GroupLayer({id: "slImg", title: "水利影像", visible: true});
 
   tdtImg.addMany([tdt_img_w, tdt_cia_w]);
   tdtVec.addMany([tdt_vec_w, tdt_cva_w]);
   tdtTer.addMany([tdt_ter_w, tdt_cta_w]);
-  // sl_zh.addMany([ahsl_zh0717]);
+  sl_zh.addMany([ahsl_zh0717]);
+  slImg.addMany([AHSLIMG_CHINA, AHSLIMG, AHYX_ZH0717])
 
-  let baseLayers = [tdtImg, tdtVec, tdtTer, ahsl_zh0717];
+
+  let baseLayers = [slImg, sl_zh];
 
   return baseLayers;
 }
