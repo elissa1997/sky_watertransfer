@@ -1,20 +1,26 @@
 <template>
   <div id="inspection">
-    <div class="operat">
-      <a-button type="primary" @click="addInspection" v-if="this.$userInfo.type === 'A'">添加巡查情况</a-button>
+    <div class="operat" v-if="$hasPermission(this.$userInfo.type, 'A')">
+      <a-button type="primary" @click="addInspection">添加巡查情况</a-button>
     </div>
-    <a-table :columns="inspectionData.colums" :data-source="inspectionData.data" rowKey="id" :pagination="false" >
-      <template slot="urgeTime" slot-scope="urgeTime">{{$dayjs(urgeTime).format("YYYY-MM-DD HH:mm:ss")}}</template>
-      <span slot="action" slot-scope="text, record" @click="openDetail(record)">
-        <a class="action"><icon-preview-open theme="outline" size="20" fill="#1890ff" :strokeWidth="3"/>详情</a>
-      </span>
-    </a-table>
+    <div class="tableWarp">
+      <a-table :columns="inspectionData.colums" :data-source="inspectionData.data" rowKey="id" :pagination="false">
+        <a-tag :color="(status === '0')?'orange':'green'" slot="status" slot-scope="status">
+          {{(status === "0")?'未回复':'已回复'}}
+        </a-tag>
+        <template slot="urgeTime" slot-scope="urgeTime">{{$dayjs(urgeTime).format("YYYY-MM-DD HH:mm:ss")}}</template>
+        <div slot="action" slot-scope="text, record" class="actionWarp">
+          <a class="action" @click="openDetail(record)"><icon-preview-open theme="outline" size="20" fill="#1890ff" :strokeWidth="3"/>详情</a>
+          <a class="action" @click="replyInspection(record)" v-if="$userInfo.unitCode_ === record.receiveUnitCode && record.status === '0'"><icon-email-push theme="outline" size="20" fill="#1890ff" :strokeWidth="3"/>回复</a>
+        </div>
+      </a-table>
+    </div>
   </div>
 </template>
 
 <script>
 import { inspectionList } from "@/network/command/inspection.js";
-import { Button, Table, Tag } from 'ant-design-vue';
+import { Button, Table, Tag, Divider, } from 'ant-design-vue';
 
 export default {
   name: "inspection",
@@ -27,35 +33,31 @@ export default {
   components: {
     ATable:Table,
     ATag:Tag,
-    AButton:Button
+    AButton:Button,
+    ADivider:Divider,
   },
   data() {
     return {
       inspectionData:{
         colums:[
           { title: '巡查单位', dataIndex: 'urgeUnitName' },
-          // { title: '巡查单位类型', dataIndex: 'inspectionDepartType' },
           { title: '巡查内容', dataIndex: 'problem' },
           { title: '被巡查站点', dataIndex: 'receiveUnitName' },
-          // { title: '状态', dataIndex: 'status', scopedSlots: { customRender: 'status' }, },
-          { title: '时间', dataIndex: 'urgeTime', scopedSlots: { customRender: 'urgeTime' } },
+          { title: '状态', dataIndex: 'status', scopedSlots: { customRender: 'status' }, },
+          { title: '巡查发布时间', dataIndex: 'urgeTime', scopedSlots: { customRender: 'urgeTime' } },
           { title: '操作', scopedSlots: { customRender: 'action' } },
         ],
-        data: [
-          // {id: "1", name: "宿州市水利局", type: "市管单位", status: "确认收到", time: "2021-12-17"},
-          // {id: "2", name: "蚌埠市水利局", type: "市管单位", status: "确认收到", time: "2021-12-17"},
-          // {id: "1", inspectionDepart: "淮洪新河河道管理局", inspectionDepartType: "省管中心", inspectionContent: "巡查正常，暂未发现问题", supervisedDepart: "何巷闸", status: "巡查完成", time: "2021-12-17"},
-          // {id: "2", inspectionDepart: "淮洪新河河道管理局", inspectionDepartType: "省管中心", inspectionContent: "巡查正常，暂未发现问题", supervisedDepart: "五河站", status: "巡查完成", time: "2021-12-17"},
-          // {id: "3", inspectionDepart: "宿州市水利局", inspectionDepartType: "市管中心", inspectionContent: "巡查正常，暂未发现问题", supervisedDepart: "娄宋站", status: "巡查完成", time: "2021-12-17"},
-          // {id: "4", inspectionDepart: "蚌埠市水利局", inspectionDepartType: "市管中心", inspectionContent: "巡查正常，暂未发现问题", supervisedDepart: "固镇站", status: "巡查完成", time: "2021-12-17"},
-
-        ]
+        data: [],
       }
     }
   },
   methods: {
     openDetail(row) {
-      console.log(row);
+      this.$emit('detailInspection', row);
+    },
+
+    replyInspection(row) {
+      this.$emit('replyInspection', row);
     },
 
     addInspection() {
@@ -67,7 +69,6 @@ export default {
         if (res.code === "1") {
           this.inspectionData.data = res.data;
         }
-        // console.log(res);
       })
     },
 
@@ -95,6 +96,7 @@ export default {
   height: 100%;
   border: 1px solid #00000021;
   border-radius: 5px;
+  // overflow-y: auto;
 }
 
 .operat {
@@ -102,9 +104,22 @@ export default {
   border-bottom: 1px solid #00000021;
 }
 
-.action {
+.tableWarp {
+  overflow-y: scroll;
+  height: calc(100% - 60px);
+}
+
+.actionWarp {
   display: flex;
   align-items: center;
-
+  justify-content: flex-start;
+  .action {
+    display: flex;
+    align-items: center;
+  }
+  .action:not(:first-of-type) {
+    margin-left: 5px;
+  }
 }
+
 </style>

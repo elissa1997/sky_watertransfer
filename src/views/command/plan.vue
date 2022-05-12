@@ -1,16 +1,15 @@
 <template>
   <div id="plan">
 
-    <div class="preView" :style="{width:(this.$userInfo.type === 'A')?'70%':'100%'}">
-      <a-button class="receiveBtn" type="primary" @click="handleReceive" v-if="loggedInreceiveUnit && this.$userInfo.type != 'A'" :disabled="loggedInreceiveUnit.zt === '1'">
+    <div class="preView" :style="{width:$hasPermission(this.$userInfo.type, 'AE')?'70%':'100%'}">
+      <pdfView v-if="uploaded && pdfSrc" :height="$hasPermission(this.$userInfo.type, 'AE')?'100%':'calc(100% - 32px)'" :src="pdfSrc"/>
+      <noData v-else/>
+      <a-button type="primary" @click="handleReceive" v-if="loggedInreceiveUnit && $hasPermission(this.$userInfo.type, 'BCD')" :disabled="loggedInreceiveUnit.zt === '1'">
         {{(loggedInreceiveUnit.zt === '0')?'确认签收':'已签收'}} 
       </a-button>
-
-      <pdfView v-if="uploaded && pdfSrc" :height="'100%'" :src="pdfSrc"/>
-      <noData v-else/>
     </div>
-    <a-tabs default-active-key="1" style="width: calc(30% - 10px);" v-if="this.$userInfo.type === 'A'">
-      <a-tab-pane key="1" tab="发布方案">
+    <a-tabs default-active-key="1" style="width: calc(30% - 10px);" v-if="$hasPermission(this.$userInfo.type, 'AE')">
+      <a-tab-pane key="1" tab="发布方案" v-if="$hasPermission(this.$userInfo.type, 'A')">
         <div class="upload">
           <a-input v-model="upload.planName" placeholder="请输入文件标题或选择文件后自动填写"></a-input>
 
@@ -20,7 +19,7 @@
             :file-list="upload.fileList" :remove="handleRemove" :before-upload="beforeUpload"
             accept=".pdf"
           >
-            <a-button block class="btnInnerCenter"> 
+            <a-button type="primary" block class="btnInnerCenter"> 
               <icon-upload-one theme="outline" size="16" fill="#9b9b9b" :strokeWidth="3"/> 
               点击选择文件 
             </a-button>
@@ -36,7 +35,7 @@
 
         </div>
       </a-tab-pane>
-      <a-tab-pane key="2" tab="签收情况" force-render>
+      <a-tab-pane key="2" tab="签收情况"  v-if="$hasPermission(this.$userInfo.type, 'AE')">
         <a-table bordered class="receiveTable" v-if="uploaded" :columns="receiveUnitColums" :data-source="uploaded.planExtList" rowKey="id" :pagination="false" size="middle" >
           <a-tag :color="(zt === '0')?'orange':'green'" slot="zt" slot-scope="zt">
             {{(zt === "0")?'暂未确认':'确认收到'}}
@@ -198,7 +197,7 @@ export default {
     // 接收单位树更改
     unitChange(unitStringList) {
       if (unitStringList.length) {
-        this.upload.unitList = unitStringList.join(",");
+        this.upload.unitList = unitStringList.join("");
       }
       // console.log(unitStringList);
     },
@@ -218,7 +217,7 @@ export default {
       if (contactsList && contactsList.length) {
         this.upload.SMS.list = contactsList.join(",");
       }else {
-        this.uploaded.SMS.list = undefined;
+        this.upload.SMS.list = undefined;
       }
       // console.log(contactsList);
     },
@@ -288,12 +287,6 @@ export default {
   border: 1px solid #00000021;
   border-radius: 5px;
   position: relative;
-
-  .receiveBtn {
-    position: absolute;
-    top: 20px;
-    left: 20px;
-  }
 }
 
 .upload {
@@ -330,7 +323,7 @@ export default {
 
 .receiveTable {
   margin-top: 10px;
-  height: 690px;
+  height: calc(90vh - 175px);
   overflow-y: auto;
 }
 

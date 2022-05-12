@@ -1,19 +1,16 @@
 <template>
   <div id="meeting">
 
-    <div class="preView" :style="{width:(this.$userInfo.type === 'A')?'70%':'100%'}">
-      <a-button class="receiveBtn" type="primary" @click="handleReceive" v-if="loggedInreceiveUnit && $userInfo.type != 'A'" :disabled="loggedInreceiveUnit.zt === '1'">
-        {{(loggedInreceiveUnit.zt === '0')?'确认签收':'已签收'}} 
-        <!-- {{checkReciveStatus()}} -->
-      </a-button>
-      
-      
-      <pdfView v-if="uploaded && pdfSrc" :height="'100%'" :src="pdfSrc"/>
+    <div class="preView" :style="{width:$hasPermission(this.$userInfo.type, 'AE')?'70%':'100%'}">
+      <pdfView v-if="uploaded && pdfSrc" :height="$hasPermission(this.$userInfo.type, 'AE')?'100%':'calc(100% - 32px)'" :src="pdfSrc"/>
       <noData v-else/>
+      <a-button class="receiveBtn" type="primary" @click="handleReceive" v-if="loggedInreceiveUnit && $hasPermission(this.$userInfo.type, 'BCD')" :disabled="loggedInreceiveUnit.zt === '1'">
+        {{(loggedInreceiveUnit.zt === '0')?'确认签收':'已签收'}} 
+      </a-button>
     </div>
 
-    <a-tabs default-active-key="1" style="width: calc(30% - 10px);" v-if="this.$userInfo.type === 'A'">
-      <a-tab-pane key="1" tab="上传会议记录">
+    <a-tabs default-active-key="1" style="width: calc(30% - 10px);" v-if="$hasPermission(this.$userInfo.type, 'AE')">
+      <a-tab-pane key="1" tab="上传会议记录" v-if="$hasPermission(this.$userInfo.type, 'A')">
         <div class="upload">
           <a-input v-model="upload.meetingName" placeholder="请输入会议名称"></a-input>
           <!-- <a-textarea v-model="upload.meetingContent" placeholder="请输入会议内容" :auto-size="{ minRows: 5, maxRows: 15 }"></a-textarea> -->
@@ -23,7 +20,7 @@
             :file-list="upload.fileList" :remove="handleRemove" :before-upload="beforeUpload"
             accept=".pdf"
           >
-            <a-button block class="btnInnerCenter"> 
+            <a-button type="primary" block class="btnInnerCenter"> 
               <icon-upload-one theme="outline" size="16" fill="#9b9b9b" :strokeWidth="3"/> 
               点击选择文件 
             </a-button>
@@ -43,7 +40,7 @@
         </div>
 
       </a-tab-pane>
-      <a-tab-pane key="2" tab="签收情况" force-render>
+      <a-tab-pane key="2" tab="签收情况" v-if="$hasPermission(this.$userInfo.type, 'AE')">
         <a-table bordered class="receiveTable" v-if="uploaded" :columns="receiveUnitColums" :data-source="uploaded.unitList" rowKey="id" :pagination="false" size="middle" >
           <a-tag :color="(zt === '0')?'orange':'green'" slot="zt" slot-scope="zt">{{(zt === "0")?'暂未确认':'确认收到'}}</a-tag>
           <!-- <template slot="ts" slot-scope="ts">{{$dayjs(ts).format("YYYY-MM-DD HH:mm:ss")}}</template> -->
@@ -152,7 +149,7 @@ export default {
         formData.append('id', this.uploaded.id);
       }
 
-      if (this.unit.sendSMS) {
+      if (this.upload.SMS.isSend) {
         formData.append('sendFlag', "1");
         formData.append('telstrs', this.upload.SMS.list);
         formData.append('message', this.SMSContent);
@@ -207,7 +204,7 @@ export default {
     // 接收单位树更改
     unitChange(unitStringList) {
       if (unitStringList.length) {
-        this.upload.unitList = unitStringList.join(",");
+        this.upload.unitList = unitStringList.join("");
       }
       // console.log(unitStringList);
     },
@@ -296,9 +293,9 @@ export default {
   position: relative;
 
   .receiveBtn {
-    position: absolute;
-    top: 20px;
-    left: 20px;
+    // position: absolute;
+    // top: 20px;
+    // left: 20px;
   }
 }
 
@@ -332,7 +329,7 @@ export default {
 
 .receiveTable {
   margin-top: 10px;
-  height: 690px;
+  height: calc(90vh - 175px);
   overflow-y: auto;
 }
 
