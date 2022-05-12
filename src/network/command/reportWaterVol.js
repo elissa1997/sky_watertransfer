@@ -25,3 +25,11 @@ export function update(params, data) {
     data
   })
 }
+
+export function autoWw(params) {
+  return instance_api({
+    url: 'indexZBController.api',
+    method: 'get',
+    params
+  })
+}

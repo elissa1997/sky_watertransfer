@@ -2,21 +2,25 @@
   <div id="unitAndContacsList">
     <a-tabs default-active-key="1" style="width: 100%;">
       <a-tab-pane key="1" tab="接收单位">
-        <a-tree
-          class="tree"
-          checkable
-          :checkStrictly="true"
-          defaultExpandParent
-          :replace-fields="replaceFields"
-          :tree-data="unit.unitTree"
-          @check="treeCheck"
-        >
-        </a-tree>
+        <div class="treeWarp">
+          <a-tree
+            class="tree"
+            checkable
+            :checkStrictly="true"
+            defaultExpandParent
+            :replace-fields="replaceFields"
+            :tree-data="unit.unitTree"
+            @check="treeCheck"
+          >
+          </a-tree>
+        </div>
       </a-tab-pane>
       <a-tab-pane key="2" tab=" 短信接收人" v-if="unit.sendSMS">
-        <a-checkbox-group class="tree" @change="contactsChange" v-model="selected.contactsList">
-          <a-checkbox v-for="people in unit.contactsList" :key="people.id" :value="people.tel">{{people.name}}</a-checkbox>
-        </a-checkbox-group>
+        <div class="treeWarp">
+          <a-checkbox-group class="tree" @change="contactsChange" v-model="selected.contactsList">
+            <a-checkbox v-for="people in unit.contactsList" :key="people.id" :value="people.tel">{{people.name}}</a-checkbox>
+          </a-checkbox-group>
+        </div>
       </a-tab-pane>
       <div slot="tabBarExtraContent" style="margin-right: 10px;display: flex;align-items: center;"> 
         短信提醒 &nbsp; <a-switch v-model="unit.sendSMS"/> 
@@ -126,6 +130,7 @@ export default {
     getReceiveUnit_params: function () {
       return {
         action: "transferUnitList",
+        visible: "1",
       }
     },
   },
@@ -169,6 +174,12 @@ export default {
 ::v-deep .ant-checkbox-wrapper + .ant-checkbox-wrapper {
   margin-left: 0px;
 }
+
+.treeWarp {
+  height: calc(90vh - 380px);
+  overflow-y: auto;
+}
+
 .tree {
   padding: 5px;
 

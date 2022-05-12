@@ -43,8 +43,8 @@ export default {
       width: 400,
       modalWidthByFrom: {
         full: ["transferCommand"],
-        large: ["businessLayer_08", "projectPlan"],
-        medium: ["businessLayer_02", "businessLayer_03", "waterUserAllTable", "waterUser"],
+        large: ["businessLayer_08", "projectPlan", "waterUserAllTable"],
+        medium: ["businessLayer_02", "businessLayer_03", "waterUser"],
         small: []
       }
     }

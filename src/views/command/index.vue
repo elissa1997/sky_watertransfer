@@ -6,11 +6,11 @@
       <notice v-if="displayNum === 2" @addNotice="addNotice" :regData="regData" ref="notice"/>
       <!-- <selfCheck v-if="displayNum === 3" @addSelfCheck="addSelfCheck" :regData="regData" ref="selfCheck"/> -->
       <meeting v-if="displayNum === 3" :regData="regData" />
-      <inspection v-if="displayNum === 4" @addInspection="addInspection" :regData="regData" ref="inspection"/>
-      <execute v-if="displayNum === 5" @addExecute="addExecute" @executeDetail="executeDetail" :regData="regData" ref="execute"/>
+      <inspection v-if="displayNum === 4" @addInspection="addInspection" @replyInspection="replyInspection" :regData="regData" @detailInspection = "detailInspection" ref="inspection"/>
+      <execute v-if="displayNum === 5" @addExecute="addExecute" @replyExecute="replyExecute" @executeDetail="executeDetail" :regData="regData" ref="execute"/>
       <reportWaterVol v-if="displayNum === 6 || displayNum === 7" @addWaterVol="addWaterVol" @updateWaterVol="updateWaterVol" :regData.sync="regData" ref="reportWaterVol"/>
     </div>
-    <div class="stepControl" v-if="$userInfo.type === 'A'">
+    <div class="stepControl"  v-if="$hasPermission(this.$userInfo.type, 'A')">
       <a-button type="primary" @click="nextStep" :disabled="current >= 7">
         <template v-if="current <= 5">确认执行下一步</template>
         <template v-if="current === 6 || current === 7 ">本次调水完成</template>
@@ -115,6 +115,24 @@ export default {
       }
     },
 
+    replyInspection(record) {
+      this.modal = {
+        visible: true,
+        title: "巡查回复",
+        data: record,
+        from: "replyInspection"
+      }
+    },
+
+    detailInspection(record) {
+      this.modal = {
+        visible: true,
+        title: "巡查详情",
+        data: record,
+        from: "detailInspection"
+      }
+    },
+
     addExecute() {
       this.modal = {
         visible: true,
@@ -132,12 +150,19 @@ export default {
         from: "executeDetail"
       }
     },
-
-    addWaterVol() {
+    replyExecute(record){
+      this.modal = {
+        visible: true,
+        title: "调度指令单反馈",
+        data: record,
+        from: "replyExecute"
+      }
+    },
+    addWaterVol(station) {
       this.modal = {
         visible: true,
         title: "水量上报",
-        data: this.regData,
+        data: {reg:this.regData, station},
         from: "addWaterVol"
       }
     },
@@ -146,7 +171,7 @@ export default {
       this.modal = {
         visible: true,
         title: "水量上报修改",
-        data: {reg:this.regData, record},
+        data: record,
         from: "updateWaterVol"
       }
     },
