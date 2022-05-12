@@ -13,7 +13,7 @@ export default {
   props: {
     steps: {
       type: Array,
-      default: () => ["调水方案", "调水预通知", "工作会议", "巡查情况" ,"实施调水", "信息上报"]
+      default: () => ["调水方案", "调水预通知", "工作会议", "调水巡查" ,"实施调水", " "]
     },
     current: {
       type: Number,
@@ -38,7 +38,11 @@ export default {
     }
   },
   mounted() {
-    
+    if (this.$userInfo.type === "E") {
+      this.steps[5] = "水量信息";
+    }else{
+      this.steps[5] = "信息上报";
+    }
   },
   watch: {
     current: {

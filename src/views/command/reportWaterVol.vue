@@ -1,17 +1,20 @@
 <template>
   <div id="reportWaterVol">
-    <div class="operat" placeholder="选择站点">
-      <a-select v-if="statsionList.length" v-model="stationSelected" style="width: 120px; marginRight: 10px" placeholder="">
-        <a-select-option v-for="station in statsionList" :key="station.stcd" :value="station.stcd">{{station.name}}</a-select-option>
+    <div class="operat" placeholder="选择站点" v-if="$hasPermission(this.$userInfo.type, 'ABCD')">
+      <a-select v-if="station.statsionList.length" v-model="station.stationSelected" style="width: 120px; marginRight: 10px" placeholder="">
+        <a-select-option v-for="st in station.statsionList" :key="st.stcd" :value="st.stcd">{{st.name}}</a-select-option>
       </a-select>
-      <a-button @click="addWaterVol" type="primary" v-if="this.$userInfo.type === 'B' || this.$userInfo.type === 'D'">水量上报</a-button>
+      <a-button @click="addWaterVol" type="primary" v-if="$hasPermission(this.$userInfo.type, 'BCD')">水量上报</a-button>
     </div>
-    <a-table :columns="tableData.colums" :data-source="tableData.data" rowKey="id" :pagination="false" >
-      <!-- <a-tag :color="(status === '确认收到')?'green':'orange'" slot="status" slot-scope="status">{{status}}</a-tag> -->
-      <span slot="action" slot-scope="text, record" @click="update(text, record)" class="actionWarp">
-        <a class="linkBtn"><icon-edit theme="outline" size="20" fill="#1890ff" :strokeWidth="3" style="margin-right: 5px" />修改</a>
-      </span>
-    </a-table>
+    <div class="tableWarp">
+      <a-table :columns="tableData.colums" :data-source="tableData.data" rowKey="sw_cd" :pagination="false" >
+        <!-- <a-tag :color="(status === '确认收到')?'green':'orange'" slot="status" slot-scope="status">{{status}}</a-tag> -->
+        <span slot="action" slot-scope="text, record" @click="update(text, record)" class="actionWarp">
+          <a class="linkBtn"><icon-edit theme="outline" size="20" fill="#1890ff" :strokeWidth="3" style="margin-right: 5px" />修改</a>
+        </span>
+      </a-table>
+      
+    </div>
     <!-- {{stationSelected}} -->
     <!-- {{regData}} -->
   </div>
@@ -19,7 +22,7 @@
 
 <script>
 import { receiveUnit } from "@/network/command/receiveUnit.js";
-import { dictTrans } from "@/util/readLocalData.js";
+import { localData, dictTrans } from "@/util/readLocalData.js"
 import { waterVolList } from "@/network/command/reportWaterVol.js";
 import { Button, Select, Table, Tag } from 'ant-design-vue';
 
@@ -41,18 +44,21 @@ export default {
   },
   data() {
     return {
-      statsionList: [],
-      stationSelected: undefined,
+      station: {
+        stcdDict: undefined,
+        statsionList: [],
+        stationSelected: undefined,
+      },
       tableData: {
         colums: [
           // { title: 'sw_cd', dataIndex: 'sw_cd', width: 100 },
-          { title: '站点名称', dataIndex: 'unitName' },
+          { title: '时间', dataIndex: 'ts', width: 170, sorter: (a, b) => { return a.ts> b.ts? 1 : -1 }, sortDirections: ['descend', 'ascend'] },
+          { title: '站点名称', dataIndex: 'unitName', sorter: (a, b) => a.unitName.localeCompare(b.unitName), sortDirections: ['descend', 'ascend'] },
           { title: '上游水位(m)', dataIndex: 'upstream_water_level' },
           { title: '下游水位(m)', dataIndex: 'downstream_water_level' },
           { title: '引流量(m³/s)', dataIndex: 'discharge' },
           { title: '开启情况', dataIndex: 'open' },
           { title: '日水量(万m³)', dataIndex: 'station_ww' },
-          { title: '时间', dataIndex: 'ts', width: 200 },
         ],
         data: []
       }
@@ -60,7 +66,8 @@ export default {
   },
   methods: {
     addWaterVol() {
-      this.$emit('addWaterVol');
+      let dictItem = dictTrans(this.station.stcdDict, "stcd", this.station.stationSelected);
+      this.$emit('addWaterVol', dictItem);
     },
 
     async getReceiveUnit() {
@@ -69,31 +76,26 @@ export default {
         let tempList = undefined;
         // let obj = await dictTrans("stcdName", "stcd", "340323100788");
         await receiveUnit(this.getReceiveUnit_params).then(res => {
-          tempList = res.data[0].stationCodeList;
+          if (res.data.length) {
+            tempList = res.data[0].stationCodeList;
+            tempList.forEach(element => {
+              let dictItem = dictTrans(this.station.stcdDict, "stcd", element);
+              if (dictItem) {
+                this.station.statsionList.push(dictItem);
+              }
+            });
+            this.station.stationSelected = this.station.statsionList[0].stcd
+          } 
         })
-        for (let index = 0; index < tempList.length; index++) {
-          const element = tempList[index];
-          this.statsionList.push(await dictTrans("stcdName", "stcd", element));
-        }
-        console.log(this.statsionList)
-        this.stationSelected = this.statsionList[0].stcd
-
-        // 用户为BD类型的向regcd属性更新自己对应的站码
-        if (this.$userInfo.type === 'B' || this.$userInfo.type === 'D') {
-          let tempProps = this.regData;
-          tempProps.stcd = this.stationSelected
-          this.$emit('update:regData', tempProps);
-        }
       }
     },
 
     async getWaterVol() {
       this.tableData.data = [];
-      let stationObj = await dictTrans("stcdName", "stcd", this.stationSelected);
       waterVolList(this.getWaterVol_params).then(res => {
         if (res.code === "1" && res.data.length) {
           this.tableData.data = res.data.map(ele => {
-            ele.unitName = stationObj.name
+            ele.unitName = this.station.statsionList.filter(n => n.stcd === ele.station_cd)[0].name
             return ele
           })
         }
@@ -111,8 +113,9 @@ export default {
     }
   },
   async mounted() {
+    this.station.stcdDict = await localData("stcdName");
     await this.getReceiveUnit();
-    if (this.$userInfo.type === "B" || this.$userInfo.type === "D") {
+    if (this.$hasPermission(this.$userInfo.type, 'BCD')) {
       this.tableData.colums.push(
           { title: '操作', scopedSlots: { customRender: 'action' }, width: 200},
       )
@@ -128,18 +131,27 @@ export default {
     },
 
     getWaterVol_params: function (params) {
-      return {
-        action: "stationWwmList",
-        reg_cd: this.regData.reg_cd,
-        station_cd: this.stationSelected
+      if (this.$hasPermission(this.$userInfo.type, 'E')) {
+        return {
+          action: "stationWwmList",
+          reg_cd: this.regData.reg_cd,
+          // station_cd: this.station.stationSelected
+        }
+      }else{
+        return {
+          action: "stationWwmList",
+          reg_cd: this.regData.reg_cd,
+          station_cd: this.station.stationSelected
+        }
       }
     }
   },
   watch: {
-    stationSelected: {
+    'station.stationSelected': {
       handler(newVal, oldVal) {
         this.getWaterVol();
-      }
+      },
+      deep: true
       
     }
   }
@@ -156,7 +168,10 @@ export default {
   padding: 10px;
   border-bottom: 1px solid #00000021;
 }
-
+.tableWarp {
+  overflow-y: auto;
+  height: calc(100% - 60px);
+}
 .actionWarp {
   display: flex;
   align-items: center;
