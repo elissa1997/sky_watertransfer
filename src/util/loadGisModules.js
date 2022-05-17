@@ -40,8 +40,8 @@ export async function initArcGisJs() {
   ]
   let moduleNames = moduleJsPath.map(path => (path.match('[^/]+(?!.*/)')[0]));
   let options = {
-    url: "http://10.34.192.71:8080/static/arcgis/4.19/init.js",
-    css: "http://10.34.192.71:8080/static/arcgis/4.19/esri/css/main.css"
+    url: "http://10.34.0.118:8081/dist/arcgis/4.19/init.js",
+    css: "http://10.34.0.118:8081/dist/arcgis/4.19/esri/css/main.css"
     // url: "https://js.arcgis.com/4.20/",
     // css:"https://js.arcgis.com/4.20/esri/themes/light/main.css",
   };
