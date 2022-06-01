@@ -3,6 +3,7 @@ import App from './App.vue';
 import router from './router';
 import dayjs from "dayjs";
 import dayOfyear from 'dayjs/plugin/dayOfYear';
+import customParseFormat from 'dayjs/plugin/customParseFormat';
 import * as echarts from 'echarts';
 
 import { message } from 'ant-design-vue';
@@ -17,7 +18,7 @@ import { hasPermission } from "@/util/hasPermission.js";
 Vue.config.productionTip = false
 
 dayjs.extend(dayOfyear)
-
+dayjs.extend(customParseFormat)
 //加载需要异步查询的参数、数据 如：esri gis模块，将异步方法同步执行完后再初始化vue，
 const initParamsStart = async () => {
   try {
