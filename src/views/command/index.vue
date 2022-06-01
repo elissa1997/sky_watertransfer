@@ -5,8 +5,8 @@
       <plan v-if="displayNum === 1" :regData="regData"/>
       <notice v-if="displayNum === 2" @addNotice="addNotice" :regData="regData" ref="notice"/>
       <!-- <selfCheck v-if="displayNum === 3" @addSelfCheck="addSelfCheck" :regData="regData" ref="selfCheck"/> -->
-      <meeting v-if="displayNum === 3" :regData="regData" />
-      <inspection v-if="displayNum === 4" @addInspection="addInspection" @replyInspection="replyInspection" :regData="regData" @detailInspection = "detailInspection" ref="inspection"/>
+      <inspection v-if="displayNum === 3" @addInspection="addInspection" @replyInspection="replyInspection" :regData="regData" @detailInspection = "detailInspection" ref="inspection"/>
+      <meeting v-if="displayNum === 4" :regData="regData" />
       <execute v-if="displayNum === 5" @addExecute="addExecute" @replyExecute="replyExecute" @executeDetail="executeDetail" :regData="regData" ref="execute"/>
       <reportWaterVol v-if="displayNum === 6 || displayNum === 7" @addWaterVol="addWaterVol" @updateWaterVol="updateWaterVol" :regData.sync="regData" ref="reportWaterVol"/>
     </div>
@@ -167,11 +167,12 @@ export default {
       }
     },
 
-    updateWaterVol(record) {
+    updateWaterVol(record, station) {
+      // console.log(record, station)
       this.modal = {
         visible: true,
         title: "水量上报修改",
-        data: record,
+        data: {reg:record, station, type: "update"},
         from: "updateWaterVol"
       }
     },
