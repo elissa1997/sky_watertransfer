@@ -25,13 +25,38 @@ export async function featureLayer() {
       }
     },
     renderer: {
-      "type": "simple",
-      "symbol": {
-        "type": "picture-marker",
-        "url": "/dist/icon/pumpStation_red_128.svg",
-        "width": 20,
-        "height": 20
-      }
+      "type": "unique-value",
+      "field": "omcn",
+      defaultSymbol: {
+
+          "type": "picture-marker",
+          "url": "/dist/icon/pumpStation_red_128_blink.gif",
+          "width": 20,
+          "height": 20
+  
+      },
+      "uniqueValueInfos": [
+        {
+          "value": "-",
+          "symbol": {
+            "type": "picture-marker",
+            "url": "/dist/icon/pumpStation_red_128.svg",
+            "width": 20,
+            "height": 20
+          },
+          "label": "机组全关"
+        },
+        {
+          "value": "0",
+          "symbol": {
+            "type": "picture-marker",
+            "url": "/dist/icon/pumpStation_red_128.svg",
+            "width": 20,
+            "height": 20
+          },
+          "label": "机组全关"
+        }
+      ]
     },
     labelsVisible: true,
     fields: [
