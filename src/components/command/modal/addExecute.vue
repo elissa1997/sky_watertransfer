@@ -39,13 +39,11 @@
             </a-select>
           </a-form-item>
         </a-col>
-        <!-- <a-col :span="12">
-          <a-form-item label="协作部门">
-            <a-select placeholder="请选择" v-model="formData.cooperationUnitCode" @change="getCooperationUnitName">
-              <a-select-option v-for="item in cooperationUnitList" :key="item.unitcode" :value="item.unitcode">{{item.unitname}}</a-select-option>
-            </a-select>
+        <a-col :span="12">
+          <a-form-item label="短信提醒">
+            <a-switch v-model="formData.sendFlag"/> 
           </a-form-item>
-        </a-col> -->
+        </a-col>
       </a-row>
       <a-row >
         <a-col :span="12">
@@ -105,7 +103,7 @@
       <a-row>
         <a-col :span="24">
           <a-form-item :labelCol="{span:3}" :wrapperCol="{span:19}" label="附件">
-            <a-upload name="file" :multiple="false" :file-list="formData.fileList" :remove="handleRemove" :before-upload="beforeUpload" accept=".pdf,.jpeg,.png">
+            <a-upload name="file" :multiple="false" :file-list="formData.fileList" :remove="handleRemove" :before-upload="beforeUpload" accept=".pdf,.jpg,.png">
               <a-button block class="btnInnerCenter"> 
                 <icon-upload-one theme="outline" size="16" fill="#9b9b9b" :strokeWidth="3"/>选择文件 
               </a-button>
@@ -146,7 +144,7 @@
 </template>
 
 <script>
-import { Button,Form,Input,Select,Tree,Upload,Checkbox,Row,Col,Radio,DatePicker,TimePicker,Icon} from 'ant-design-vue';
+import { Button,Form,Input,Select,Tree,Upload,Checkbox,Row,Col,Radio,DatePicker,TimePicker,Icon,Switch} from 'ant-design-vue';
 import { receiveUnit } from "@/network/command/receiveUnit.js";
 import { publish } from "@/network/command/execute.js";
 
@@ -180,6 +178,7 @@ export default {
     ADatePicker:DatePicker,
     ATimePicker:TimePicker,
     AIcon:Icon,
+    ASwitch:Switch,
   },
   data() {
     return {
@@ -204,6 +203,7 @@ export default {
         orderTel: '0552-3918705',
         orderFax: '0552-3918713',
         fileList: [],
+        sendFlag: false,
       },
       taskList:[],
       executeUnitList:[],
@@ -262,13 +262,23 @@ export default {
       formDataObj.append('orderTime', this.formData.orderTime);
       formDataObj.append('orderTel', this.formData.orderTel);
       formDataObj.append('orderFax', this.formData.orderFax);
+      //短信提醒
+      if (this.formData.sendFlag) {
+        formDataObj.append('sendFlag', "1");
+        formDataObj.append('message', this.SMSContent);
+        formDataObj.append('sendUser', this.$userInfo.username_);
+      } else {
+        formDataObj.append('sendFlag', "0");
+      }
       this.formData.fileList.forEach(file => {
         formDataObj.append('file', file);
       });
       if (this.taskList.length > 0) {
         let strs = '';
         this.taskList.forEach(item => {
-          strs+=item.onOffNum+','+item.flow+','+item.wv+'#';
+          if (item.onOffNum && item.flow && item.wv) {
+            strs+=item.onOffNum+','+item.flow+','+item.wv+'#';
+          }
         });
         formDataObj.append('taskstrs', strs);
       }
@@ -314,6 +324,9 @@ export default {
         parent_unitcode : this.$userInfo.unitCode_,
       }
     },
+    SMSContent: function (params) {
+      return `您好,${this.$userInfo.unitName_}${this.$userInfo.realName_}在节水调水平台给您单位发送了一条实施调水的指令,请及时查收!`
+    }
   },
   watch: {}
 }
