@@ -2,8 +2,9 @@ import Vue from 'vue';
 
 const arcgisModules = Vue.prototype.$arcgisModules;
 
-import imageLayer from "@/layers/imageLayer.js";
+// import {imageLayer_dark, imageLayer_light } from "@/layers/imageLayer.js";
 import globleMask from "@/layers/globleMask.js";
+import mainLine_overview from "@/layers/business_layer/mainLine_overview.js";
 
 import * as businessLayer_01 from "@/layers/business_layer/mainLine.js";
 import * as businessLayer_02 from "@/layers/business_layer/pumpStation_L8.js";
@@ -24,29 +25,29 @@ import * as businessLayer_35 from "@/layers/business_layer/SZ_line.js";
 import * as businessLayer_36 from "@/layers/business_layer/BB_user.js";
 
 const layerObj = {
-  businessLayer_01: {layer: businessLayer_01, index: 1},
-  businessLayer_02: {layer: businessLayer_02, index: 8},
-  businessLayer_03: {layer: businessLayer_03, index: 7},
-  businessLayer_04: {layer: businessLayer_04, index: 6},
-  businessLayer_05: {layer: businessLayer_05, index: 5},
-  businessLayer_06: {layer: businessLayer_06, index: 4},
-  businessLayer_07: {layer: businessLayer_07, index: 3},
-  businessLayer_08: {layer: businessLayer_08, index: 2},
+  businessLayer_02: {layer: businessLayer_02, index: 9},
+  businessLayer_03: {layer: businessLayer_03, index: 8},
+  businessLayer_04: {layer: businessLayer_04, index: 7},
+  businessLayer_05: {layer: businessLayer_05, index: 6},
+  businessLayer_06: {layer: businessLayer_06, index: 5},
+  businessLayer_07: {layer: businessLayer_07, index: 4},
+  businessLayer_08: {layer: businessLayer_08, index: 3},
+  businessLayer_01: {layer: businessLayer_01, index: 2},
   businessLayer_09: {layer: businessLayer_09, index: 0},
 
-  businessLayer_30: {layer: businessLayer_30, index: 14},
-  businessLayer_31: {layer: businessLayer_31, index: 12},
-  businessLayer_32: {layer: businessLayer_32, index: 10},
-  businessLayer_33: {layer: businessLayer_33, index: 13},
-  businessLayer_34: {layer: businessLayer_34, index: 11},
-  businessLayer_35: {layer: businessLayer_35, index: 9},
-  businessLayer_36: {layer: businessLayer_36, index: 15},
+  businessLayer_36: {layer: businessLayer_36, index: 26},
+  businessLayer_30: {layer: businessLayer_30, index: 25},
+  businessLayer_33: {layer: businessLayer_33, index: 24},
+  businessLayer_31: {layer: businessLayer_31, index: 23},
+  businessLayer_34: {layer: businessLayer_34, index: 22},
+  businessLayer_32: {layer: businessLayer_32, index: 21},
+  businessLayer_35: {layer: businessLayer_35, index: 20},
 };
 
 // 默认加载图层
 export function loadDefaultLayers(map, view) {
-  imageLayer(map, view);
   globleMask(map);
+  mainLine_overview(map);
 }
 
 // 控制树控制
@@ -57,7 +58,7 @@ export async function handlerLayerByTree(map, view, checkKeys, allLayerId) {
     let isChecKeys = checkKeys.find(layer => layer.layerId == id)
     let isLoadOnMap = map.findLayerById(id);
     // console.log(view)
-    console.log(id, isChecKeys, isLoadOnMap);
+    // console.log(id, isChecKeys, isLoadOnMap);
     if (isChecKeys) {
       // 已勾选
       if (!isLoadOnMap) {
@@ -96,7 +97,10 @@ export async function handlerLayerByTree(map, view, checkKeys, allLayerId) {
     }
     
   }
+  map.reorder(map.findLayerById("businessLayer_02"), 30);
+  // console.log("默认图层加载完成");
 }
+
 
 export async function layerTest(map) {
   let layer = new arcgisModules.FeatureLayer(await bussiness_01.featureLayer());

@@ -30,7 +30,7 @@ export async function featureLayer(){
             "type": "simple-line",
             "miterLimit": 20,
             "width": 3,
-            "color": "#00ffcd"
+            "color": "#1890ff"
           },
           "label": "地上"
         },
@@ -41,12 +41,13 @@ export async function featureLayer(){
             "style": "short-dash",
             "miterLimit": 20,
             "width": 3,
-            "color": [20, 180, 248, 1]
+            "color": "#1890ff"
           },
           "label": "地下"
         }
       ]
     },
+    effect: "bloom(1, 0px 0)",
     labelsVisible: true,
     fields: [
       {"name": "FID", "type": "oid"},

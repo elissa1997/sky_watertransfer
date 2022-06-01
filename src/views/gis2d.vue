@@ -238,7 +238,7 @@ export default {
     },
 
     openCommand(data) {
-      this.openModal("调水指令-(用户："+this.$userInfo.unitName_+")", data, "transferCommand");
+      this.openModal("调水过程", data, "transferCommand");
     },
 
     openWaterUser(data) {
