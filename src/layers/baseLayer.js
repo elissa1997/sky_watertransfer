@@ -69,8 +69,8 @@ export function initLayers(map) {
   const tdtImg = new arcgisModules.GroupLayer({id: "tdtImg", title: "天地图影像", visible: false});
   const tdtVec = new arcgisModules.GroupLayer({id: "tdtVec", title: "天地图矢量", visible: false});
   const tdtTer = new arcgisModules.GroupLayer({id: "tdtTer", title: "天地图地形", visible: false});
-  const sl_zh = new arcgisModules.GroupLayer({id: "sl_zh", title: "水利综合", visible: false});
-  const slImg = new arcgisModules.GroupLayer({id: "slImg", title: "水利影像", visible: true});
+  const sl_zh = new arcgisModules.GroupLayer({id: "sl_zh", title: "水利综合", visible: true});
+  const slImg = new arcgisModules.GroupLayer({id: "slImg", title: "水利影像", visible: false});
 
   tdtImg.addMany([tdt_img_w, tdt_cia_w]);
   tdtVec.addMany([tdt_vec_w, tdt_cva_w]);
