@@ -1,6 +1,5 @@
 import axios from 'axios';
-import Cookies from 'js-cookie'
-
+import { setDevSessionId } from "@/util/auth.js";
 
 // 访问接口
 export function instance_api(config) {
@@ -21,10 +20,7 @@ export function instance_api(config) {
 
 
     instance.interceptors.request.use(config => {
-        if(process.env.NODE_ENV === "development"){
-            let sessionId = "F7E4F4CB441D5A46D24AADAA7D76265B";
-            Cookies.set("JSESSIONID", sessionId, { expires: 27 });
-        }
+        setDevSessionId();
         return config
     },err => {
         console.log(err);
