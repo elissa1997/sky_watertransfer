@@ -52,7 +52,7 @@ export default {
           }
         },
         legend: {
-          data: ['上游水位', '下游水位', '瞬时流量','累计流量'],
+          data: ['上游水位', '下游水位', '瞬时流量','累计水量'],
           left: 10
         },
         dataZoom: [
@@ -79,7 +79,7 @@ export default {
         ],
         yAxis: [
           {
-            name: '流量(m³/s)',
+            name: '水位(m)',
             type: 'value',
             axisLine: {
               show: true
@@ -89,7 +89,7 @@ export default {
             minInterval: 1
           },
           {
-            name: '水位(m)',
+            name: '流量(m³/s)',
             type: 'value',
             axisLine: {
               show: true
@@ -104,6 +104,7 @@ export default {
           {
             name: '上游水位',
             type: 'line',
+            yAxisIndex: 0,
             data: this.chartData.ppupz,
             lineStyle: {
               width: 2
@@ -115,7 +116,7 @@ export default {
           {
             name: '下游水位',
             type: 'line',
-            yAxisIndex: 1,
+            yAxisIndex: 0,
             lineStyle: {
               width: 2
             },
@@ -138,7 +139,7 @@ export default {
             connectNulls: true      //连接null  '' 数据
           },
           {
-            name: '累计流量',
+            name: '累计水量',
             type: 'line',
             yAxisIndex: 1,
             lineStyle: {
