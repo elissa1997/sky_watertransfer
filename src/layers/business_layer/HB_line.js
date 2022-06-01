@@ -45,6 +45,7 @@ export async function featureLayer(){
         }
       ]
     },
+    effect: "bloom(0.7, 0px 0)",
     labelsVisible: false,
     fields: [
       {"name": "FID", "type": "oid"},

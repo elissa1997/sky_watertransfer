@@ -29,6 +29,7 @@ export async function featureLayer() {
         "color": [21,163,239,0.25]
       }
     },
+    effect: "bloom(0.7, 0px 0)",
     labelsVisible: true,
     fields: [
       {"name": "FID","type": "oid"},
