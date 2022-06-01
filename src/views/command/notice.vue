@@ -9,7 +9,7 @@
     </div>
 
     <a-tabs default-active-key="1" style="width: calc(30% - 10px);" v-if="$hasPermission(this.$userInfo.type, 'AE')">
-      <a-tab-pane key="1" tab="发布方案"  v-if="$hasPermission(this.$userInfo.type, 'A')">
+      <a-tab-pane key="1" tab="发布预通知"  v-if="$hasPermission(this.$userInfo.type, 'A')">
         <div class="upload">
           <a-input v-model="upload.noticeName" placeholder="请输入文件标题或选择文件后自动填写"></a-input>
 

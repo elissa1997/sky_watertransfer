@@ -74,7 +74,9 @@ export default {
         tm.push(element.tm);
         waterVolume.push(element.waterVolume);
       })
-
+      tm = tm.reverse();
+      waterVolume = waterVolume.reverse();
+      
       return {tm, waterVolume};
     }
   },

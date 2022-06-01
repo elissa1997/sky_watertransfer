@@ -4,8 +4,8 @@
       <a-button type="primary" @click="addExecute">下达指令</a-button>
     </div>
     <div class="tableWarp">
-      <a-table class="table" :columns="executeData.colums" :data-source="executeData.data" rowKey="instructionRef.id" :pagination="false" >
-        <span slot="ts" slot-scope="ts">{{$dayjs(ts).format("YYYY-MM-DD HH:mm")}}</span>
+      <a-table class="table" :columns="executeData.colums" :data-source="executeData.data" rowKey="id" :pagination="false" >
+        <span slot="executeTime" slot-scope="text, record">{{$dayjs(record.executeTime).format("YYYY-MM-DD HH:mm")}}</span>
         <a-tag :color="(zt === '0')?'orange':'green'" slot="zt" slot-scope="zt">
           {{(zt === "0")?'未反馈':'已反馈'}}
         </a-tag>
@@ -45,7 +45,7 @@ export default {
           { title: '执行单位', dataIndex: 'executeUnitName'},
           { title: '调度电话', dataIndex: 'orderTel'},
           { title: '状态', dataIndex: 'zt', scopedSlots: { customRender: 'zt' }, },
-          { title: '时间', dataIndex: 'ts', scopedSlots: { customRender: 'ts' } },
+          { title: '执行时间', dataIndex: 'executeTime', scopedSlots: { customRender: 'executeTime' } },
           { title: '操作', scopedSlots: { customRender: 'action' } },
         ],
         data:[]

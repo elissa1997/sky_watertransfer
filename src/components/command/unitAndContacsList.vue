@@ -4,10 +4,11 @@
       <a-tab-pane key="1" tab="接收单位">
         <div class="treeWarp">
           <a-tree
+            v-if="unit.unitTree"
             class="tree"
             checkable
             :checkStrictly="true"
-            defaultExpandParent
+            defaultExpandAll
             :replace-fields="replaceFields"
             :tree-data="unit.unitTree"
             @check="treeCheck"

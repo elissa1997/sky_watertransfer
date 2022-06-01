@@ -73,6 +73,9 @@ export default {
       this.chartData.forEach(element => {
         tm.push(element.tm);
         waterVolume.push(element.waterVolume);
+
+        tm = tm.reverse();
+        waterVolume = waterVolume.reverse();
       })
 
       return {tm, waterVolume};

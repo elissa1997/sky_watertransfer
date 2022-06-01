@@ -128,7 +128,7 @@ export default {
           
         if (file.type === "application/pdf") {
           this.upload.fileList = [...this.upload.fileList, file];
-          this.upload.planName = file.name;
+          this.upload.meetingName = file.name;
         }else{
           this.$message.warning("请上传PDF类型文件");
         }
