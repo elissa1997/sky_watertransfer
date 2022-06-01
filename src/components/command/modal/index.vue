@@ -5,8 +5,8 @@
       <addSelfCheck v-if="modal.visible && modal.from === 'addSelfCheck'" :modalData="modal.data" @close="close"/> -->
       <addInspection v-if="modal.visible && modal.from === 'addInspection'" :modalData="modal.data" @close="close"/>
       <addExecute v-if="modal.visible && modal.from === 'addExecute'" :modalData="modal.data" @close="close"/>
-      <addWaterVol v-if="modal.visible && modal.from === 'addWaterVol'" :modalData="modal.data.reg" :station="modal.data.station" @close="close"/>
-      <addWaterVol v-if="modal.visible && modal.from === 'updateWaterVol'" :modalData="modal.data" @close="close"/>
+      <addWaterVol v-if="modal.visible && modal.from === 'addWaterVol'" :modalData="modal.data.reg" :station="modal.data.station" :type="modal.data.type" @close="close"/>
+      <addWaterVol v-if="modal.visible && modal.from === 'updateWaterVol'" :modalData="modal.data.reg" :station="modal.data.station" :type="modal.data.type" @close="close"/>
 
       <detailExecute v-if="modal.visible && modal.from === 'executeDetail'" :modalData="modal.data" />
       <replyExecute v-if="modal.visible && modal.from === 'replyExecute'" :modalData="modal.data" @close="close"/>

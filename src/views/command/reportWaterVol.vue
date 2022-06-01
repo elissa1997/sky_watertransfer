@@ -1,10 +1,11 @@
 <template>
   <div id="reportWaterVol">
     <div class="operat" placeholder="选择站点" v-if="$hasPermission(this.$userInfo.type, 'ABCD')">
-      <a-select v-if="station.statsionList.length" v-model="station.stationSelected" style="width: 120px; marginRight: 10px" placeholder="">
+      <span v-if="$hasPermission(this.$userInfo.type, 'ABCD')">选择上报站点： </span>
+      <a-select v-if="station.statsionList.length && $hasPermission(this.$userInfo.type, 'ABCD')" v-model="station.stationSelected" style="width: 120px; marginRight: 10px" placeholder="">
         <a-select-option v-for="st in station.statsionList" :key="st.stcd" :value="st.stcd">{{st.name}}</a-select-option>
       </a-select>
-      <a-button @click="addWaterVol" type="primary" v-if="$hasPermission(this.$userInfo.type, 'BCD')">水量上报</a-button>
+      <a-button @click="addWaterVol" type="primary" v-if="$hasPermission(this.$userInfo.type, 'ABCD')">水量上报</a-button>
     </div>
     <div class="tableWarp">
       <a-table :columns="tableData.colums" :data-source="tableData.data" rowKey="sw_cd" :pagination="false" >
@@ -108,8 +109,8 @@ export default {
     },
 
     update(text, record) {
-      console.log(text);
-      this.$emit('updateWaterVol', record);
+      let dictItem = dictTrans(this.station.stcdDict, "stcd", record.station_cd);
+      this.$emit('updateWaterVol', record,dictItem);
     }
   },
   async mounted() {
@@ -131,7 +132,7 @@ export default {
     },
 
     getWaterVol_params: function (params) {
-      if (this.$hasPermission(this.$userInfo.type, 'E')) {
+      if (this.$hasPermission(this.$userInfo.type, 'EA')) {
         return {
           action: "stationWwmList",
           reg_cd: this.regData.reg_cd,

@@ -3,8 +3,8 @@
     <a-form :label-col="{ span: 3 }" :wrapper-col="{ span: 18 }">
       <a-alert message="填报之前请先阅读以下说明" type="info" show-icon
         description="上游水位、下游水位、引流量 为填报日期08:00数据，日水量 为填报日期前一天(00:00-24:00)累计数据"  />
-      <a-form-item label="监测站点">
-        <a-tag>{{this.$userInfo.unitName_}}</a-tag>
+      <a-form-item label="上报站点">
+        <a-tag>{{this.station.name}}</a-tag>
       </a-form-item>
 
       <a-form-item label="上游水位">
@@ -56,6 +56,10 @@ export default {
       type: Object,
       default: undefined
     },
+    type: {
+      type: String,
+      default: undefined
+    }
   },
   components: {
     AButton:Button,
@@ -130,7 +134,7 @@ export default {
     }
   },
   mounted() {
-    if (!this.station) {
+    if (this.type === 'update') {
       this.formData = JSON.parse(JSON.stringify(this.modalData));
     } else {
       this.formData['station_cd'] = this.station.stcd;
