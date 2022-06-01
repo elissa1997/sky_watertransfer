@@ -15,6 +15,7 @@
       </a-form-item>
       <a-form-item label="接收单位">
         <a-tree-select treeCheckStrictly tree-checkable @change="treeSelect"
+        defaultExpandAll
             :tree-data="unitTreeData" :replace-fields="replaceFields"/>
       </a-form-item>
       <a-form-item :wrapper-col="{ span: 19, offset: 4 }">
@@ -143,6 +144,7 @@ export default {
       return {
         action: "transferUnitList",
         visible: "1",
+        parent_unitcode : this.$userInfo.unitCode_,
       }
     },
   },

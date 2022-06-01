@@ -29,7 +29,7 @@
 
             <div class="item">
               <div class="lable">结束时间</div>
-              <div class="value">{{item.reg_end_time}}</div>
+              <div class="value">{{(Number(item.status) &lt; 7)?'——':item.reg_end_time}}</div>
             </div>
 
             <div class="item">
@@ -39,7 +39,8 @@
 
             <div class="item">
               <!-- {{item.status === '0 '}} -->
-              <a-tag color="green" v-if="item.status === '7'">调水已结束</a-tag>
+              <a-tag color="green" v-if="item.status === '1' && $dayjs().isBefore($dayjs(item.reg_start_time, 'MM月DD日'))">调水未开始</a-tag>
+              <a-tag color="green" v-else-if="item.status === '7'">调水已结束</a-tag>
               <a-tag color="blue" v-else>调水进行中</a-tag>
             </div>
 
@@ -78,6 +79,7 @@
         <!-- {{item}} -->
 
         </div>
+      
       </div>
 
     </template>

@@ -7,17 +7,18 @@
         <div class="gateItem" v-for="(item,index) in gateStatusList" :key="index" @click="openGateHModal(item)">
           <div class="itemMeta">
             <span class="NO">{{item.title}}</span>
-            <a-tag color="blue">{{item.stcd}}</a-tag>
+            <!-- <a-tag color="blue">{{item.stcd}}</a-tag> -->
           </div>
 
           <div class="itemStatus">
-            <div v-if="!item.state"><a-badge status="default" />暂无数据</div>
-            <div v-else-if="item.state === '0'"><a-badge status="warning" />设备关闭</div>
-            <div v-else>
-              <a-badge status="processing" />
-              <template v-if="item.title.indexOf('机组') !== -1">机组电流:</template>
-              <span class="statusNum">{{item.state}}</span>
-            </div>
+            <template v-if="item.title.indexOf('机组') !== -1">
+              <div v-if="item.state === undefined"><a-badge status="default" />暂无数据</div>
+              <div v-else-if="item.state === 0"><a-badge status="warning" />机组关闭</div>
+              <div v-else-if="item.state === 1"><a-badge status="processing" />机组开启</div>
+            </template>
+            <template v-if="item.title.indexOf('门') !== -1">
+              <div v-if="item.state === undefined"><a-badge status="default" />暂无数据</div>
+            </template>
           </div>
         </div>
       </div>
@@ -101,7 +102,7 @@ export default {
 
 <style lang="scss" scoped>
   #deviceStatus{
-    padding: 10px;
+    padding: 20px 10px;
   }
 
   .gateList {

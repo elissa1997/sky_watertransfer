@@ -6,11 +6,11 @@
     </div>
     <div class="item">
       <div class="lable">闸上水位</div>
-      <div class="value">{{attributes.z}}</div>
+      <div class="value">{{attributes.z}} m</div>
     </div>
     <div class="item">
       <div class="lable">闸下水位</div>
-      <div class="value">{{attributes.dwz}}</div>
+      <div class="value">{{attributes.dwz}} m</div>
     </div>
     <!-- <div class="item">
       <div class="lable">流量</div>
@@ -22,12 +22,11 @@
 
     <div class="item">
       <div class="lable">实时流量</div>
-      <div class="value">{{attributes.q}}</div>
+      <div class="value">{{attributes.q}} m³/s</div>
     </div>
-    <div class="item multiLine">
+    <div class="item multiLine" v-if="!checkExtra(attributes.name)">
       <div class="lable">引水位</div>
       <div class="value">
-        <!-- {{attributes.quote}} -->
         <div class="diversion" v-for="(item,index) in attributes.quote" :key="index">
           <div v-if="item.z">{{item.z}}</div>
           <div v-if="item.q">流量：{{item.q}}</div>
@@ -44,8 +43,19 @@
       <div class="value">
         <a-tag v-if="!attributes.gateH">暂无数据</a-tag>
         <div class="tagWarp" v-else>
-          <a-tag color="blue" v-for="(item,index) in attributes.gateH.split(',')" :key="index">{{item}}</a-tag>
+          <a-tag color="blue" v-for="(item,index) in attributes.gateH.split(',')" :key="index">{{formatGateH(item, 'gate')}}{{formatGateH(item, 'num')}}</a-tag>
 
+        </div>
+      </div>
+    </div>
+
+    <div class="item multiLine" v-if="checkExtra(attributes.name)">
+      <div class="lable">引水位</div>
+      <div class="value">
+        <!-- {{attributes.quote}} -->
+        <div class="diversion" v-for="(item,index) in attributes.quote" :key="index">
+          <div v-if="item.z">蚌埠闸：{{item.z}}</div>
+          <div v-if="item.q">流量：{{item.q}}</div>
         </div>
       </div>
     </div>
@@ -73,11 +83,35 @@ export default {
     AButton:Button
   },
   data() {
-    return {}
+    return {
+      extra: ['何巷闸']
+    }
   },
   methods: {
     openModal() {
       this.$emit('modal');
+    },
+
+    // 使用正则表达式格式化闸门开度
+    formatGateH(string, type){
+      console.log(string);
+      let reg = /(\d*组\d*孔)(.*)/;
+      console.log(reg.exec(string))
+      if (type === 'gate') {
+        return (reg.exec(string)[1]);
+      }else if (type === 'num') {
+        if(reg.exec(string)[2] === "全关" || reg.exec(string)[2] === "全开"){
+          return reg.exec(string)[2];
+        }else{
+          // console.log(typeof(reg.exec(string)[2]))
+          return parseFloat(reg.exec(string)[2]).toFixed(2)+'m';
+        }
+      }
+    },
+
+    //检查站点是否在额外站点中
+    checkExtra(name){
+      return this.extra.indexOf(name) > -1;
     }
   },
   mounted() {

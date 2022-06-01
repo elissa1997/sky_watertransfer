@@ -8,8 +8,8 @@
     <div class="item">
       <div class="lable">站前水位</div>
       <div class="value compare">
-        <div>{{attributes.z}}<a-tag color="cyan">实时</a-tag></div>
-        <div>{{attributes.designZ}}<a-tag color="purple">设计</a-tag></div>
+        <div>{{(attributes.z === '-')?'-':attributes.z+'m'}}<a-tag color="cyan">实时</a-tag></div>
+        <div>{{attributes.designZ}}m<a-tag color="purple">调水位</a-tag></div>
       </div>
     </div>
 
@@ -17,8 +17,8 @@
     <div class="item">
       <div class="lable">站后水位</div>
       <div class="value compare">
-        <div>{{attributes.dwz}}<a-tag color="cyan">实时</a-tag></div>
-        <div>{{attributes.designCZ}}<a-tag color="purple">设计</a-tag></div>
+        <div>{{(attributes.dwz === '-')?'-':attributes.dwz+'m'}}<a-tag color="cyan">实时</a-tag></div>
+        <div>{{attributes.designCZ}}m<a-tag color="purple">调水位</a-tag></div>
       </div>
     </div>
 
@@ -26,20 +26,20 @@
     <div class="item">
       <div class="lable">流量</div>
       <div class="value compare">
-        <div>{{attributes.mpQi}}<a-tag color="cyan">实时</a-tag></div>
-        <div>{{attributes.q}}<a-tag color="purple">设计</a-tag></div>
+        <div>{{(attributes.mpQi === '-')?'-':attributes.mpQi+'m³/s'}}<a-tag color="cyan">实时</a-tag></div>
+        <div>{{attributes.q}}m³/s<a-tag color="purple">设计</a-tag></div>
       </div>
     </div>
     <div class="item">
       <div class="lable">功率</div>
       <div class="value compare">
-        <div>{{attributes.omPwr}}<a-tag color="cyan">开机</a-tag></div>
-        <div>{{attributes.installedPower}}<a-tag color="purple">装机</a-tag></div>
+        <div>{{(attributes.omPwr === '-')?'-':attributes.omPwr+'kW'}}<a-tag color="cyan">开机</a-tag></div>
+        <div>{{attributes.installedPower}}kW<a-tag color="purple">装机</a-tag></div>
       </div>
     </div>
     <div class="item">
       <div class="lable">累计水量</div>
-      <div class="value">{{attributes.mpQacc}}</div>
+      <div class="value">{{(attributes.mpQacc === '-')?'-':(parseFloat(attributes.mpQacc)/10000).toFixed(2)+'万m3'}}</div>
     </div>
     <div class="item">
       <div class="lable">开机台数</div>
