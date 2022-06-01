@@ -1,15 +1,15 @@
 <template>
   <div id="plan">
 
-    <div class="preView" :style="{width:$hasPermission(this.$userInfo.type, 'AE')?'70%':'100%'}">
-      <pdfView v-if="uploaded && pdfSrc" :height="$hasPermission(this.$userInfo.type, 'AE')?'100%':'calc(100% - 32px)'" :src="pdfSrc"/>
+    <div class="preView" :style="{width:$hasPermission(this.$store.state.user.info.type, 'AE')?'70%':'100%'}">
+      <pdfView v-if="uploaded && pdfSrc" :height="$hasPermission(this.$store.state.user.info.type, 'AE')?'100%':'calc(100% - 32px)'" :src="pdfSrc"/>
       <noData v-else/>
-      <a-button type="primary" @click="handleReceive" v-if="loggedInreceiveUnit && $hasPermission(this.$userInfo.type, 'BCD')" :disabled="loggedInreceiveUnit.zt === '1'">
+      <a-button type="primary" @click="handleReceive" v-if="loggedInreceiveUnit && $hasPermission(this.$store.state.user.info.type, 'BCD')" :disabled="loggedInreceiveUnit.zt === '1'">
         {{(loggedInreceiveUnit.zt === '0')?'确认签收':'已签收'}} 
       </a-button>
     </div>
-    <a-tabs default-active-key="1" style="width: calc(30% - 10px);" v-if="$hasPermission(this.$userInfo.type, 'AE')">
-      <a-tab-pane key="1" tab="发布方案" v-if="$hasPermission(this.$userInfo.type, 'A')">
+    <a-tabs default-active-key="1" style="width: calc(30% - 10px);" v-if="$hasPermission(this.$store.state.user.info.type, 'AE')">
+      <a-tab-pane key="1" tab="发布方案" v-if="$hasPermission(this.$store.state.user.info.type, 'A')">
         <div class="upload">
           <a-input v-model="upload.planName" placeholder="请输入文件标题或选择文件后自动填写"></a-input>
 
@@ -35,7 +35,7 @@
 
         </div>
       </a-tab-pane>
-      <a-tab-pane key="2" tab="签收情况"  v-if="$hasPermission(this.$userInfo.type, 'AE')">
+      <a-tab-pane key="2" tab="签收情况"  v-if="$hasPermission(this.$store.state.user.info.type, 'AE')">
         <a-table bordered class="receiveTable" v-if="uploaded" :columns="receiveUnitColums" :data-source="uploaded.planExtList" rowKey="id" :pagination="false" size="middle" >
           <a-tag :color="(zt === '0')?'orange':'green'" slot="zt" slot-scope="zt">
             {{(zt === "0")?'暂未确认':'确认收到'}}
@@ -93,7 +93,7 @@ export default {
         SMS: {
           isSend: true,
           list: undefined,
-          sendUser: this.$userInfo.username_
+          sendUser: this.$store.state.user.info.username_
         }
       },
     }
@@ -130,10 +130,10 @@ export default {
       formData.append('recordUnitCode', '1001');
       formData.append('recordUnitName', '安徽省水利厅');
       formData.append('unitstrs', this.upload.unitList);
-      formData.append('author', this.$userInfo.username_);
-      formData.append('authorName', this.$userInfo.realName_);
-      formData.append('initUnitCode', this.$userInfo.unitCode_);
-      formData.append('initUnitName', this.$userInfo.unitName_);
+      formData.append('author', this.$store.state.user.info.username_);
+      formData.append('authorName', this.$store.state.user.info.realName_);
+      formData.append('initUnitCode', this.$store.state.user.info.unitCode_);
+      formData.append('initUnitName', this.$store.state.user.info.unitName_);
 
       if (this.upload.SMS.isSend) {
         formData.append('sendFlag', "1");
@@ -186,7 +186,7 @@ export default {
       if (this.uploaded) {
         for (let index = 0; index < this.uploaded.planExtList.length; index++) {
           const element = this.uploaded.planExtList[index];
-          if (element.unitCode === this.$userInfo.unitCode_) {
+          if (element.unitCode === this.$store.state.user.info.unitCode_) {
             // console.log(element);
             this.loggedInreceiveUnit = element
           }
@@ -226,7 +226,7 @@ export default {
     handleReceive() {
         for (let index = 0; index < this.uploaded.planExtList.length; index++) {
           const element = this.uploaded.planExtList[index];
-          if (element.unitCode === this.$userInfo.unitCode_) {
+          if (element.unitCode === this.$store.state.user.info.unitCode_) {
             // console.log(element);
             recivePlan(this.handleReceive_params(element.id)).then(res => {
               // console.log(res);
@@ -265,7 +265,7 @@ export default {
       }
     },
     SMSContent: function (params) {
-      return `您好,${this.$userInfo.unitName_}${this.$userInfo.realName_}在节水调水平台给你单位发送了调水方案《${this.upload.planName || ''}》,请及时查收!`
+      return `您好,${this.$store.state.user.info.unitName_}${this.$store.state.user.info.realName_}在节水调水平台给你单位发送了调水方案《${this.upload.planName || ''}》,请及时查收!`
     }
   },
   watch: {

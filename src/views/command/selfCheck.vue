@@ -1,7 +1,7 @@
 <template>
   <div id="selfCheck">
     <div class="operat">
-      <a-button type="primary" @click="addSelfCheck" v-if="this.$userInfo.type === 'B' || this.$userInfo.type === 'D'">上报自检情况</a-button>
+      <a-button type="primary" @click="addSelfCheck" v-if="this.$store.state.user.info.type === 'B' || this.$store.state.user.info.type === 'D'">上报自检情况</a-button>
     </div>
     <a-table :columns="selfCheckData.colums" :data-source="selfCheckData.data" rowKey="id" :pagination="false" >
       <a-tag color="green" slot="status" slot-scope="status">{{status}}</a-tag>

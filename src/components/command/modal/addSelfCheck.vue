@@ -1,7 +1,7 @@
 <template>
   <div id="addSelfCheck">
     <a-form :label-col="{ span: 4 }" :wrapper-col="{ span: 19 }">
-      <a-form-item label="自检上报单位"><a-tag>{{this.$userInfo.unitName_}}</a-tag></a-form-item>
+      <a-form-item label="自检上报单位"><a-tag>{{this.$store.state.user.info.unitName_}}</a-tag></a-form-item>
       <a-form-item label="自检情况">
         <a-textarea v-model="formData.handleContent" placeholder="自检情况" :auto-size="{ minRows: 5, maxRows: 15 }"/>
       </a-form-item>

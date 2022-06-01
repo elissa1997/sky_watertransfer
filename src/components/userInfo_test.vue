@@ -1,5 +1,5 @@
 <template>
-  <div id="test">{{this.$userInfo}}</div>
+  <div id="test">{{this.$store.state.user.info}}</div>
 </template>
 
 <script>

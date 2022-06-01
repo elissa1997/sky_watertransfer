@@ -10,7 +10,7 @@
       <execute v-if="displayNum === 5" @addExecute="addExecute" @replyExecute="replyExecute" @executeDetail="executeDetail" :regData="regData" ref="execute"/>
       <reportWaterVol v-if="displayNum === 6 || displayNum === 7" @addWaterVol="addWaterVol" @updateWaterVol="updateWaterVol" :regData.sync="regData" ref="reportWaterVol"/>
     </div>
-    <div class="stepControl"  v-if="$hasPermission(this.$userInfo.type, 'A')">
+    <div class="stepControl"  v-if="$hasPermission(this.$store.state.user.info.type, 'A')">
       <a-button type="primary" @click="nextStep" :disabled="current >= 7">
         <template v-if="current <= 5">确认执行下一步</template>
         <template v-if="current === 6 || current === 7 ">本次调水完成</template>

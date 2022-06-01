@@ -1,16 +1,16 @@
 <template>
   <div id="meeting">
 
-    <div class="preView" :style="{width:$hasPermission(this.$userInfo.type, 'AE')?'70%':'100%'}">
-      <pdfView v-if="uploaded && pdfSrc" :height="$hasPermission(this.$userInfo.type, 'AE')?'100%':'calc(100% - 32px)'" :src="pdfSrc"/>
+    <div class="preView" :style="{width:$hasPermission(this.$store.state.user.info.type, 'AE')?'70%':'100%'}">
+      <pdfView v-if="uploaded && pdfSrc" :height="$hasPermission(this.$store.state.user.info.type, 'AE')?'100%':'calc(100% - 32px)'" :src="pdfSrc"/>
       <noData v-else/>
-      <a-button class="receiveBtn" type="primary" @click="handleReceive" v-if="loggedInreceiveUnit && $hasPermission(this.$userInfo.type, 'BCD')" :disabled="loggedInreceiveUnit.zt === '1'">
+      <a-button class="receiveBtn" type="primary" @click="handleReceive" v-if="loggedInreceiveUnit && $hasPermission(this.$store.state.user.info.type, 'BCD')" :disabled="loggedInreceiveUnit.zt === '1'">
         {{(loggedInreceiveUnit.zt === '0')?'确认签收':'已签收'}} 
       </a-button>
     </div>
 
-    <a-tabs default-active-key="1" style="width: calc(30% - 10px);" v-if="$hasPermission(this.$userInfo.type, 'AE')">
-      <a-tab-pane key="1" tab="上传会议记录" v-if="$hasPermission(this.$userInfo.type, 'A')">
+    <a-tabs default-active-key="1" style="width: calc(30% - 10px);" v-if="$hasPermission(this.$store.state.user.info.type, 'AE')">
+      <a-tab-pane key="1" tab="上传会议记录" v-if="$hasPermission(this.$store.state.user.info.type, 'A')">
         <div class="upload">
           <a-input v-model="upload.meetingName" placeholder="请输入会议名称"></a-input>
           <!-- <a-textarea v-model="upload.meetingContent" placeholder="请输入会议内容" :auto-size="{ minRows: 5, maxRows: 15 }"></a-textarea> -->
@@ -40,7 +40,7 @@
         </div>
 
       </a-tab-pane>
-      <a-tab-pane key="2" tab="签收情况" v-if="$hasPermission(this.$userInfo.type, 'AE')">
+      <a-tab-pane key="2" tab="签收情况" v-if="$hasPermission(this.$store.state.user.info.type, 'AE')">
         <a-table bordered class="receiveTable" v-if="uploaded" :columns="receiveUnitColums" :data-source="uploaded.unitList" rowKey="id" :pagination="false" size="middle" >
           <a-tag :color="(zt === '0')?'orange':'green'" slot="zt" slot-scope="zt">{{(zt === "0")?'暂未确认':'确认收到'}}</a-tag>
           <!-- <template slot="ts" slot-scope="ts">{{$dayjs(ts).format("YYYY-MM-DD HH:mm:ss")}}</template> -->
@@ -102,7 +102,7 @@ export default {
         SMS: {
           isSend: true,
           list: undefined,
-          sendUser: this.$userInfo.username_
+          sendUser: this.$store.state.user.info.username_
         }
       },
       replaceFields: {
@@ -193,7 +193,7 @@ export default {
       if (this.uploaded) {
         for (let index = 0; index < this.uploaded.unitList.length; index++) {
           const element = this.uploaded.unitList[index];
-          if (element.unitCode === this.$userInfo.unitCode_) {
+          if (element.unitCode === this.$store.state.user.info.unitCode_) {
             // console.log(element);
             this.loggedInreceiveUnit = element
           }
@@ -233,7 +233,7 @@ export default {
     handleReceive() {
         for (let index = 0; index < this.uploaded.unitList.length; index++) {
           const element = this.uploaded.unitList[index];
-          if (element.unitCode === this.$userInfo.unitCode_) {
+          if (element.unitCode === this.$store.state.user.info.unitCode_) {
             reciveMeeting(this.handleReceive_params(element.id)).then(res => {
               // console.log(res);
             }).finally(async () => {
@@ -267,7 +267,7 @@ export default {
       }
     },
     SMSContent: function (params) {
-      return `您好,${this.$userInfo.unitName_}${this.$userInfo.realName_}在节水调水平台上传了调水准备工作会议记录《${this.upload.meetingName || ''}》,请及时查收!`
+      return `您好,${this.$store.state.user.info.unitName_}${this.$store.state.user.info.realName_}在节水调水平台上传了调水准备工作会议记录《${this.upload.meetingName || ''}》,请及时查收!`
     }
 
 

@@ -103,8 +103,8 @@ export default {
       formDataObj.append('regCd', this.formData.regCd);
       formDataObj.append('problem', this.formData.problem);
       formDataObj.append('unitstrs', this.formData.unitstrs);
-      formDataObj.append('urgeUnitCode', this.$userInfo.unitCode_);
-      formDataObj.append('urgeUnitName', this.$userInfo.unitName_);
+      formDataObj.append('urgeUnitCode', this.$store.state.user.info.unitCode_);
+      formDataObj.append('urgeUnitName', this.$store.state.user.info.unitName_);
       this.formData.fileList.forEach(file => {
         formDataObj.append('file', file);
       });
@@ -144,7 +144,7 @@ export default {
       return {
         action: "transferUnitList",
         visible: "1",
-        parent_unitcode : this.$userInfo.unitCode_,
+        parent_unitcode : this.$store.state.user.info.unitCode_,
       }
     },
   },

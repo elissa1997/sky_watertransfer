@@ -1,6 +1,6 @@
 <template>
   <div id="inspection">
-    <div class="operat" v-if="$hasPermission(this.$userInfo.type, 'A')">
+    <div class="operat" v-if="$hasPermission(this.$store.state.user.info.type, 'A')">
       <a-button type="primary" @click="addInspection">添加巡查情况</a-button>
     </div>
     <div class="tableWarp">
@@ -11,7 +11,7 @@
         <template slot="urgeTime" slot-scope="urgeTime">{{$dayjs(urgeTime).format("YYYY-MM-DD HH:mm:ss")}}</template>
         <div slot="action" slot-scope="text, record" class="actionWarp">
           <a class="action" @click="openDetail(record)"><icon-preview-open theme="outline" size="20" fill="#1890ff" :strokeWidth="3"/>详情</a>
-          <a class="action" @click="replyInspection(record)" v-if="$userInfo.unitCode_ === record.receiveUnitCode && record.status === '0'"><icon-email-push theme="outline" size="20" fill="#1890ff" :strokeWidth="3"/>回复</a>
+          <a class="action" @click="replyInspection(record)" v-if="$store.state.user.info.unitCode_ === record.receiveUnitCode && record.status === '0'"><icon-email-push theme="outline" size="20" fill="#1890ff" :strokeWidth="3"/>回复</a>
         </div>
       </a-table>
     </div>

@@ -1,15 +1,15 @@
 <template>
   <div id="notice">
-    <div class="preView" :style="{width:$hasPermission(this.$userInfo.type, 'AE')?'70%':'100%'}">
-      <pdfView v-if="uploaded && pdfSrc" :height="$hasPermission(this.$userInfo.type, 'AE')?'100%':'calc(100% - 32px)'" :src="pdfSrc"/>
+    <div class="preView" :style="{width:$hasPermission(this.$store.state.user.info.type, 'AE')?'70%':'100%'}">
+      <pdfView v-if="uploaded && pdfSrc" :height="$hasPermission(this.$store.state.user.info.type, 'AE')?'100%':'calc(100% - 32px)'" :src="pdfSrc"/>
       <noData v-else/>
-      <a-button class="receiveBtn" type="primary" @click="handleReceive" v-if="loggedInreceiveUnit && $hasPermission(this.$userInfo.type, 'BCD')" :disabled="loggedInreceiveUnit.status === '1'">
+      <a-button class="receiveBtn" type="primary" @click="handleReceive" v-if="loggedInreceiveUnit && $hasPermission(this.$store.state.user.info.type, 'BCD')" :disabled="loggedInreceiveUnit.status === '1'">
         {{(loggedInreceiveUnit.status === '0')?'确认签收':'已签收'}} 
       </a-button>
     </div>
 
-    <a-tabs default-active-key="1" style="width: calc(30% - 10px);" v-if="$hasPermission(this.$userInfo.type, 'AE')">
-      <a-tab-pane key="1" tab="发布预通知"  v-if="$hasPermission(this.$userInfo.type, 'A')">
+    <a-tabs default-active-key="1" style="width: calc(30% - 10px);" v-if="$hasPermission(this.$store.state.user.info.type, 'AE')">
+      <a-tab-pane key="1" tab="发布预通知"  v-if="$hasPermission(this.$store.state.user.info.type, 'A')">
         <div class="upload">
           <a-input v-model="upload.noticeName" placeholder="请输入文件标题或选择文件后自动填写"></a-input>
 
@@ -35,7 +35,7 @@
 
         </div>
       </a-tab-pane>
-      <a-tab-pane key="2" tab="签收情况"  v-if="$hasPermission(this.$userInfo.type, 'AE')">
+      <a-tab-pane key="2" tab="签收情况"  v-if="$hasPermission(this.$store.state.user.info.type, 'AE')">
         <a-table bordered class="receiveTable" v-if="uploaded" :columns="receiveUnitColums" :data-source="uploaded.noticeOrgList" rowKey="id" :pagination="false" size="middle" >
           <a-tag :color="(status === '0')?'orange':'green'" slot="status" slot-scope="status">
             {{(status === "0")?'暂未确认':'确认收到'}}
@@ -95,7 +95,7 @@ export default {
         SMS: {
           isSend: true,
           list: undefined,
-          sendUser: this.$userInfo.username_
+          sendUser: this.$store.state.user.info.username_
         }
       },
     }
@@ -132,10 +132,10 @@ export default {
       formData.append('recordUnitCode', '1001');
       formData.append('recordUnitName', '安徽省水利厅');
       formData.append('unitstrs', this.upload.unitList);
-      formData.append('author', this.$userInfo.username_);
-      formData.append('authorName', this.$userInfo.realName_);
-      formData.append('initUnitCode', this.$userInfo.unitCode_);
-      formData.append('initUnitName', this.$userInfo.unitName_);
+      formData.append('author', this.$store.state.user.info.username_);
+      formData.append('authorName', this.$store.state.user.info.realName_);
+      formData.append('initUnitCode', this.$store.state.user.info.unitCode_);
+      formData.append('initUnitName', this.$store.state.user.info.unitName_);
 
       if (this.upload.SMS.isSend) {
         formData.append('sendFlag', "1");
@@ -190,7 +190,7 @@ export default {
       if (this.uploaded) {
         for (let index = 0; index < this.uploaded.noticeOrgList.length; index++) {
           const element = this.uploaded.noticeOrgList[index];
-          if (element.receiveUnitCode === this.$userInfo.unitCode_) {
+          if (element.receiveUnitCode === this.$store.state.user.info.unitCode_) {
             // console.log(element);
             this.loggedInreceiveUnit = element
           }
@@ -230,7 +230,7 @@ export default {
     handleReceive() {
         for (let index = 0; index < this.uploaded.noticeOrgList.length; index++) {
           const element = this.uploaded.noticeOrgList[index];
-          if (element.receiveUnitCode === this.$userInfo.unitCode_) {
+          if (element.receiveUnitCode === this.$store.state.user.info.unitCode_) {
             // console.log(element);
             reciveNotice(this.handleReceive_params(element.id)).then(res => {
               // console.log(res);

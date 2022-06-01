@@ -186,8 +186,8 @@ export default {
         regCd: this.modalData.reg_cd,
         orderNo: '',
         orderTask: '',
-        initUnitCode: this.$userInfo.unitCode_,
-        initUnitName: this.$userInfo.unitName_,
+        initUnitCode: this.$store.state.user.info.unitCode_,
+        initUnitName: this.$store.state.user.info.unitName_,
         orderType: '',
         executeUnitCode: '',
         executeUnitName: '',
@@ -196,8 +196,8 @@ export default {
         projectName: '',
         executeTime: '',
         orderRemark: '',
-        orderUser: this.$userInfo.realName_,
-        issueUser: this.$userInfo.realName_,
+        orderUser: this.$store.state.user.info.realName_,
+        issueUser: this.$store.state.user.info.realName_,
         orderDate: this.$dayjs().format("YYYY-MM-DD"),
         orderTime: this.$dayjs().format("HH:mm"),
         orderTel: '0552-3918705',
@@ -266,7 +266,7 @@ export default {
       if (this.formData.sendFlag) {
         formDataObj.append('sendFlag', "1");
         formDataObj.append('message', this.SMSContent);
-        formDataObj.append('sendUser', this.$userInfo.username_);
+        formDataObj.append('sendUser', this.$store.state.user.info.username_);
       } else {
         formDataObj.append('sendFlag', "0");
       }
@@ -321,11 +321,11 @@ export default {
     getExecuteUnit__params: function () {
       return {
         action: "transferUnitList",
-        parent_unitcode : this.$userInfo.unitCode_,
+        parent_unitcode : this.$store.state.user.info.unitCode_,
       }
     },
     SMSContent: function (params) {
-      return `您好,${this.$userInfo.unitName_}${this.$userInfo.realName_}在节水调水平台给您单位发送了一条实施调水的指令,请及时查收!`
+      return `您好,${this.$store.state.user.info.unitName_}${this.$store.state.user.info.realName_}在节水调水平台给您单位发送了一条实施调水的指令,请及时查收!`
     }
   },
   watch: {}

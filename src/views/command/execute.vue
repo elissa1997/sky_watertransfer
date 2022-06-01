@@ -1,6 +1,6 @@
 <template>
   <div id="execute">
-    <div class="operat" v-if="$hasPermission(this.$userInfo.type, 'A')">
+    <div class="operat" v-if="$hasPermission(this.$store.state.user.info.type, 'A')">
       <a-button type="primary" @click="addExecute">下达指令</a-button>
     </div>
     <div class="tableWarp">
@@ -11,7 +11,7 @@
         </a-tag>
         <span class="actionWarp" slot="action" slot-scope="text, record">
           <a class="action"  @click="openDetail(record)"><icon-preview-open theme="outline" size="20" fill="#1890ff" :strokeWidth="3"/>详情</a>
-          <a class="action" @click="replyExecute(record)" v-if="$userInfo.unitCode_ === record.executeUnitCode && record.zt === '0'"><icon-email-push theme="outline" size="20" fill="#1890ff" :strokeWidth="3"/>反馈</a>
+          <a class="action" @click="replyExecute(record)" v-if="$store.state.user.info.unitCode_ === record.executeUnitCode && record.zt === '0'"><icon-email-push theme="outline" size="20" fill="#1890ff" :strokeWidth="3"/>反馈</a>
         </span>
       </a-table>
     </div>
@@ -93,17 +93,17 @@ export default {
   },
   computed: {
     getExecuteList_params: function (params) {
-      if (this.$userInfo.type === "A") {
+      if (this.$store.state.user.info.type === "A") {
         return {
           "action": "instructionList",
           "regCd": this.regData.reg_cd,
-        // "instructionRef.unitCode": this.$userInfo.unitCode_
+        // "instructionRef.unitCode": this.$store.state.user.info.unitCode_
         }
       }else {
         return {
           "action": "instructionList",
           "regCd": this.regData.reg_cd,
-          "instructionRef.unitCode": this.$userInfo.unitCode_
+          "instructionRef.unitCode": this.$store.state.user.info.unitCode_
         }
       }
     }

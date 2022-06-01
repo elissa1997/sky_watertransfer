@@ -22,7 +22,7 @@ export function instance_api(config) {
 
     instance.interceptors.request.use(config => {
         if(process.env.NODE_ENV === "development"){
-            let sessionId = "29C5424F6FEA879A4AD76EB46FFC8301";
+            let sessionId = "F7E4F4CB441D5A46D24AADAA7D76265B";
             Cookies.set("JSESSIONID", sessionId, { expires: 27 });
         }
         return config

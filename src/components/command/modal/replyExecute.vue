@@ -141,8 +141,8 @@ export default {
     return {
       formData: {
         orderId: this.modalData.id,
-        executeUnitCode:this.$userInfo.unitCode_,
-        executeUnitName:this.$userInfo.unitName_,
+        executeUnitCode:this.$store.state.user.info.unitCode_,
+        executeUnitName:this.$store.state.user.info.unitName_,
         leader:'',
         connectPeople:'',
         operator:'',

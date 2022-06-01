@@ -1,11 +1,11 @@
 <template>
   <div id="reportWaterVol">
-    <div class="operat" placeholder="选择站点" v-if="$hasPermission(this.$userInfo.type, 'ABCD')">
-      <span v-if="$hasPermission(this.$userInfo.type, 'ABCD')">选择上报站点： </span>
-      <a-select v-if="station.statsionList.length && $hasPermission(this.$userInfo.type, 'ABCD')" v-model="station.stationSelected" style="width: 120px; marginRight: 10px" placeholder="">
+    <div class="operat" placeholder="选择站点" v-if="$hasPermission(this.$store.state.user.info.type, 'ABCD')">
+      <span v-if="$hasPermission(this.$store.state.user.info.type, 'ABCD')">选择上报站点： </span>
+      <a-select v-if="station.statsionList.length && $hasPermission(this.$store.state.user.info.type, 'ABCD')" v-model="station.stationSelected" style="width: 120px; marginRight: 10px" placeholder="">
         <a-select-option v-for="st in station.statsionList" :key="st.stcd" :value="st.stcd">{{st.name}}</a-select-option>
       </a-select>
-      <a-button @click="addWaterVol" type="primary" v-if="$hasPermission(this.$userInfo.type, 'ABCD')">水量上报</a-button>
+      <a-button @click="addWaterVol" type="primary" v-if="$hasPermission(this.$store.state.user.info.type, 'ABCD')">水量上报</a-button>
     </div>
     <div class="tableWarp">
       <a-table :columns="tableData.colums" :data-source="tableData.data" rowKey="sw_cd" :pagination="false" >
@@ -73,7 +73,7 @@ export default {
 
     async getReceiveUnit() {
       this.statsionList = [];
-      if (this.$userInfo) {
+      if (this.$store.state.user.info) {
         let tempList = undefined;
         // let obj = await dictTrans("stcdName", "stcd", "340323100788");
         await receiveUnit(this.getReceiveUnit_params).then(res => {
@@ -116,7 +116,7 @@ export default {
   async mounted() {
     this.station.stcdDict = await localData("stcdName");
     await this.getReceiveUnit();
-    if (this.$hasPermission(this.$userInfo.type, 'BCD')) {
+    if (this.$hasPermission(this.$store.state.user.info.type, 'BCD')) {
       this.tableData.colums.push(
           { title: '操作', scopedSlots: { customRender: 'action' }, width: 200},
       )
@@ -127,12 +127,12 @@ export default {
       return {
         action: "transferUnitList",
         line_cd: this.regData.line_cd,
-        unitcode: this.$userInfo.unitCode_
+        unitcode: this.$store.state.user.info.unitCode_
       }
     },
 
     getWaterVol_params: function (params) {
-      if (this.$hasPermission(this.$userInfo.type, 'EA')) {
+      if (this.$hasPermission(this.$store.state.user.info.type, 'EA')) {
         return {
           action: "stationWwmList",
           reg_cd: this.regData.reg_cd,

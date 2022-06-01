@@ -38,7 +38,7 @@ export default {
     }
   },
   mounted() {
-    if (this.$userInfo.type === "E" || this.$userInfo.type === "A") {
+    if (this.$store.state.user.info.type === "E" || this.$store.state.user.info.type === "A") {
       this.steps[5] = "水量信息";
     }else{
       this.steps[5] = "信息上报";
