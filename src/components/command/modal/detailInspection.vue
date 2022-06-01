@@ -73,14 +73,10 @@ export default {
     getFileSrc() {
       this.$nextTick(() => {
         if (this.modalData.sendFileId) {
-          let url = undefined;
-          (this.$env === "development")?url = "/local/": url = "/ahjs/";
-          this.fileSrc = url + "gateway/only.do?action=previewFile&file_cd="+this.modalData.sendFileId;
+          this.fileSrc = process.env.VUE_APP_API + "gateway/only.do?action=previewFile&file_cd="+this.modalData.sendFileId;
         }
         if (this.modalData.replyFileId) {
-          let url = undefined;
-          (this.$env === "development")?url = "/local/": url = "/ahjs/";
-          this.replyFileSrc = url + "gateway/only.do?action=previewFile&file_cd="+this.modalData.replyFileId;
+          this.replyFileSrc = process.env.VUE_APP_API + "gateway/only.do?action=previewFile&file_cd="+this.modalData.replyFileId;
         }
       })
     },

@@ -1,8 +1,8 @@
-import {instance_api, instance_test_local} from "../axios.js";
+import {instance_api} from "../axios.js";
 
 export function waterVolList(params) {
   return instance_api({
-    url: 'gateway/only.do',
+    url: process.env.VUE_APP_API + 'gateway/only.do',
     method: 'get',
     params
   })
@@ -10,7 +10,7 @@ export function waterVolList(params) {
 
 export function publish(params, data) {
   return instance_api({
-    url: 'gateway/only.do',
+    url: process.env.VUE_APP_API + 'gateway/only.do',
     method: 'post',
     params,
     data
@@ -19,7 +19,7 @@ export function publish(params, data) {
 
 export function update(params, data) {
   return instance_api({
-    url: 'gateway/only.do',
+    url: process.env.VUE_APP_API + 'gateway/only.do',
     method: 'post',
     params,
     data
@@ -28,7 +28,7 @@ export function update(params, data) {
 
 export function autoWw(params) {
   return instance_api({
-    url: 'indexZBController.api',
+    url: process.env.VUE_APP_API + 'indexZBController.api',
     method: 'get',
     params
   })

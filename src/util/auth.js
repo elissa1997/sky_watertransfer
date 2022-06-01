@@ -12,7 +12,7 @@ export async function saveUserInfo() {
 
 export function setDevSessionId() {
   if(process.env.NODE_ENV === "development"){
-    let sessionId = "F7E4F4CB441D5A46D24AADAA7D76265B";
+    let sessionId = "A460F22BCF07DCF6513C1471C3BD8FEB";
     Cookies.set("JSESSIONID", sessionId, { expires: 27 });
   }
 }

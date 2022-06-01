@@ -171,9 +171,7 @@ export default {
         }
       }).finally(() => {
         if (this.uploaded) {
-          let url = undefined;
-          (this.$env === "development")?url = "/local/": url = "/ahjs/";
-          this.pdfSrc = url + "gateway/only.do?action=previewFile&file_cd="+this.uploaded.fileId
+          this.pdfSrc = process.env.VUE_APP_API + "gateway/only.do?action=previewFile&file_cd="+this.uploaded.fileId
           console.log(this.pdfSrc);
         }
       })

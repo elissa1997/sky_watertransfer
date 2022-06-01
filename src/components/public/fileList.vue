@@ -70,10 +70,7 @@ export default {
     },
 
     getfileUrl(file) {
-      let url = undefined;
-      (this.$env === "development")?url = "/local/": url = "/ahjs/";
-      // url = "/ahjs/";
-      return url + "gateway/only.do?action=previewFile&file_cd="+file.file_cd;
+      return process.env.VUE_APP_API + "gateway/only.do?action=previewFile&file_cd="+file.file_cd;
     },
   },
   mounted() {},
