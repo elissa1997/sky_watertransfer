@@ -24,7 +24,6 @@ export async function initArcGisJs() {
     "esri/layers/WebTileLayer",
     "esri/layers/support/LabelClass",
     "esri/layers/support/TileInfo",
-    "esri/views/SceneView",
     "esri/views/2d/layers/BaseLayerViewGL2D",
     "esri/geometry/Circle",
     "esri/symbols/TextSymbol",

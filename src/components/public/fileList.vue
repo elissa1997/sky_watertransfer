@@ -15,10 +15,10 @@
       <!-- {{fileList}} -->
 
       <a-modal  v-model="preViewVisible" title="文件预览" :footer="null" width="1000px">
-        <div class="preViewWarp" v-if="preViewType === 'img'">
+        <!-- <div class="preViewWarp" v-if="preViewType === 'img'">
           <img :src="preViewUrl" alt="">
-        </div>
-        <div class="preViewWarp" v-if="preViewType === 'pdf'">
+        </div> -->
+        <div class="preViewWarp">
           <embed class="content" :src="preViewUrl" />
         </div>
       </a-modal>
@@ -33,7 +33,8 @@
 </template>
 
 <script>
-
+import 'viewerjs/dist/viewer.css';
+import VueViewer from 'v-viewer';
 export default {
   name: "fileList",
   props: {
@@ -49,18 +50,23 @@ export default {
       preViewVisible: false,
       preViewType: undefined,
       preViewUrl: undefined,
+      options: { "navbar": false, "title": false, "toolbar": false }
     }
   },
   methods: {
     openPreview(file) {
       if (file.file_ext === '.jpg' || file.file_ext === '.png') {
-        this.preViewType = 'img';
-      }else if(file.file_ext === '.pdf'){
-        this.preViewType = 'pdf';
+        const $viewer = this.$viewerApi({
+          options:this.options,
+          images: [this.getfileUrl(file)]
+        })
 
+        $viewer.zoom(5)
+      }else if(file.file_ext === '.pdf'){
+        this.preViewUrl = this.getfileUrl(file);
+        this.preViewType = 'pdf';
+        this.preViewVisible = true;
       }
-      this.preViewVisible = true;
-      this.preViewUrl = this.getfileUrl(file);
     },
 
     getfileUrl(file) {

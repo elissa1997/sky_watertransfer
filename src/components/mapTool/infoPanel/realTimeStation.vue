@@ -5,8 +5,9 @@
       <div class="gateList">
         <div class="title">
           <div class="text">
-            大型闸站信息
+            闸站
             <a-button type="primary" @click="exportGateXLSX" style="margin-left: 5px;">导出</a-button>
+            <a-button @click="getStationList" style="margin-left: 5px;">刷新</a-button>
           </div>
 
           <div class="legend">
@@ -51,11 +52,12 @@
       <div class="pumpList">
         <div class="title">
           <div class="text">
-            泵站信息
+            泵站
             <a-button type="primary" @click="exportPumpXLSX" style="margin-left: 5px;">导出</a-button>
+            <a-button @click="getStationList" style="margin-left: 5px;">刷新</a-button>
           </div>
         </div>
-        <a-table class="table" :columns="pumpStationList.columns" :data-source="pumpStationList.data" rowKey="name" size="small" :pagination="false" :rowClassName="rowClassName"/>
+        <a-table class="table" :scroll="{ x: 500 }" :columns="pumpStationList.columns" :data-source="pumpStationList.data" rowKey="name" size="small" :pagination="false" :rowClassName="rowClassName"/>
       </div>
 
 
@@ -97,12 +99,14 @@ export default {
       },
       pumpStationList: {
         columns: [
-          { title: '测站名称', dataIndex: 'name', width: 87 },
+          { title: '测站名称', dataIndex: 'name', width: 87 ,fixed: 'left'},
           { title: '采集时间', dataIndex: 'tm', width: 89 },
           { title: '上游水位', dataIndex: 'z', width: 72 },
           { title: '下游水位', dataIndex: 'dwz', width: 72 },
-          { title: '台数', dataIndex: 'omcn', width: 60 },
-          { title: '功率', dataIndex: 'omPwr', width: 78 },
+          { title: '流量', dataIndex: 'mpQi', width: 85 },
+          { title: '水量', dataIndex: 'mpQacc', width: 115 },
+          { title: '开机台数', dataIndex: 'omcn', width: 72 },
+          { title: '开机功率', dataIndex: 'omPwr', width: 78 },
         ],
         data: []
       },
@@ -118,6 +122,7 @@ export default {
 
       // 获取闸站数据
       params.action = "getAllJsonS4";
+      this.gateStationList.data = [];
       params['level'] = "30";
       transferApi(params).then(res => {
         res.source.forEach(element => {
@@ -129,11 +134,13 @@ export default {
 
       // 获取泵站数据
       params.action = "getAllJsonB4";
+      this.pumpStationList.data = [];
       transferApi(params).then(res => {
         res.source.forEach(element => {
           this.pumpStationList.data.push(element.attributes);
         });
         this.formatPumpStationList();
+        this.resortPumpStationList();
       })
 
       this.loading = false;
@@ -143,9 +150,9 @@ export default {
     formatGateStationList() {
       this.gateStationList.data.map(ele => {
         ele.tm = this.$dayjs(ele.tm).format("MM-DD HH:mm");
-        ele.z = parseFloat(ele.z.substring(0,ele.z.length-1)).toFixed(2) + "m";
-        ele.dwz = parseFloat(ele.dwz.substring(0,ele.dwz.length-1)).toFixed(2) + "m";
-        ele.q = parseFloat(ele.q.substring(0,ele.q.length-1)).toFixed(2) + "m³/s";
+        ele.z = parseFloat(ele.z).toFixed(2) + "m";
+        ele.dwz = parseFloat(ele.dwz).toFixed(2) + "m";
+        ele.q = parseFloat(ele.q).toFixed(2) + "m³/s";
         if (ele.gateH.indexOf(",") !== -1) {
           ele.gateH = ele.gateH.split(",");
         }
@@ -169,9 +176,30 @@ export default {
     formatPumpStationList() {
       this.pumpStationList.data.map(ele => {
         ele.tm = (ele.tm !== "-")?this.$dayjs(ele.tm).format("MM-DD HH:mm"):"-";
-        ele.z = (ele.z !== "-")?parseFloat(ele.z.substring(0,ele.z.length-1)).toFixed(2) + "m":"-";
-        ele.dwz = (ele.dwz !== "-")?parseFloat(ele.dwz.substring(0,ele.dwz.length-1)).toFixed(2) + "m":"-";
+        ele.z = (ele.z !== "-")?parseFloat(ele.z).toFixed(2) + "m":"-";
+        ele.dwz = (ele.dwz !== "-")?parseFloat(ele.dwz).toFixed(2) + "m":"-";
+        ele.mpQi = (ele.mpQi !== "-")?parseFloat(ele.mpQi).toFixed(2) + "m³/s":"-";
+        ele.mpQacc = (ele.mpQacc !== "-")?(parseFloat(ele.mpQacc)/10000).toFixed(2)+'万m3':"-";
+        ele.omcn = (ele.omcn !== "-")?ele.omcn + "台":"-";
+        ele.omPwr = (ele.omPwr !== "-")?ele.omPwr + "kW":"-";
         return ele;
+      })
+    },
+
+      // 手动指定泵站顺序
+    resortPumpStationList() {
+      // this.pumpStationList.data.sort((a,b)=>{
+      //   let t1 = this.$dayjs(a.tm, 'MM-DD HH:mm');
+      //   let t2 = this.$dayjs(b.tm, 'MM-DD HH:mm');
+      //   return t2-t1;
+      // })
+      let manual = ["固镇泵站","娄宋泵站","宿州泵站","四铺泵站","侯王泵站","贾窝泵站","岱山口泵站"].reverse();
+      manual.forEach(name => {
+        this.pumpStationList.data.map((item,index) => {
+          if(item.name == name){
+              this.pumpStationList.data.unshift(this.pumpStationList.data.splice(index , 1)[0]);
+          }
+        })
       })
     },
 
@@ -206,15 +234,16 @@ export default {
 
     // 导出泵站
     exportPumpXLSX() {
-      let excelData = this.gateStationList.data.map(ele => {
-        let gateH = (typeof(ele.gateH) === "object")? ele.gateH.join(",") : ele.gateH;
+      let excelData = this.pumpStationList.data.map(ele => {
         return {
           "测站名称": ele.name,
           "采集时间": ele.tm,
           "上游水位": ele.z,
           "下游水位": ele.dwz,
-          "台数": ele.omcn,
-          "功率": ele.number,
+          "流量": ele.mpQi,
+          "水量": ele.mpQacc,
+          "开机台数": ele.omcn,
+          "开机功率": ele.number,
         }
       })
 
