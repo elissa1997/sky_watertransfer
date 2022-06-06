@@ -162,7 +162,7 @@ export default {
       this.modal = {
         visible: true,
         title: "水量上报",
-        data: {reg:this.regData, station},
+        data: this.regData,
         from: "addWaterVol"
       }
     },
@@ -172,7 +172,7 @@ export default {
       this.modal = {
         visible: true,
         title: "水量上报修改",
-        data: {reg:record, station, type: "update"},
+        data: record,
         from: "updateWaterVol"
       }
     },
