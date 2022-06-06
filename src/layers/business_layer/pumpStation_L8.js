@@ -31,8 +31,8 @@ export async function featureLayer() {
 
           "type": "picture-marker",
           "url": "/dist/icon/pumpStation_red_128_blink.gif",
-          "width": 20,
-          "height": 20
+          "width": 42,
+          "height": 42
   
       },
       "uniqueValueInfos": [
