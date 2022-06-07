@@ -3,7 +3,7 @@
     <div class="mapView" id="mapView"></div>
     <template v-if="map">
       <!-- <displayCommand/> -->
-      <baseLayerSwitch :map="map"/>
+      <baseLayerSwitch :map="map" @openOverviewLive="openOverviewLive"/>
       <layerTree @checkedChange="checkedChange(arguments)" @treeClick="treeClick(arguments)"/>
       <!-- <projectPlan @openPlan="openProjectPlan"/>
       <overViewPic/> -->
@@ -68,6 +68,11 @@ export default {
     }
   },
   methods: {
+    // 打开实时概化图
+    openOverviewLive() {
+      this.openModal("实时概化图", null, "overViewLive");
+    },
+
     // 控制树勾选
     checkedChange(data) {
       console.log("控制树勾选");

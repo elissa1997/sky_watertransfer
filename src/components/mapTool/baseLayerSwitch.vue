@@ -35,12 +35,6 @@ export default {
     return {
       collapse: false,
       baseMapList: undefined,
-      overView: {
-        images: [
-          '/dist/images/Huai_NorthTransfer_overview.jpg'
-        ],
-        options: { "navbar": false, "title": false, "toolbar": false }
-      }
     }
   },
   methods: {
@@ -59,12 +53,7 @@ export default {
     },
 
     openOverview() {
-      const $viewer = this.$viewerApi({
-        options:this.overView.options,
-        images: this.overView.images
-      })
-
-      $viewer.zoom(5)
+      this.$emit('openOverviewLive');
     },
 
   },

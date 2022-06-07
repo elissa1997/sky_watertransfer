@@ -8,6 +8,7 @@
       <videoIframe v-if="modal.visible && modal.from === 'businessLayer_08'" :attributes="modal.data"/>
       <waterUser v-if="modal.visible && modal.from === 'waterUser'" :attributes="modal.data"/>
       <command v-if="modal.visible && modal.from === 'transferCommand'" :regData="modal.data"/>
+      <overViewLive v-if="modal.visible && modal.from === 'overViewLive'"/>
     </a-modal>
   </div>
 </template>
@@ -20,6 +21,7 @@ import waterUserAllTable from "@/components/modal/waterUserAllTable.vue";
 import videoIframe from "@/components/modal/videoIframe.vue";
 import waterUser from "@/components/modal/waterUser/tabIndex.vue";
 import command from "@/views/command/index.vue";
+import overViewLive from "@/components/modal/overViewLive.vue";
 
 export default {
   name: "modalIndex",
@@ -36,13 +38,14 @@ export default {
     waterUserAllTable,
     videoIframe,
     waterUser,
-    command
+    command,
+    overViewLive
   },
   data() {
     return {
       width: 400,
       modalWidthByFrom: {
-        full: ["transferCommand"],
+        full: ["transferCommand", "overViewLive"],
         large: ["businessLayer_08", "projectPlan", "waterUserAllTable"],
         medium: ["businessLayer_02", "businessLayer_03", "waterUser"],
         small: []
