@@ -1,23 +1,21 @@
 <template>
   <div id="reportWaterVol">
     <div class="operat">
-      <!-- <span v-if="$hasPermission(this.$store.state.user.info.type, 'ABCD')">选择上报站点： </span>
-      <a-select v-if="station.statsionList.length && $hasPermission(this.$store.state.user.info.type, 'ABCD')" v-model="station.stationSelected" style="width: 120px; marginRight: 10px" placeholder="">
-        <a-select-option v-for="st in station.statsionList" :key="st.stcd" :value="st.stcd">{{st.name}}</a-select-option>
-      </a-select> -->
       <a-select v-model="searchParams.stcd" style="width: 120px; marginRight: 10px" placeholder="筛选站点">
         <a-select-option v-for="st in station.statsionList" :key="st.stcd" :value="st.stcd">{{st.name}}</a-select-option>
       </a-select>
       <a-range-picker valueFormat="YYYY-MM-DD" @change="rangeChange" />
       <a-button @click="searchReset" style="margin-left: 10px">重置</a-button>
+      <a-button @click="exportWaterVol" v-if="this.$hasPermission(this.$store.state.user.info.type, 'AE')" style="margin-left: 10px">导出</a-button>
+      <span style="margin-left: 10px">合计水量：{{allWaterVol}}(万m³)</span>
       <!-- <a-button @click="addWaterVol" type="primary" v-if="$hasPermission(this.$store.state.user.info.type, 'ABCD')" style="margin-left: auto;">水量上报</a-button> -->
     </div>
     <div class="tableWarp">
-      <a-table :columns="tableData.colums" :data-source="tableData.data" rowKey="id" :pagination="false" bordered>
+      <a-table id="tableRef" :columns="tableData.colums" :data-source="tableData.data" rowKey="id" :pagination="false" bordered>
         <span  slot="startup_time" slot-scope="text, record">{{$dayjs(record.startup_time).format('HH:mm')}}</span>
         <span  slot="shutdown_time_date" slot-scope="text, record">{{$dayjs(record.shutdown_time).format('MM-DD')}}</span>
         <span  slot="shutdown_time_time" slot-scope="text, record">{{$dayjs(record.shutdown_time).format('HH:mm')}}</span>
-        <span  slot="totalHour" slot-scope="text, record">{{$dayjs(record.shutdown_time).diff($dayjs(record.startup_time), 'h')}}小时</span>
+        <span  slot="totalHour" slot-scope="text, record">{{(record.hour) || 0}}小时{{(record.minute) || 0}}分钟</span>
         <span  slot="water" slot-scope="text, record">{{parseFloat(record.water/10000).toFixed(2)}}</span>
         <span  slot="station_ww" slot-scope="text, record">{{parseFloat(record.station_ww).toFixed(2)}}</span>
 
@@ -37,6 +35,8 @@ import { Button, Select, Table, Tag, DatePicker } from 'ant-design-vue';
 import { receiveUnit } from "@/network/command/receiveUnit.js";
 import { localData, dictTrans } from "@/util/readLocalData.js"
 import { waterVolList } from "@/network/command/reportWaterVol.js";
+import * as XLSX from "xlsx";
+
 export default {
   name: "reportWaterVol",
   props: {
@@ -59,7 +59,6 @@ export default {
       station: {
         stcdDict: undefined,
         statsionList: [],
-        stationSelected: undefined,
       },
       searchParams: {
         stcd: undefined,
@@ -192,7 +191,8 @@ export default {
       waterVolList(this.getWaterVol_params).then(res => {
         if (res.code === "1" && res.data.length) {
           this.tableData.data = res.data.map(ele => {
-            ele.unitName = this.station.statsionList.filter(n => n.stcd === ele.station_cd)[0].name
+            // console.log(this.station.stcdDict.filter(n => n.stcd === ele.station_cd));
+            ele['unitName'] = this.station.stcdDict.filter(n => n.stcd === ele.station_cd)[0].name
             return ele
           })
           this.mergeRowCell()
@@ -235,11 +235,25 @@ export default {
         }, []);
       this.tableData.data = arr;
     },
+
+    // 导出
+    exportWaterVol() {
+      const data = XLSX.utils.table_to_sheet(document.getElementById("tableRef"));
+      const wb = XLSX.utils.book_new()
+      XLSX.utils.book_append_sheet(wb, data, 'sheet1')
+      XLSX.writeFile(wb,'水量信息.xlsx')
+    }
+
   },
   async mounted() {
     this.station.stcdDict = await localData("stcdName");
     await this.getReceiveUnit();
-    this.getWaterVol();
+    // 如果是下级站点，默认选择第一个站点
+    if (this.$hasPermission(this.$store.state.user.info.type, 'BCD')) {
+      this.searchParams.stcd = this.station.statsionList[0].stcd;
+    }else{
+      await this.getWaterVol();
+    }
 
     // 追加操作列暂时隐藏
     // if (this.$hasPermission(this.$store.state.user.info.type, 'ABCD')) {
@@ -266,6 +280,15 @@ export default {
           endTime: this.searchParams.end_time
         }
       
+    },
+    allWaterVol: function () {
+      let sum = 0.0;
+      this.tableData.data.forEach(ele => {
+        if (ele.water) {
+          sum += parseFloat(ele.water);
+        }
+      })
+      return parseFloat(sum/10000).toFixed(2);
     }
   },
   watch: {
@@ -294,6 +317,10 @@ export default {
 .tableWarp {
   overflow-y: auto;
   height: calc(100% - 60px);
+
+  ::v-deep table tbody tr:hover>td { 
+    background-color:#ffffff!important
+  }
 }
 .actionWarp {
   display: flex;
