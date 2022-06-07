@@ -138,8 +138,8 @@ export default {
   margin-left: 10px;
 }
 
-.table {
-  height: calc(100% - 60px);
-  overflow-y: auto;
-}
+// .table {
+//   height: calc(100% - 60px);
+//   overflow-y: auto;
+// }
 </style>
